@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 300" role="img" aria-label="QuintHard">
+  <!-- Tres techos, estilo lineal — homenaje directo al logo de Quintana -->
+  <g stroke="#3A4763" stroke-width="9" fill="none" stroke-linecap="round">
+    <!-- techo lateral izquierdo -->
+    <path d="M 118 128 L 208 68 L 262 104"/>
+    <!-- techo central (más alto) -->
+    <path d="M 236 122 L 340 30 L 444 122"/>
+    <!-- techo lateral derecho -->
+    <path d="M 418 104 L 472 68 L 562 128"/>
+    <!-- línea de base -->
+    <path d="M 148 132 L 532 132"/>
+  </g>
+  <!-- ventanas -->
+  <g fill="#3A4763">
+    <rect x="196" y="92" width="10" height="10"/><rect x="212" y="92" width="10" height="10"/>
+    <rect x="196" y="108" width="10" height="10"/><rect x="212" y="108" width="10" height="10"/>
+    <rect x="324" y="78" width="13" height="13"/><rect x="344" y="78" width="13" height="13"/>
+    <rect x="324" y="98" width="13" height="13"/><rect x="344" y="98" width="13" height="13"/>
+    <rect x="460" y="92" width="10" height="10"/><rect x="476" y="92" width="10" height="10"/>
+    <rect x="460" y="108" width="10" height="10"/><rect x="476" y="108" width="10" height="10"/>
+  </g>
+  <!-- wordmark -->
+  <text x="340" y="216" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="72" letter-spacing="10" fill="#141F38">QUINTHARD</text>
+  <!-- subtítulo con líneas laterales -->
+  <g stroke="#C08A2D" stroke-width="2">
+    <line x1="150" y1="252" x2="240" y2="252"/>
+    <line x1="440" y1="252" x2="530" y2="252"/>
+  </g>
+  <text x="340" y="260" text-anchor="middle" font-family="Georgia, serif" font-size="22" letter-spacing="12" fill="#C08A2D">INMOBILIARIA</text>
+</svg>
