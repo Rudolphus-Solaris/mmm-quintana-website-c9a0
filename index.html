@@ -149,6 +149,13 @@
   .testi .who .nm{font-size:13px;font-weight:700;color:var(--navy);}
   .testi .who .dz{font-size:11px;color:var(--ink-soft);}
 
+  .testi-invite{margin-top:16px;background:var(--gold-bg);border:1px solid rgba(192,138,45,.4);border-radius:16px;padding:20px 22px;display:flex;flex-direction:column;gap:14px;align-items:flex-start;}
+  .testi-invite h4{font-family:var(--display);font-weight:400;font-size:18px;color:var(--navy);margin:0 0 4px;}
+  .testi-invite p{font-size:13px;color:var(--ink-soft);margin:0;}
+  .btn-wa-inline{background:#1DA851;color:#fff;border-radius:999px;padding:11px 20px;font-size:13px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all .25s var(--ease);box-shadow:0 4px 14px rgba(29,168,81,.3);white-space:nowrap;flex-shrink:0;}
+  .btn-wa-inline:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(29,168,81,.4);}
+  .btn-wa-inline svg{width:14px;height:14px;fill:currentColor;}
+
   .zones-band{margin:60px 0 0;position:relative;border-radius:18px;overflow:hidden;box-shadow:var(--sh-lift);}
   .zones-band img{width:100%;height:440px;object-fit:cover;}
   .zones-band .zveil{position:absolute;inset:0;background:linear-gradient(180deg, rgba(20,31,56,.3) 0%, rgba(20,31,56,.94) 78%);}
@@ -319,6 +326,7 @@
     .testis > *{flex:1;}
     .testi{padding:32px 28px;}
     .testi:hover{transform:translateY(-6px);box-shadow:var(--sh-lift);}
+    .testi-invite{flex-direction:row;align-items:center;justify-content:space-between;margin-top:22px;padding:24px 30px;}
 
     .zones-band{margin:84px 0 0;}
     .zones-band img{height:400px;}
@@ -528,6 +536,16 @@
           <div class="q">Ayudaron a acercar a nuestra madre a la zona donde vivimos todos, vendiendo una propiedad con características difíciles. Siempre agradecidos.</div>
           <div class="who"><img class="ava" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80" alt=""><div><div class="nm">Hermanos T.</div><div class="dz">Vendieron en Lima Sur</div></div></div>
         </div>
+      </div>
+
+      <div class="testi-invite rv">
+        <div class="ti-txt">
+          <h4>¿Ya trabajaste con nosotros?</h4>
+          <p>Cuéntanos tu experiencia — con tu permiso, la sumamos aquí para que otros la conozcan.</p>
+        </div>
+        <a class="btn-wa-inline" href="https://wa.me/51947176425?text=Hola%2C%20quiero%20dejar%20mi%20testimonio%20sobre%20mi%20experiencia%20con%20Quintana%20Propiedades">
+          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.4 14.1c-.2.7-1.3 1.3-1.8 1.3-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5s.8 1.9.8 2c.1.1.1.3 0 .5l-.4.6c-.1.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1.1 2.2 1.4 2.5 1.5.3.1.5.1.7-.1l.9-1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.7-.2 1.1z"/></svg> Dejar mi testimonio
+        </a>
       </div>
     </div>
   </section>
