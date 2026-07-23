@@ -68,8 +68,9 @@
   .hero h1{font-family:var(--display);font-weight:300;font-size:clamp(26px,7vw,54px);color:#fff;margin:0 0 14px;line-height:1.14;text-wrap:balance;opacity:0;animation:rise 1s .2s var(--ease) forwards;}
   .hero h1 em{font-style:italic;color:var(--gold-bright);}
   .hero p.sub{color:rgba(255,255,255,.92);font-size:14.5px;max-width:56ch;margin:0 auto;opacity:0;animation:rise 1s .4s var(--ease) forwards;}
-  .hero .tagline{font-family:var(--display);font-style:italic;font-weight:300;font-size:12.5px;color:rgba(227,169,60,.8);margin-top:16px;letter-spacing:.06em;opacity:0;animation:rise 1s .6s var(--ease) forwards;}
+  .hero .tagline{font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(18px,3vw,27px);color:var(--gold-bright);margin-top:20px;letter-spacing:.03em;opacity:0;animation:rise 1s .6s var(--ease) forwards, taglineGlow 3.4s ease-in-out 1.8s infinite;}
   @keyframes rise{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:none;}}
+  @keyframes taglineGlow{0%,100%{text-shadow:0 0 0 rgba(227,169,60,0);}50%{text-shadow:0 0 16px rgba(227,169,60,.5);}}
 
   /* ---------- Rutas: grid clásico (se activa solo desde tablet) ---------- */
   .routes-band{position:relative;z-index:5;}
@@ -97,6 +98,8 @@
   .sroute{display:flex;align-items:center;gap:14px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:12px;text-align:left;cursor:pointer;transition:all .25s var(--ease);}
   .sroute:active{transform:scale(.98);border-color:var(--gold);}
   .sroute .simg{width:64px;height:64px;border-radius:12px;background-size:cover;background-position:center;flex-shrink:0;}
+  .sroute .simg.simg-wa{background:#1DA851;display:flex;align-items:center;justify-content:center;}
+  .sroute .simg.simg-wa svg{width:28px;height:28px;fill:#fff;}
   .sroute .sn{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);font-weight:700;}
   .sroute h4{font-family:var(--display);font-weight:400;font-size:16.5px;margin:2px 0 3px;color:var(--navy);}
   .sroute p{font-size:12px;color:var(--ink-soft);margin:0;line-height:1.45;}
@@ -165,6 +168,12 @@
   .zones{display:flex;flex-wrap:wrap;gap:7px;}
   .zone{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(4px);border-radius:999px;padding:6px 13px;font-size:11.5px;color:#fff;font-weight:600;}
   .zone.od{background:rgba(227,169,60,.2);border-color:var(--gold-bright);color:var(--gold-bright);}
+
+  .final-cta{margin:44px 0 0;text-align:center;}
+  .fc-label{font-family:var(--display);font-style:italic;font-weight:300;font-size:17px;color:var(--navy);margin-bottom:16px;}
+  .fc-btns{display:flex;flex-direction:column;gap:10px;}
+  .fc-btn{background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:14px 20px;font-size:14px;font-weight:700;color:var(--navy);cursor:pointer;transition:all .25s var(--ease);font-family:var(--sans);}
+  .fc-btn:hover{border-color:var(--gold);background:var(--gold-bg);transform:translateY(-2px);}
 
   footer{background:var(--navy);color:#B9BFCF;padding:48px 0 100px;margin-top:70px;}
   footer .fgrid{display:flex;flex-direction:column;gap:32px;max-width:1200px;margin:0 auto;padding:0 20px;}
@@ -332,6 +341,9 @@
     .zones-band img{height:400px;}
     .zones-band .zveil{background:linear-gradient(90deg, rgba(20,31,56,.92) 0%, rgba(20,31,56,.55) 60%, rgba(20,31,56,.25) 100%);}
     .zones-band .ztxt{justify-content:center;max-width:640px;padding:48px;}
+    .final-cta{margin:60px 0 0;}
+    .fc-btns{flex-direction:row;justify-content:center;flex-wrap:wrap;}
+    .fc-btn{padding:14px 26px;}
 
     footer{padding:58px 0 40px;margin-top:100px;}
     footer .fgrid{flex-direction:row;gap:40px;padding:0 28px;}
@@ -381,7 +393,7 @@
       <a href="#nosotros" onclick="goAnchor('nosotros');return false;">Nosotros</a>
       <a href="#testimonios" onclick="goAnchor('testimonios');return false;">Testimonios</a>
     </nav>
-    <a class="btn-wa" href="#"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.4 14.1c-.2.7-1.3 1.3-1.8 1.3-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5s.8 1.9.8 2c.1.1.1.3 0 .5l-.4.6c-.1.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1.1 2.2 1.4 2.5 1.5.3.1.5.1.7-.1l.9-1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.7-.2 1.1z"/></svg> WhatsApp</a>
+    <a class="btn-wa" href="#"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.4 14.1c-.2.7-1.3 1.3-1.8 1.3-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5s.8 1.9.8 2c.1.1.1.3 0 .5l-.4.6c-.1.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1.1 2.2 1.4 2.5 1.5.3.1.5.1.7-.1l.9-1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.7-.2 1.1z"/></svg> Conversemos</a>
     <button class="burger" onclick="toggleMenu()" aria-label="Menú"><span></span><span></span><span></span></button>
   </div>
 </header>
@@ -412,10 +424,10 @@
   <div class="wrap routes-band">
     <div class="routes">
       <button class="route" onclick="startFlow('vender')">
-        <div class="rimg" style="background-image:url('https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=80')"></div>
+        <div class="rimg" style="background-image:url('https://images.unsplash.com/photo-1572704681866-977ba85b2d65?auto=format&fit=crop&w=900&q=80')"></div>
         <div class="rveil"></div>
         <div class="rtxt">
-          <div class="rn">RUTA 01</div>
+          <div class="rn">LLAVE 01</div>
           <h3>Quiero vender mi propiedad</h3>
           <p>Valorización honesta, promoción seria y acompañamiento hasta la inscripción.</p>
           <span class="go">Empezar →</span>
@@ -425,7 +437,7 @@
         <div class="rimg" style="background-image:url('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=80')"></div>
         <div class="rveil"></div>
         <div class="rtxt">
-          <div class="rn">RUTA 02</div>
+          <div class="rn">LLAVE 02</div>
           <h3>Quiero alquilar mi propiedad</h3>
           <p>Inquilinos evaluados y verificados, para tu tranquilidad.</p>
           <span class="go">Empezar →</span>
@@ -435,7 +447,7 @@
         <div class="rimg" style="background-image:url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=900&q=80')"></div>
         <div class="rveil"></div>
         <div class="rtxt">
-          <div class="rn">RUTA 03</div>
+          <div class="rn">LLAVE 03</div>
           <h3>Busco comprar</h3>
           <p>Propiedades reales con toda la información desde el inicio.</p>
           <span class="go">Explorar →</span>
@@ -445,7 +457,7 @@
         <div class="rimg" style="background-image:url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=900&q=80')"></div>
         <div class="rveil"></div>
         <div class="rtxt">
-          <div class="rn">RUTA 04</div>
+          <div class="rn">LLAVE 04</div>
           <h3>Busco rentar</h3>
           <p>Un lugar donde empezar de nuevo, mostrado tal como es.</p>
           <span class="go">Explorar →</span>
@@ -466,7 +478,7 @@
           <div class="s-eyebrow">Quiénes somos</div>
           <h2>Doce años acompañando decisiones importantes</h2>
           <p class="lead" style="margin-bottom:0;">Vender o alquilar una propiedad no es como vender una gaseosa. Hay historia, hay emociones y hay mucho en juego.</p>
-          <blockquote>"No vemos a las personas como dinero. Un buen cierre empieza por decir la verdad — incluso cuando no es la más cómoda."</blockquote>
+          <blockquote>"Vemos a cada cliente como una persona, no como una cifra. Por eso hablamos con franqueza, en cada paso."</blockquote>
           <p class="lead" style="margin-bottom:0;font-size:13.5px;">— Oscar Ayala Quintana, fundador</p>
         </div>
       </div>
@@ -482,21 +494,21 @@
           </div>
         </div>
         <div class="person rv d1">
-          <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80" alt="Rafael Morales">
-          <div class="pveil"></div>
-          <div class="ptxt">
-            <div class="role">Agente senior</div>
-            <h4>Rafael Morales</h4>
-            <p>Vendedor constante y dedicado. Lleva su propia cartera y guía a los agentes nuevos del equipo.</p>
-          </div>
-        </div>
-        <div class="person rv d2">
           <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80" alt="Patricia Herrera">
           <div class="pveil"></div>
           <div class="ptxt">
             <div class="role">Agente</div>
             <h4>Patricia Herrera</h4>
             <p>En pleno crecimiento dentro del rubro, con el mismo compromiso de la casa: honestidad primero.</p>
+          </div>
+        </div>
+        <div class="person rv d2">
+          <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80" alt="Rafael Morales">
+          <div class="pveil"></div>
+          <div class="ptxt">
+            <div class="role">Agente senior</div>
+            <h4>Rafael Morales</h4>
+            <p>Vendedor constante y dedicado. Lleva su propia cartera y guía a los agentes nuevos del equipo.</p>
           </div>
         </div>
       </div>
@@ -540,7 +552,7 @@
 
       <div class="testi-invite rv">
         <div class="ti-txt">
-          <h4>¿Ya trabajaste con nosotros?</h4>
+          <h4>¿Ya estuvimos en contacto?</h4>
           <p>Cuéntanos tu experiencia — con tu permiso, la sumamos aquí para que otros la conozcan.</p>
         </div>
         <a class="btn-wa-inline" href="https://wa.me/51947176425?text=Hola%2C%20quiero%20dejar%20mi%20testimonio%20sobre%20mi%20experiencia%20con%20Quintana%20Propiedades">
@@ -565,6 +577,18 @@
     </div>
   </div>
 
+  <div class="wrap">
+    <div class="final-cta rv">
+      <div class="fc-label">¿Con qué te ayudamos?</div>
+      <div class="fc-btns">
+        <button class="fc-btn" onclick="startFlow('vender')">Vender mi propiedad</button>
+        <button class="fc-btn" onclick="startFlow('alquilar')">Alquilar mi propiedad</button>
+        <button class="fc-btn" onclick="startBrowse('comprar')">Comprar</button>
+        <button class="fc-btn" onclick="startBrowse('rentar')">Rentar</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- ============ VISTA: FLUJO PROPIETARIO (calmo) ============ -->
@@ -574,7 +598,7 @@
       <div class="fimg"></div>
       <div class="fveil"></div>
       <div class="fquote">
-        <div class="fq">"Te decimos la verdad sobre tu propiedad, incluso cuando no es la más cómoda. Por eso nuestros clientes vuelven."</div>
+        <div class="fq">"Te contamos la verdad sobre tu propiedad, con franqueza y cuidado. Por eso nuestros clientes vuelven."</div>
         <div class="fa">Oscar Ayala Quintana · Fundador</div>
       </div>
     </div>
@@ -614,7 +638,7 @@
           <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&q=80" alt="Oscar">
           <div class="tt"><b>Oscar Ayala Quintana</b> — fundador, 12 años de experiencia — revisará personalmente tu caso y <b>te responde en menos de 1 hora</b> en horario de oficina.</div>
         </div>
-        <a class="btn wa" href="#">Escribir por WhatsApp ahora</a>
+        <a class="btn wa" href="#">Escríbenos ahora</a>
         <a class="btn call" href="#">Prefiero que me llamen</a>
       </div>
     </div>
@@ -651,7 +675,7 @@
           </div>
         </div>
         <div class="prop" style="animation-delay:.12s">
-          <div class="ph"><img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">En venta</span></div>
+          <div class="ph"><img src="https://images.unsplash.com/photo-1628012209120-d9db7abf7eab?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">En venta</span></div>
           <div class="pi">
             <div class="price">US$ 290,000</div>
             <div class="pt">Casa · 233 m²</div>
@@ -729,7 +753,7 @@
 <!-- ---------- Bottom sheet "Quiero…" (mobile) ---------- -->
 <div class="sheet-scrim" id="sheetScrim" onclick="closeSheet()"></div>
 <button class="sheet-collapsed" id="sheetCollapsed" onclick="toggleSheet()">
-  <div class="thumb" id="sheetThumb" style="background-image:url('https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=200&q=80')"></div>
+  <div class="thumb" id="sheetThumb" style="background-image:url('https://images.unsplash.com/photo-1572704681866-977ba85b2d65?auto=format&fit=crop&w=200&q=80')"></div>
   <div class="txt"><div class="lbl">Quiero…</div><div class="cur" id="sheetCur">Vender mi propiedad</div></div>
   <div class="chev" id="sheetChev">⌃</div>
 </button>
@@ -807,10 +831,11 @@
 
   // ---------- Bottom sheet "Quiero…" ----------
   const ROUTES = [
-    { num:'RUTA 01', h:'Vender mi propiedad',  p:'Valorización honesta, promoción seria y acompañamiento hasta la inscripción en registros.', img:'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=300&q=80', act:() => startFlow('vender') },
-    { num:'RUTA 02', h:'Alquilar mi propiedad', p:'Inquilinos evaluados y verificados, para tu tranquilidad de principio a fin.', img:'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=300&q=80', act:() => startFlow('alquilar') },
-    { num:'RUTA 03', h:'Comprar una propiedad', p:'Propiedades reales con toda la información desde el inicio — sin sorpresas.', img:'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=300&q=80', act:() => startBrowse('comprar') },
-    { num:'RUTA 04', h:'Rentar un lugar',       p:'Un lugar donde empezar de nuevo, mostrado tal como es.', img:'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=300&q=80', act:() => startBrowse('rentar') }
+    { num:'LLAVE 01', h:'Vender mi propiedad',  p:'Valorización honesta, promoción seria y acompañamiento hasta la inscripción en registros.', img:'https://images.unsplash.com/photo-1572704681866-977ba85b2d65?auto=format&fit=crop&w=300&q=80', act:() => startFlow('vender') },
+    { num:'LLAVE 02', h:'Alquilar mi propiedad', p:'Inquilinos evaluados y verificados, para tu tranquilidad de principio a fin.', img:'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=300&q=80', act:() => startFlow('alquilar') },
+    { num:'LLAVE 03', h:'Comprar una propiedad', p:'Propiedades reales con toda la información desde el inicio — sin sorpresas.', img:'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=300&q=80', act:() => startBrowse('comprar') },
+    { num:'LLAVE 04', h:'Rentar un lugar',       p:'Un lugar donde empezar de nuevo, mostrado tal como es.', img:'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=300&q=80', act:() => startBrowse('rentar') },
+    { num:'ASESORÍA', h:'Hablar con nosotros', p:'¿Tienes una duda puntual o prefieres contarnos tu caso directo? Escríbenos.', whatsapp:true, act:() => window.open('https://wa.me/51947176425?text=Hola%2C%20quiero%20más%20información', '_blank') }
   ];
   const sheet = document.getElementById('sheet');
   const sheetScrim = document.getElementById('sheetScrim');
@@ -819,7 +844,9 @@
 
   sheetBody.innerHTML = ROUTES.map((r, i) => `
     <button class="sroute" data-i="${i}">
-      <div class="simg" style="background-image:url('${r.img}')"></div>
+      ${r.whatsapp
+        ? `<div class="simg simg-wa"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.4 14.1c-.2.7-1.3 1.3-1.8 1.3-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5s.8 1.9.8 2c.1.1.1.3 0 .5l-.4.6c-.1.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1.1 2.2 1.4 2.5 1.5.3.1.5.1.7-.1l.9-1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.7-.2 1.1z"/></svg></div>`
+        : `<div class="simg" style="background-image:url('${r.img}')"></div>`}
       <div style="flex:1;min-width:0;">
         <div class="sn">${r.num}</div>
         <h4>${r.h}</h4>
@@ -831,9 +858,11 @@
   sheetBody.querySelectorAll('.sroute').forEach(btn => {
     btn.addEventListener('click', () => {
       const r = ROUTES[+btn.dataset.i];
-      document.getElementById('sheetCur').textContent = r.h;
-      document.getElementById('sheetThumb').style.backgroundImage = `url('${r.img}')`;
       closeSheet();
+      if (!r.whatsapp) {
+        document.getElementById('sheetCur').textContent = r.h;
+        document.getElementById('sheetThumb').style.backgroundImage = `url('${r.img}')`;
+      }
       r.act();
     });
   });
