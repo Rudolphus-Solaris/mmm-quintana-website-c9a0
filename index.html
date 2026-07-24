@@ -79,8 +79,7 @@
   .routes{display:none;}
 
   /* ---------- Bottom sheet "Quiero…" (mobile-first, por defecto) ---------- */
-  .sheet-collapsed{position:fixed;left:14px;right:14px;top:min(66vh,420px);bottom:auto;z-index:70;background:rgba(20,31,56,.92);backdrop-filter:blur(14px);border-radius:18px;padding:13px 16px;display:flex;align-items:center;gap:12px;box-shadow:var(--sh-lift);cursor:pointer;border:1px solid rgba(255,255,255,.1);transition:transform .3s var(--ease), top .4s var(--ease), bottom .4s var(--ease);}
-  .sheet-collapsed.docked{top:auto;bottom:calc(14px + var(--safe-b));}
+  .sheet-collapsed{position:fixed;left:14px;right:14px;bottom:calc(14px + var(--safe-b));z-index:70;background:rgba(20,31,56,.92);backdrop-filter:blur(14px);border-radius:18px;padding:13px 16px;display:flex;align-items:center;gap:12px;box-shadow:var(--sh-lift);cursor:pointer;border:1px solid rgba(255,255,255,.1);transition:transform .3s var(--ease);}
   .sheet-collapsed:active{transform:scale(.98);}
   .sheet-collapsed .thumb{width:40px;height:40px;border-radius:11px;background-size:cover;background-position:center;flex-shrink:0;}
   .sheet-collapsed .txt{flex:1;min-width:0;}
@@ -110,10 +109,23 @@
 
   .routes-hint{display:none;}
 
-  /* ---------- Reveal on scroll ---------- */
+  /* ---------- Reveal on scroll — cada sección con su propia firma ---------- */
   .rv{opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease), transform .8s var(--ease);}
   .rv.in{opacity:1;transform:none;}
-  .rv.d1{transition-delay:.08s;} .rv.d2{transition-delay:.16s;}
+  .rv.d1{transition-delay:.08s;} .rv.d2{transition-delay:.16s;} .rv.d3{transition-delay:.24s;}
+
+  .rv-left{opacity:0;transform:translateX(-42px);transition:opacity .9s var(--ease), transform .9s var(--ease);}
+  .rv-left.in{opacity:1;transform:none;}
+  .rv-right{opacity:0;transform:translateX(42px);transition:opacity .9s var(--ease), transform .9s var(--ease);}
+  .rv-right.in{opacity:1;transform:none;}
+  .rv-scale{opacity:0;transform:scale(.9);transition:opacity .7s var(--ease), transform .7s cubic-bezier(.22,1.3,.36,1);}
+  .rv-scale.in{opacity:1;transform:none;}
+  .rv-rise{opacity:0;transform:translateY(52px);transition:opacity 1s var(--ease), transform 1s cubic-bezier(.16,1,.3,1);}
+  .rv-rise.in{opacity:1;transform:none;}
+  .rv-bounce{opacity:0;transform:translateY(40px) scale(.94);transition:opacity .6s var(--ease), transform .7s cubic-bezier(.34,1.56,.64,1);}
+  .rv-bounce.in{opacity:1;transform:none;}
+  .rv-card{opacity:0;transform:translateY(30px) rotate(-2.5deg);transition:opacity .8s var(--ease), transform .8s cubic-bezier(.22,1.2,.36,1);}
+  .rv-card.in{opacity:1;transform:none;}
 
   /* ---------- Secciones ---------- */
   section.free{padding:56px 0 8px;}
@@ -133,8 +145,9 @@
   .tc-arrow{flex-shrink:0;width:34px;height:34px;border-radius:50%;background:var(--card);border:1.5px solid var(--line);color:var(--navy);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s var(--ease);}
   .tc-arrow:hover{border-color:var(--gold);background:var(--gold-bg);}
   .tc-cards{flex:1;display:flex;gap:10px;min-width:0;}
-  .tc-card{position:relative;border-radius:16px;overflow:hidden;box-shadow:var(--sh);height:280px;flex:1;min-width:0;opacity:.5;transform:scale(.92);transition:opacity .5s var(--ease), transform .5s var(--ease);}
-  .tc-card.featured{opacity:1;transform:scale(1.04) translateY(-6px);z-index:2;box-shadow:var(--sh-lift);}
+  .tc-card{display:none;position:relative;border-radius:16px;overflow:hidden;box-shadow:var(--sh);height:340px;flex:1;min-width:0;transition:opacity .5s var(--ease), transform .5s var(--ease);}
+  .tc-card.featured{display:block;opacity:1;transform:none;z-index:2;box-shadow:var(--sh-lift);animation:tcPop .5s var(--ease);}
+  @keyframes tcPop{from{opacity:0;transform:scale(.96);}to{opacity:1;transform:none;}}
   .tc-card img{width:100%;height:100%;object-fit:cover;}
   .tc-card .tc-veil{position:absolute;inset:0;background:linear-gradient(180deg, transparent 40%, rgba(20,31,56,.92) 100%);}
   .tc-card .tc-txt{position:absolute;left:0;right:0;bottom:0;padding:16px;color:#fff;}
@@ -260,10 +273,10 @@
   .af-reset{grid-column:1/-1;background:none;border:none;color:var(--gold);font-weight:700;font-size:12.5px;cursor:pointer;text-align:left;padding:2px 0 0;font-family:var(--sans);}
   .browse-grid{display:flex;flex-direction:column;gap:18px;}
   .props{display:flex;flex-direction:column;gap:14px;}
-  .prop.hide{display:none;}
+  .prop.hide{opacity:0;transform:scale(.92);max-height:0;margin:0;padding:0;border:0;pointer-events:none;box-shadow:none;}
   .no-results{display:none;text-align:center;padding:30px 20px;color:var(--ink-soft);font-size:13.5px;background:var(--card);border-radius:16px;border:1px dashed var(--line);}
   .no-results.show{display:block;}
-  .prop{background:var(--card);border-radius:16px;overflow:hidden;box-shadow:var(--sh);cursor:pointer;transition:transform .4s var(--ease), box-shadow .4s var(--ease);opacity:0;transform:translateY(16px) scale(.98);animation:propIn .5s var(--ease) forwards;}
+  .prop{background:var(--card);border-radius:16px;overflow:hidden;box-shadow:var(--sh);cursor:pointer;transition:transform .4s var(--ease), box-shadow .4s var(--ease), opacity .35s var(--ease), max-height .4s var(--ease);opacity:0;transform:translateY(16px) scale(.98);animation:propIn .5s var(--ease) forwards;max-height:600px;}
   @keyframes propIn{to{opacity:1;transform:none;}}
   .prop .ph{height:170px;overflow:hidden;position:relative;}
   .prop .ph img{width:100%;height:100%;object-fit:cover;transition:transform 1.1s var(--ease);}
@@ -368,7 +381,8 @@
     .team-carousel{gap:16px;}
     .tc-arrow{width:44px;height:44px;font-size:22px;}
     .tc-cards{gap:16px;}
-    .tc-card{height:420px;}
+    .tc-card{display:block;height:420px;opacity:.5;transform:scale(.92);animation:none;}
+    .tc-card.featured{opacity:1;transform:scale(1.04) translateY(-6px);animation:none;}
     .tc-card .tc-txt{padding:24px;}
     .tc-card h4{font-size:22px;}
     .tc-card .role{font-size:11px;}
@@ -462,8 +476,8 @@
     <div class="vignette"></div>
     <div class="grain"></div>
     <div class="inner" id="heroInner">
-      <h1>Tu próxima puerta,<br>en <em id="cycleDistrict">San Borja</em>.</h1>
-      <p class="sub">Doce años acompañando a personas que están tomando una de las decisiones más grandes de su vida — con información clara, sin apuros y sin letra pequeña.</p>
+      <h1>Un nuevo inicio te espera,<br>en <em id="cycleDistrict">San Borja</em>.</h1>
+      <p class="sub">Doce años acompañando decisiones importantes — con información clara y sin apuros.</p>
       <div class="tagline">Cada llave, un nuevo inicio.</div>
     </div>
   </div>
@@ -517,11 +531,11 @@
   <section class="free" id="nosotros">
     <div class="wrap">
       <div class="about-split">
-        <div class="about-photo rv">
+        <div class="about-photo rv-left">
           <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1200&q=80" alt="El equipo">
           <div class="badge"><div class="bn">200+</div><div class="bl">operaciones cerradas</div></div>
         </div>
-        <div class="about-copy rv d1">
+        <div class="about-copy rv-right d1">
           <div class="s-eyebrow">Quiénes somos</div>
           <h2>Doce años acompañando decisiones importantes</h2>
           <p class="lead" style="margin-bottom:0;">Vender o alquilar una propiedad no es como vender una gaseosa. Hay historia, hay emociones y hay mucho en juego.</p>
@@ -530,7 +544,7 @@
         </div>
       </div>
 
-      <div class="team-carousel" style="margin-top:44px;">
+      <div class="team-carousel rv-scale" style="margin-top:44px;">
         <button class="tc-arrow prev" onclick="teamNav(-1)" aria-label="Anterior">‹</button>
         <div class="tc-cards" id="teamCards">
           <div class="tc-card" data-i="0">
@@ -566,7 +580,7 @@
       <div class="tc-dots" id="teamDots"></div>
       <div class="photo-note">* Fotografías referenciales — se reemplazan por las fotos reales del equipo.</div>
 
-      <div class="zones-compact rv">
+      <div class="zones-compact rv-rise">
         <div class="zc-label">Zonas de cobertura</div>
         <div class="zones">
           <span class="zchip">La Molina</span><span class="zchip">Surco</span><span class="zchip">Miraflores</span><span class="zchip">San Isidro</span><span class="zchip">San Borja</span><span class="zchip">Magdalena</span><span class="zchip">San Miguel</span><span class="zchip">Ate</span><span class="zchip">Chorrillos</span><span class="zchip">Callao</span><span class="zchip od">Trujillo · bajo demanda</span><span class="zchip od">Pisco · bajo demanda</span>
@@ -576,7 +590,7 @@
     </div>
   </section>
 
-  <div class="stats-band rv">
+  <div class="stats-band rv-scale">
     <div class="wrap">
       <div class="stats">
         <div class="stat"><div class="n" data-count="200">0</div><div class="l">Operaciones cerradas</div></div>
@@ -593,24 +607,24 @@
       <h2 class="rv">Historias reales, contadas por sus protagonistas</h2>
       <p class="lead rv">Cada llave que entregamos tiene una historia detrás. Estas son algunas.</p>
       <div class="testis">
-        <div class="testi rv">
+        <div class="testi rv-card">
           <div class="qm">"</div>
           <div class="q">Mi barrio se volvió peligroso y ningún agente quería ayudarnos a vender nuestra quinta antigua. No solo la vendieron — nos ayudaron a mudarnos a un distrito más seguro para mi hija.</div>
           <div class="who"><img class="ava" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80" alt=""><div><div class="nm">María</div><div class="dz">Vendió en Ate</div></div></div>
         </div>
-        <div class="testi rv d1">
+        <div class="testi rv-card d1">
           <div class="qm">"</div>
           <div class="q">Nos ayudaron con sus contactos en los bancos para conseguir el préstamo y un buen descuento de la constructora. Alcanzamos el sueño del depa propio.</div>
           <div class="who"><img class="ava" src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=200&q=80" alt=""><div><div class="nm">Familia R.</div><div class="dz">Compró en San Borja</div></div></div>
         </div>
-        <div class="testi rv d2">
+        <div class="testi rv-card d2">
           <div class="qm">"</div>
           <div class="q">Ayudaron a acercar a nuestra madre a la zona donde vivimos todos, vendiendo una propiedad con características difíciles. Siempre agradecidos.</div>
           <div class="who"><img class="ava" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80" alt=""><div><div class="nm">Hermanos T.</div><div class="dz">Vendieron en Chorrillos</div></div></div>
         </div>
       </div>
 
-      <div class="testi-invite rv" id="testiInvite">
+      <div class="testi-invite rv-rise" id="testiInvite">
         <div class="ti-view" id="tiView">
           <div class="ti-txt">
             <h4>¿Ya estuvimos en contacto?</h4>
@@ -633,7 +647,7 @@
   </section>
 
   <div class="wrap">
-    <div class="final-cta rv">
+    <div class="final-cta rv-bounce">
       <div class="fc-label">¿Con qué te ayudamos?</div>
       <div class="fc-btns">
         <button class="fc-btn" onclick="startFlow('vender')">Vender mi propiedad</button>
@@ -1114,10 +1128,11 @@
     // la aprobación real (para que lo vean todos) queda para revisión manual, no es automática.
     const testisEl = document.querySelector('.testis');
     const card = document.createElement('div');
-    card.className = 'testi rv in pending';
+    card.className = 'testi rv-bounce pending';
     const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     card.innerHTML = `<div class="pending-tag">Pendiente de aprobación</div><div class="qm">"</div><div class="q">${esc(text)}</div><div class="who"><div><div class="nm">${esc(name)}</div><div class="dz">Enviado ahora</div></div></div>`;
     testisEl.appendChild(card);
+    requestAnimationFrame(() => requestAnimationFrame(() => card.classList.add('in')));
 
     fetch('https://script.google.com/macros/s/AKfycbxfTavzQrge9izRxGmP0L3pB9t463mvpzsYARCCS5_6nIYkRffZnx6iZY8xhlDQ-Zoo/exec', {
       method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' },
@@ -1178,12 +1193,6 @@
   renderTeam();
   resetTeamTimer();
 
-  // "Quiero…" flota en el hueco del hero al inicio, se ancla abajo al scrollear
-  window.addEventListener('scroll', () => {
-    if (currentView !== 'home') return;
-    sheetCollapsed.classList.toggle('docked', window.scrollY > 60);
-  }, { passive: true });
-
   // Distritos rotando en el título del hero
   const DISTRICTS = ['San Borja', 'Santiago de Surco', 'Miraflores', 'San Isidro', 'La Molina', 'Magdalena', 'San Miguel', 'Chorrillos'];
   let districtIdx = 0;
@@ -1234,7 +1243,8 @@
       }
     });
   }, { threshold: .18 });
-  function observeAll(){ document.querySelectorAll('.rv:not(.in)').forEach(el => io.observe(el)); }
+  const RV_SEL = '.rv, .rv-left, .rv-right, .rv-scale, .rv-rise, .rv-bounce, .rv-card';
+  function observeAll(){ document.querySelectorAll(RV_SEL + ':not(.in)').forEach(el => io.observe(el)); }
   observeAll();
 
   let counted = false;
