@@ -71,13 +71,16 @@
   .hero .tagline{font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(18px,3vw,27px);color:var(--gold-bright);margin-top:20px;letter-spacing:.03em;opacity:0;animation:rise 1s .6s var(--ease) forwards, taglineGlow 3.4s ease-in-out 1.8s infinite;}
   @keyframes rise{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:none;}}
   @keyframes taglineGlow{0%,100%{text-shadow:0 0 0 rgba(227,169,60,0);}50%{text-shadow:0 0 16px rgba(227,169,60,.5);}}
+  .hero h1 em{display:inline-block;transition:opacity .45s var(--ease), transform .45s var(--ease);}
+  .hero h1 em.swap{opacity:0;transform:translateY(8px);}
 
   /* ---------- Rutas: grid clásico (se activa solo desde tablet) ---------- */
   .routes-band{position:relative;z-index:5;}
   .routes{display:none;}
 
   /* ---------- Bottom sheet "Quiero…" (mobile-first, por defecto) ---------- */
-  .sheet-collapsed{position:fixed;left:14px;right:14px;bottom:calc(14px + var(--safe-b));z-index:70;background:rgba(20,31,56,.92);backdrop-filter:blur(14px);border-radius:18px;padding:13px 16px;display:flex;align-items:center;gap:12px;box-shadow:var(--sh-lift);cursor:pointer;border:1px solid rgba(255,255,255,.1);transition:transform .3s var(--ease);}
+  .sheet-collapsed{position:fixed;left:14px;right:14px;top:min(66vh,420px);bottom:auto;z-index:70;background:rgba(20,31,56,.92);backdrop-filter:blur(14px);border-radius:18px;padding:13px 16px;display:flex;align-items:center;gap:12px;box-shadow:var(--sh-lift);cursor:pointer;border:1px solid rgba(255,255,255,.1);transition:transform .3s var(--ease), top .4s var(--ease), bottom .4s var(--ease);}
+  .sheet-collapsed.docked{top:auto;bottom:calc(14px + var(--safe-b));}
   .sheet-collapsed:active{transform:scale(.98);}
   .sheet-collapsed .thumb{width:40px;height:40px;border-radius:11px;background-size:cover;background-position:center;flex-shrink:0;}
   .sheet-collapsed .txt{flex:1;min-width:0;}
@@ -126,14 +129,25 @@
   .about-photo .badge .bl{font-size:10px;color:var(--ink-soft);letter-spacing:.05em;text-transform:uppercase;font-weight:600;}
   .about-copy blockquote{font-family:var(--display);font-weight:300;font-style:italic;font-size:18px;color:var(--navy);border-left:3px solid var(--gold);padding-left:18px;margin:22px 0;line-height:1.5;}
 
-  .team{display:flex;flex-direction:column;gap:16px;margin-top:14px;}
-  .person{position:relative;border-radius:16px;overflow:hidden;box-shadow:var(--sh);height:300px;cursor:pointer;}
-  .person img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease);}
-  .person .pveil{position:absolute;inset:0;background:linear-gradient(180deg, transparent 40%, rgba(20,31,56,.9) 100%);}
-  .person .ptxt{position:absolute;left:0;right:0;bottom:0;padding:19px;color:#fff;}
-  .person h4{font-family:var(--display);font-weight:400;font-size:19px;margin:0 0 3px;}
-  .person .role{font-size:10px;color:var(--gold-bright);font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;}
-  .person p{font-size:12px;color:rgba(255,255,255,.8);margin:0;line-height:1.5;}
+  .team-carousel{display:flex;align-items:center;gap:8px;}
+  .tc-arrow{flex-shrink:0;width:34px;height:34px;border-radius:50%;background:var(--card);border:1.5px solid var(--line);color:var(--navy);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s var(--ease);}
+  .tc-arrow:hover{border-color:var(--gold);background:var(--gold-bg);}
+  .tc-cards{flex:1;display:flex;gap:10px;min-width:0;}
+  .tc-card{position:relative;border-radius:16px;overflow:hidden;box-shadow:var(--sh);height:280px;flex:1;min-width:0;opacity:.5;transform:scale(.92);transition:opacity .5s var(--ease), transform .5s var(--ease);}
+  .tc-card.featured{opacity:1;transform:scale(1.04) translateY(-6px);z-index:2;box-shadow:var(--sh-lift);}
+  .tc-card img{width:100%;height:100%;object-fit:cover;}
+  .tc-card .tc-veil{position:absolute;inset:0;background:linear-gradient(180deg, transparent 40%, rgba(20,31,56,.92) 100%);}
+  .tc-card .tc-txt{position:absolute;left:0;right:0;bottom:0;padding:16px;color:#fff;}
+  .tc-card h4{font-family:var(--display);font-weight:400;font-size:17px;margin:0 0 3px;}
+  .tc-card .role{font-size:9.5px;color:var(--gold-bright);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;}
+  .tc-card .tc-desc{font-size:11.5px;color:rgba(255,255,255,.85);margin:0;line-height:1.5;display:none;min-height:2.4em;}
+  .tc-card .tc-desc::after{content:"";display:inline-block;width:2px;height:1em;background:var(--gold-bright);margin-left:2px;vertical-align:middle;animation:caret .8s step-end infinite;}
+  .tc-card.featured .tc-desc{display:block;}
+  .tc-card.featured .tc-desc.done::after{display:none;}
+  @keyframes caret{50%{opacity:0;}}
+  .tc-dots{display:flex;justify-content:center;gap:7px;margin-top:14px;}
+  .tc-dot{width:7px;height:7px;border-radius:50%;background:var(--line);cursor:pointer;transition:all .3s var(--ease);}
+  .tc-dot.on{background:var(--gold);width:18px;border-radius:4px;}
   .photo-note{font-size:11px;color:var(--ink-soft);text-align:right;margin-top:10px;font-style:italic;}
 
   .stats-band{background:var(--navy);margin-top:56px;padding:44px 0;position:relative;overflow:hidden;}
@@ -152,22 +166,28 @@
   .testi .who .nm{font-size:13px;font-weight:700;color:var(--navy);}
   .testi .who .dz{font-size:11px;color:var(--ink-soft);}
 
-  .testi-invite{margin-top:16px;background:var(--gold-bg);border:1px solid rgba(192,138,45,.4);border-radius:16px;padding:20px 22px;display:flex;flex-direction:column;gap:14px;align-items:flex-start;}
+  .testi-invite{margin-top:16px;background:var(--gold-bg);border:1px solid rgba(192,138,45,.4);border-radius:16px;padding:20px 22px;}
+  .ti-view{display:flex;flex-direction:column;gap:14px;align-items:flex-start;}
   .testi-invite h4{font-family:var(--display);font-weight:400;font-size:18px;color:var(--navy);margin:0 0 4px;}
   .testi-invite p{font-size:13px;color:var(--ink-soft);margin:0;}
-  .btn-wa-inline{background:#1DA851;color:#fff;border-radius:999px;padding:11px 20px;font-size:13px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all .25s var(--ease);box-shadow:0 4px 14px rgba(29,168,81,.3);white-space:nowrap;flex-shrink:0;}
-  .btn-wa-inline:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(29,168,81,.4);}
-  .btn-wa-inline svg{width:14px;height:14px;fill:currentColor;}
+  .btn-testi{background:var(--navy);color:#fff;border:none;border-radius:999px;padding:11px 22px;font-size:13px;font-weight:700;cursor:pointer;transition:all .25s var(--ease);white-space:nowrap;flex-shrink:0;font-family:var(--sans);}
+  .btn-testi:hover{transform:translateY(-2px);background:var(--navy-2);}
+  .btn-testi-cancel{background:none;border:none;color:var(--ink-soft);font-size:13px;font-weight:700;cursor:pointer;padding:11px 6px;font-family:var(--sans);}
+  .ti-form{display:none;flex-direction:column;gap:4px;}
+  .ti-form.open{display:flex;}
+  .ti-form label{margin:10px 0 6px;}
+  .ti-form label:first-child{margin-top:0;}
+  .ti-form-btns{display:flex;align-items:center;gap:6px;margin-top:14px;}
+  .testi.pending{border:1.5px dashed rgba(192,138,45,.5);}
+  .testi .pending-tag{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--gold);background:var(--gold-bg);border-radius:99px;padding:3px 10px;margin-bottom:10px;}
 
-  .zones-band{margin:60px 0 0;position:relative;border-radius:18px;overflow:hidden;box-shadow:var(--sh-lift);}
-  .zones-band img{width:100%;height:440px;object-fit:cover;}
-  .zones-band .zveil{position:absolute;inset:0;background:linear-gradient(180deg, rgba(20,31,56,.3) 0%, rgba(20,31,56,.94) 78%);}
-  .zones-band .ztxt{position:absolute;inset:0;padding:26px;display:flex;flex-direction:column;justify-content:flex-end;}
-  .zones-band h2{font-family:var(--display);font-weight:300;font-size:clamp(22px,6vw,36px);color:#fff;margin:0 0 8px;}
-  .zones-band p{color:rgba(255,255,255,.8);font-size:13.5px;margin:0 0 18px;}
+  .zones-compact{margin-top:34px;padding-top:28px;border-top:1px solid var(--line);}
+  .zc-label{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:700;margin-bottom:12px;}
   .zones{display:flex;flex-wrap:wrap;gap:7px;}
-  .zone{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(4px);border-radius:999px;padding:6px 13px;font-size:11.5px;color:#fff;font-weight:600;}
-  .zone.od{background:rgba(227,169,60,.2);border-color:var(--gold-bright);color:var(--gold-bright);}
+  .zchip{background:var(--bg-2);border:1px solid var(--line);border-radius:999px;padding:6px 13px;font-size:11.5px;color:var(--ink-soft);font-weight:600;}
+  .zchip.od{background:var(--gold-bg);border-color:rgba(192,138,45,.4);color:var(--gold);}
+  .zc-note{font-size:12.5px;color:var(--ink-soft);margin:14px 0 0;}
+  .zc-note a{color:var(--gold);font-weight:700;text-decoration:none;border-bottom:1px solid var(--gold);}
 
   .final-cta{margin:44px 0 0;text-align:center;}
   .fc-label{font-family:var(--display);font-style:italic;font-weight:300;font-size:17px;color:var(--navy);margin-bottom:16px;}
@@ -228,8 +248,21 @@
   .filters::-webkit-scrollbar{display:none;}
   .chip{flex-shrink:0;background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:9px 16px;font-size:12.5px;font-weight:600;color:var(--ink-soft);cursor:pointer;transition:all .2s var(--ease);white-space:nowrap;}
   .chip.sel{background:var(--navy);border-color:var(--navy);color:#fff;transform:scale(1.04);}
+
+  .advfilters{display:grid;grid-template-columns:1fr 1fr;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:22px;}
+  .af-item{display:flex;flex-direction:column;gap:5px;}
+  .af-item label{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);}
+  .af-item select{width:100%;padding:10px 11px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);font-size:13px;color:var(--ink);font-family:var(--sans);}
+  .af-item select:focus{outline:none;border-color:var(--gold);}
+  .cur-toggle{display:flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden;}
+  .cur-btn{flex:1;background:var(--bg);border:none;padding:9px 6px;font-size:12.5px;font-weight:700;color:var(--ink-soft);cursor:pointer;font-family:var(--sans);}
+  .cur-btn.sel{background:var(--navy);color:#fff;}
+  .af-reset{grid-column:1/-1;background:none;border:none;color:var(--gold);font-weight:700;font-size:12.5px;cursor:pointer;text-align:left;padding:2px 0 0;font-family:var(--sans);}
   .browse-grid{display:flex;flex-direction:column;gap:18px;}
   .props{display:flex;flex-direction:column;gap:14px;}
+  .prop.hide{display:none;}
+  .no-results{display:none;text-align:center;padding:30px 20px;color:var(--ink-soft);font-size:13.5px;background:var(--card);border-radius:16px;border:1px dashed var(--line);}
+  .no-results.show{display:block;}
   .prop{background:var(--card);border-radius:16px;overflow:hidden;box-shadow:var(--sh);cursor:pointer;transition:transform .4s var(--ease), box-shadow .4s var(--ease);opacity:0;transform:translateY(16px) scale(.98);animation:propIn .5s var(--ease) forwards;}
   @keyframes propIn{to{opacity:1;transform:none;}}
   .prop .ph{height:170px;overflow:hidden;position:relative;}
@@ -245,14 +278,23 @@
   .mapbox .mveil{position:absolute;inset:0;background:rgba(20,31,56,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#fff;text-align:center;padding:22px;}
   .mapbox .mveil b{font-family:var(--display);font-weight:400;font-size:17px;}
   .mapbox .mveil span{font-size:12px;color:rgba(255,255,255,.8);max-width:34ch;}
-  .wishbox{margin-top:24px;background:var(--navy);border-radius:18px;padding:30px 24px;box-shadow:var(--sh-lift);position:relative;overflow:hidden;}
-  .wishbox::after{content:"";position:absolute;right:-60px;bottom:-90px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle, rgba(192,138,45,.3), transparent 70%);}
-  .wishbox h3{font-family:var(--display);font-weight:300;font-size:23px;color:#fff;margin:0 0 9px;position:relative;z-index:2;}
-  .wishbox p{font-size:13px;color:#B9BFCF;margin:0 0 6px;max-width:70ch;position:relative;z-index:2;}
+  .wishbox{margin-top:24px;background:var(--navy);border-radius:18px;padding:30px 24px;box-shadow:var(--sh-lift);position:relative;overflow:hidden;display:flex;flex-direction:column;gap:16px;}
+  .wishbox::after{content:"";position:absolute;right:-60px;bottom:-90px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle, rgba(192,138,45,.3), transparent 70%);animation:wbPulse 5s ease-in-out infinite;}
+  @keyframes wbPulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.15);opacity:.7;}}
+  .wb-icon{position:relative;z-index:2;width:46px;height:46px;border-radius:50%;background:rgba(227,169,60,.15);border:1.5px solid rgba(227,169,60,.4);display:flex;align-items:center;justify-content:center;color:var(--gold-bright);flex-shrink:0;}
+  .wb-icon svg{width:22px;height:22px;}
+  .wb-body{position:relative;z-index:2;}
+  .wishbox h3{font-family:var(--display);font-weight:300;font-size:23px;color:#fff;margin:0 0 9px;}
+  .wishbox p{font-size:13px;color:#B9BFCF;margin:0 0 16px;max-width:70ch;}
   .wishbox label{color:var(--gold-bright);position:relative;z-index:2;}
   .wishbox input, .wishbox textarea{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.2);color:#fff;position:relative;z-index:2;}
   .wishbox input::placeholder, .wishbox textarea::placeholder{color:#8890A5;}
   .wishbox .btn-row{position:relative;z-index:2;}
+  .wb-form.hide{display:none;}
+  .wb-done{display:none;align-items:center;gap:14px;}
+  .wb-done.show{display:flex;}
+  .wb-done p{margin:0;}
+  .wb-check{flex-shrink:0;width:34px;height:34px;border-radius:50%;background:var(--good-bg,rgba(76,169,122,.2));border:1.5px solid #4CA97A;color:#4CA97A;display:flex;align-items:center;justify-content:center;font-weight:800;}
 
   /* =====================================================================
      TABLET / DESKTOP — mejoras progresivas desde acá arriba.
@@ -294,12 +336,15 @@
     .route:nth-child(1){animation-delay:.55s;} .route:nth-child(2){animation-delay:.68s;}
     .route:nth-child(3){animation-delay:.81s;} .route:nth-child(4){animation-delay:.94s;}
     .route:hover{transform:translateY(-7px);box-shadow:var(--sh-lift);}
-    .route .rimg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform 1.2s var(--ease);}
-    .route:hover .rimg{transform:scale(1.08);}
-    .route .rveil{position:absolute;inset:0;background:linear-gradient(180deg, rgba(20,31,56,.06) 30%, rgba(20,31,56,.9) 100%);transition:background .4s;}
-    .route:hover .rveil{background:linear-gradient(180deg, rgba(20,31,56,.16) 20%, rgba(20,31,56,.95) 100%);}
-    .route .rtxt{position:absolute;left:0;right:0;bottom:0;padding:20px 20px 18px;color:#fff;}
-    .route .rn{font-family:var(--display);font-size:12px;color:var(--gold-bright);letter-spacing:.16em;margin-bottom:5px;}
+    .route .rimg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform 1.4s var(--ease), filter .4s var(--ease);}
+    .route:hover .rimg{transform:scale(1.14);filter:brightness(.85);}
+    .route .rveil{position:absolute;inset:0;background:linear-gradient(180deg, rgba(20,31,56,.28) 0%, rgba(20,31,56,.94) 100%);transition:background .4s var(--ease);}
+    .route:hover .rveil{background:linear-gradient(180deg, rgba(20,31,56,.5) 0%, rgba(20,31,56,.97) 100%);}
+    .route .rtxt{position:absolute;left:0;right:0;bottom:0;padding:20px 20px 18px;color:#fff;transition:transform .4s var(--ease);}
+    .route:hover .rtxt{transform:translateY(-4px);}
+    .route .rn{width:26px;height:26px;color:var(--gold-bright);margin-bottom:10px;transition:transform .4s var(--ease);}
+    .route .rn svg{width:100%;height:100%;}
+    .route:hover .rn{transform:scale(1.12) rotate(-4deg);}
     .route h3{font-family:var(--display);font-weight:400;font-size:19.5px;margin:0 0 5px;line-height:1.2;}
     .route p{font-size:12.5px;color:rgba(255,255,255,.78);margin:0;max-height:0;overflow:hidden;opacity:0;transition:all .45s var(--ease);}
     .route:hover p{max-height:80px;opacity:1;margin-bottom:7px;}
@@ -320,11 +365,14 @@
     .about-photo .badge .bn{font-size:25px;}
     .about-copy blockquote{font-size:20px;padding-left:20px;margin:26px 0;}
 
-    .team{gap:20px;margin-top:14px;}
-    .person{height:400px;}
-    .person:hover img{transform:scale(1.07);}
-    .person .ptxt{padding:22px;}
-    .person h4{font-size:21px;}
+    .team-carousel{gap:16px;}
+    .tc-arrow{width:44px;height:44px;font-size:22px;}
+    .tc-cards{gap:16px;}
+    .tc-card{height:420px;}
+    .tc-card .tc-txt{padding:24px;}
+    .tc-card h4{font-size:22px;}
+    .tc-card .role{font-size:11px;}
+    .tc-card .tc-desc{font-size:13.5px;}
 
     .stats-band{margin-top:76px;padding:58px 0;}
     .stats{gap:26px;}
@@ -335,12 +383,9 @@
     .testis > *{flex:1;}
     .testi{padding:32px 28px;}
     .testi:hover{transform:translateY(-6px);box-shadow:var(--sh-lift);}
-    .testi-invite{flex-direction:row;align-items:center;justify-content:space-between;margin-top:22px;padding:24px 30px;}
-
-    .zones-band{margin:84px 0 0;}
-    .zones-band img{height:400px;}
-    .zones-band .zveil{background:linear-gradient(90deg, rgba(20,31,56,.92) 0%, rgba(20,31,56,.55) 60%, rgba(20,31,56,.25) 100%);}
-    .zones-band .ztxt{justify-content:center;max-width:640px;padding:48px;}
+    .ti-view{flex-direction:row;align-items:center;justify-content:space-between;}
+    .testi-invite{margin-top:22px;padding:24px 30px;}
+    .zones-compact{margin-top:48px;padding-top:34px;}
     .final-cta{margin:60px 0 0;}
     .fc-btns{flex-direction:row;justify-content:center;flex-wrap:wrap;}
     .fc-btn{padding:14px 26px;}
@@ -367,13 +412,15 @@
     .browse{padding:110px 28px 80px;}
     .browse h2{font-size:clamp(26px,3.8vw,40px);}
     .browse .sub{font-size:15px;margin-bottom:26px;}
-    .filters{margin:0 0 28px;padding:0;overflow:visible;flex-wrap:wrap;}
+    .filters{margin:0 0 18px;padding:0;overflow:visible;flex-wrap:wrap;}
     .chip{padding:8px 18px;font-size:13px;}
     .chip:hover{border-color:var(--gold);color:var(--navy);}
+    .advfilters{grid-template-columns:repeat(6,1fr) auto;align-items:end;gap:12px;padding:18px 20px;}
+    .af-reset{grid-column:auto;white-space:nowrap;}
     .mapbox{border-radius:16px;}
     .prop:hover{transform:translateY(-6px) scale(1.01);box-shadow:var(--sh-lift);}
     .prop:hover .ph img{transform:scale(1.1) rotate(.4deg);}
-    .wishbox{padding:40px 42px;}
+    .wishbox{flex-direction:row;align-items:flex-start;padding:40px 42px;}
     .wishbox h3{font-size:26px;}
   }
 
@@ -393,7 +440,7 @@
       <a href="#nosotros" onclick="goAnchor('nosotros');return false;">Nosotros</a>
       <a href="#testimonios" onclick="goAnchor('testimonios');return false;">Testimonios</a>
     </nav>
-    <a class="btn-wa" href="#"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.4 14.1c-.2.7-1.3 1.3-1.8 1.3-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5s.8 1.9.8 2c.1.1.1.3 0 .5l-.4.6c-.1.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1.1 2.2 1.4 2.5 1.5.3.1.5.1.7-.1l.9-1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.7-.2 1.1z"/></svg> Conversemos</a>
+    <a class="btn-wa" href="https://wa.me/51947176425?text=Hola%2C%20quiero%20conversar%20sobre%20una%20propiedad" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.4 14.1c-.2.7-1.3 1.3-1.8 1.3-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5s.8 1.9.8 2c.1.1.1.3 0 .5l-.4.6c-.1.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1.1 2.2 1.4 2.5 1.5.3.1.5.1.7-.1l.9-1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.7-.2 1.1z"/></svg> Conversemos</a>
     <button class="burger" onclick="toggleMenu()" aria-label="Menú"><span></span><span></span><span></span></button>
   </div>
 </header>
@@ -403,7 +450,7 @@
   <a href="#" onclick="closeMenu();goAnchor('nosotros');return false;">Nosotros</a>
   <a href="#" onclick="closeMenu();goAnchor('testimonios');return false;">Testimonios</a>
   <a href="#" onclick="closeMenu();startFlow('vender');return false;">Vender mi propiedad</a>
-  <a href="#">WhatsApp: 947 176 425</a>
+  <a href="https://wa.me/51947176425?text=Hola%2C%20quiero%20conversar%20sobre%20una%20propiedad" target="_blank">Conversemos</a>
 </div>
 
 <!-- ============ VISTA: HOME ============ -->
@@ -415,8 +462,8 @@
     <div class="vignette"></div>
     <div class="grain"></div>
     <div class="inner" id="heroInner">
-      <h1>Vende, alquila o encuentra<br>tu próxima propiedad <em>en Lima.</em></h1>
-      <p class="sub">Detrás de cada propiedad hay años de esfuerzo, una familia, un nuevo comienzo. Por eso te decimos la verdad en cada paso — para que vendas al precio justo, alquiles sin sobresaltos y encuentres un lugar que de verdad puedas llamar tuyo.</p>
+      <h1>Tu próxima puerta,<br>en <em id="cycleDistrict">San Borja</em>.</h1>
+      <p class="sub">Doce años acompañando a personas que están tomando una de las decisiones más grandes de su vida — con información clara, sin apuros y sin letra pequeña.</p>
       <div class="tagline">Cada llave, un nuevo inicio.</div>
     </div>
   </div>
@@ -427,7 +474,7 @@
         <div class="rimg" style="background-image:url('https://images.unsplash.com/photo-1572704681866-977ba85b2d65?auto=format&fit=crop&w=900&q=80')"></div>
         <div class="rveil"></div>
         <div class="rtxt">
-          <div class="rn">LLAVE 01</div>
+          <div class="rn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="15" r="4"/><path d="M11 12l8-8M16 4h4v4M16.5 12.5l2 2"/></svg></div>
           <h3>Quiero vender mi propiedad</h3>
           <p>Valorización honesta, promoción seria y acompañamiento hasta la inscripción.</p>
           <span class="go">Empezar →</span>
@@ -437,7 +484,7 @@
         <div class="rimg" style="background-image:url('https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=80')"></div>
         <div class="rveil"></div>
         <div class="rtxt">
-          <div class="rn">LLAVE 02</div>
+          <div class="rn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 21V7l8-4 8 4v14"/><path d="M6 21h16M10 21v-6h4v6"/><circle cx="16.5" cy="12" r=".6" fill="currentColor" stroke="none"/></svg></div>
           <h3>Quiero alquilar mi propiedad</h3>
           <p>Inquilinos evaluados y verificados, para tu tranquilidad.</p>
           <span class="go">Empezar →</span>
@@ -447,7 +494,7 @@
         <div class="rimg" style="background-image:url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=900&q=80')"></div>
         <div class="rveil"></div>
         <div class="rtxt">
-          <div class="rn">LLAVE 03</div>
+          <div class="rn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-5-5"/></svg></div>
           <h3>Busco comprar</h3>
           <p>Propiedades reales con toda la información desde el inicio.</p>
           <span class="go">Explorar →</span>
@@ -457,14 +504,14 @@
         <div class="rimg" style="background-image:url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=900&q=80')"></div>
         <div class="rveil"></div>
         <div class="rtxt">
-          <div class="rn">LLAVE 04</div>
+          <div class="rn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="10" width="16" height="10" rx="1.2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div>
           <h3>Busco rentar</h3>
           <p>Un lugar donde empezar de nuevo, mostrado tal como es.</p>
           <span class="go">Explorar →</span>
         </div>
       </button>
     </div>
-    <div class="routes-hint">¿Solo mirando? Perfecto — <a href="#nosotros" onclick="goAnchor('nosotros');return false;">conócenos primero</a>, sin compromiso.</div>
+    <div class="routes-hint">¿Solo mirando? Perfecto — <a href="#nosotros" onclick="goAnchor('nosotros');return false;">conócenos primero</a> o <a href="https://wa.me/51947176425?text=Hola%2C%20tengo%20una%20consulta" target="_blank">escríbenos directamente</a>.</div>
   </div>
 
   <section class="free" id="nosotros">
@@ -483,36 +530,49 @@
         </div>
       </div>
 
-      <div class="team" style="margin-top:44px;">
-        <div class="person rv">
-          <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80" alt="Oscar Ayala Quintana">
-          <div class="pveil"></div>
-          <div class="ptxt">
-            <div class="role">Fundador</div>
-            <h4>Oscar Ayala Quintana</h4>
-            <p>12 años en el rubro y más de 200 operaciones cerradas. Fundó la empresa para hacer las cosas como se debe: con la persona al centro.</p>
+      <div class="team-carousel" style="margin-top:44px;">
+        <button class="tc-arrow prev" onclick="teamNav(-1)" aria-label="Anterior">‹</button>
+        <div class="tc-cards" id="teamCards">
+          <div class="tc-card" data-i="0">
+            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80" alt="Oscar Ayala Quintana">
+            <div class="tc-veil"></div>
+            <div class="tc-txt">
+              <div class="role">Fundador</div>
+              <h4>Oscar Ayala Quintana</h4>
+              <p class="tc-desc" data-full="12 años en el rubro y más de 200 operaciones cerradas. Fundó la empresa para hacer las cosas como se debe: con la persona al centro."></p>
+            </div>
+          </div>
+          <div class="tc-card" data-i="1">
+            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80" alt="Patricia Herrera">
+            <div class="tc-veil"></div>
+            <div class="tc-txt">
+              <div class="role">Agente</div>
+              <h4>Patricia Herrera</h4>
+              <p class="tc-desc" data-full="En pleno crecimiento dentro del rubro, con el mismo compromiso de la casa: honestidad primero."></p>
+            </div>
+          </div>
+          <div class="tc-card" data-i="2">
+            <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80" alt="Rafael Morales">
+            <div class="tc-veil"></div>
+            <div class="tc-txt">
+              <div class="role">Agente senior</div>
+              <h4>Rafael Morales</h4>
+              <p class="tc-desc" data-full="Vendedor constante y dedicado. Lleva su propia cartera y guía a los agentes nuevos del equipo."></p>
+            </div>
           </div>
         </div>
-        <div class="person rv d1">
-          <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80" alt="Patricia Herrera">
-          <div class="pveil"></div>
-          <div class="ptxt">
-            <div class="role">Agente</div>
-            <h4>Patricia Herrera</h4>
-            <p>En pleno crecimiento dentro del rubro, con el mismo compromiso de la casa: honestidad primero.</p>
-          </div>
-        </div>
-        <div class="person rv d2">
-          <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80" alt="Rafael Morales">
-          <div class="pveil"></div>
-          <div class="ptxt">
-            <div class="role">Agente senior</div>
-            <h4>Rafael Morales</h4>
-            <p>Vendedor constante y dedicado. Lleva su propia cartera y guía a los agentes nuevos del equipo.</p>
-          </div>
-        </div>
+        <button class="tc-arrow next" onclick="teamNav(1)" aria-label="Siguiente">›</button>
       </div>
+      <div class="tc-dots" id="teamDots"></div>
       <div class="photo-note">* Fotografías referenciales — se reemplazan por las fotos reales del equipo.</div>
+
+      <div class="zones-compact rv">
+        <div class="zc-label">Zonas de cobertura</div>
+        <div class="zones">
+          <span class="zchip">La Molina</span><span class="zchip">Surco</span><span class="zchip">Miraflores</span><span class="zchip">San Isidro</span><span class="zchip">San Borja</span><span class="zchip">Magdalena</span><span class="zchip">San Miguel</span><span class="zchip">Ate</span><span class="zchip">Chorrillos</span><span class="zchip">Callao</span><span class="zchip od">Trujillo · bajo demanda</span><span class="zchip od">Pisco · bajo demanda</span>
+        </div>
+        <p class="zc-note">¿No ves tu zona aquí? Cuéntanos igual — a veces sí podemos ayudarte. <a href="https://wa.me/51947176425?text=Hola%2C%20quiero%20consultar%20por%20una%20zona%20que%20no%20vi%20en%20la%20lista" target="_blank">Escríbenos</a>.</p>
+      </div>
     </div>
   </section>
 
@@ -536,46 +596,41 @@
         <div class="testi rv">
           <div class="qm">"</div>
           <div class="q">Mi barrio se volvió peligroso y ningún agente quería ayudarnos a vender nuestra quinta antigua. No solo la vendieron — nos ayudaron a mudarnos a un distrito más seguro para mi hija.</div>
-          <div class="who"><img class="ava" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80" alt=""><div><div class="nm">María</div><div class="dz">Vendió en Lima Este</div></div></div>
+          <div class="who"><img class="ava" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80" alt=""><div><div class="nm">María</div><div class="dz">Vendió en Ate</div></div></div>
         </div>
         <div class="testi rv d1">
           <div class="qm">"</div>
           <div class="q">Nos ayudaron con sus contactos en los bancos para conseguir el préstamo y un buen descuento de la constructora. Alcanzamos el sueño del depa propio.</div>
-          <div class="who"><img class="ava" src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=200&q=80" alt=""><div><div class="nm">Familia R.</div><div class="dz">Compró en Lima Moderna</div></div></div>
+          <div class="who"><img class="ava" src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=200&q=80" alt=""><div><div class="nm">Familia R.</div><div class="dz">Compró en San Borja</div></div></div>
         </div>
         <div class="testi rv d2">
           <div class="qm">"</div>
           <div class="q">Ayudaron a acercar a nuestra madre a la zona donde vivimos todos, vendiendo una propiedad con características difíciles. Siempre agradecidos.</div>
-          <div class="who"><img class="ava" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80" alt=""><div><div class="nm">Hermanos T.</div><div class="dz">Vendieron en Lima Sur</div></div></div>
+          <div class="who"><img class="ava" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80" alt=""><div><div class="nm">Hermanos T.</div><div class="dz">Vendieron en Chorrillos</div></div></div>
         </div>
       </div>
 
-      <div class="testi-invite rv">
-        <div class="ti-txt">
-          <h4>¿Ya estuvimos en contacto?</h4>
-          <p>Cuéntanos tu experiencia — con tu permiso, la sumamos aquí para que otros la conozcan.</p>
+      <div class="testi-invite rv" id="testiInvite">
+        <div class="ti-view" id="tiView">
+          <div class="ti-txt">
+            <h4>¿Ya estuvimos en contacto?</h4>
+            <p>Cuéntanos tu experiencia — con tu permiso, la sumamos aquí para que otros la conozcan.</p>
+          </div>
+          <button class="btn-testi" onclick="openTestiForm()">Dejar mi testimonio</button>
         </div>
-        <a class="btn-wa-inline" href="https://wa.me/51947176425?text=Hola%2C%20quiero%20dejar%20mi%20testimonio%20sobre%20mi%20experiencia%20con%20Quintana%20Propiedades">
-          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.4 14.1c-.2.7-1.3 1.3-1.8 1.3-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5s.8 1.9.8 2c.1.1.1.3 0 .5l-.4.6c-.1.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1.1 2.2 1.4 2.5 1.5.3.1.5.1.7-.1l.9-1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.7-.2 1.1z"/></svg> Dejar mi testimonio
-        </a>
+        <form class="ti-form" id="tiForm" onsubmit="submitTesti(event)">
+          <label>Tu experiencia</label>
+          <textarea id="tiText" rows="3" required placeholder="Cuéntanos cómo te fue con nosotros..."></textarea>
+          <label>Tu nombre</label>
+          <input type="text" id="tiName" required placeholder="Ej. Carla M.">
+          <div class="ti-form-btns">
+            <button type="submit" class="btn-testi">Enviar</button>
+            <button type="button" class="btn-testi-cancel" onclick="closeTestiForm()">Cancelar</button>
+          </div>
+        </form>
       </div>
     </div>
   </section>
-
-  <div class="wrap">
-    <div class="zones-band rv">
-      <img src="https://images.unsplash.com/photo-1531968455001-5c5272a41129?auto=format&fit=crop&w=1600&q=80" alt="Lima, Perú">
-      <div class="zveil"></div>
-      <div class="ztxt">
-        <div class="s-eyebrow" style="color:var(--gold-bright);">Dónde trabajamos</div>
-        <h2>Tu zona, nuestra cancha</h2>
-        <p>Cobertura activa en Lima y Callao — y atendemos casos especiales en Trujillo y Pisco.</p>
-        <div class="zones">
-          <span class="zone">Lima Este</span><span class="zone">Lima Moderna</span><span class="zone">Lima Sur</span><span class="zone">Lima Centro</span><span class="zone">Callao</span><span class="zone">Surco</span><span class="zone">Miraflores</span><span class="zone">San Isidro</span><span class="zone">San Borja</span><span class="zone">Magdalena</span><span class="zone">San Miguel</span><span class="zone">Ate</span><span class="zone">Chorrillos</span><span class="zone od">Trujillo · bajo demanda</span><span class="zone od">Pisco · bajo demanda</span>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <div class="wrap">
     <div class="final-cta rv">
@@ -652,55 +707,126 @@
     <h2 id="browse-title">Propiedades en venta</h2>
     <p class="sub">Explora con calma — cada ficha tiene toda la información, sin sorpresas guardadas para después.</p>
 
-    <div class="filters">
-      <button class="chip sel" onclick="selChip(this)">Todas las zonas</button>
-      <button class="chip" onclick="selChip(this)">Lima Este</button>
-      <button class="chip" onclick="selChip(this)">Lima Moderna</button>
-      <button class="chip" onclick="selChip(this)">Lima Sur</button>
-      <button class="chip" onclick="selChip(this)">Callao</button>
-      <button class="chip" onclick="selChip(this)">Departamento</button>
-      <button class="chip" onclick="selChip(this)">Casa</button>
-      <button class="chip" onclick="selChip(this)">Local</button>
+    <div class="filters" id="filterChips">
+      <button class="chip sel" data-f="zone" data-v="">Todos los distritos</button>
+      <button class="chip" data-f="zone" data-v="La Molina">La Molina</button>
+      <button class="chip" data-f="zone" data-v="Callao">Callao</button>
+      <button class="chip" data-f="zone" data-v="Chosica">Chosica</button>
+      <button class="chip" data-f="zone" data-v="Santa Anita">Santa Anita</button>
+      <button class="chip" data-f="zone" data-v="San Isidro">San Isidro</button>
+      <button class="chip" data-f="zone" data-v="Miraflores">Miraflores</button>
+      <button class="chip" data-f="zone" data-v="Surco">Surco</button>
+      <button class="chip" data-f="zone" data-v="San Borja">San Borja</button>
+    </div>
+
+    <div class="advfilters">
+      <div class="af-item">
+        <label>Tipo</label>
+        <select id="fType">
+          <option value="">Cualquiera</option>
+          <option value="Departamento">Departamento</option>
+          <option value="Casa">Casa</option>
+          <option value="Terreno">Terreno</option>
+          <option value="Local">Local comercial</option>
+        </select>
+      </div>
+      <div class="af-item">
+        <label>Precio (US$)</label>
+        <select id="fPrice">
+          <option value="">Cualquiera</option>
+          <option value="0-200000">Hasta $200,000</option>
+          <option value="200000-500000">$200,000 – $500,000</option>
+          <option value="500000-1000000">$500,000 – $1,000,000</option>
+          <option value="1000000-999999999">Más de $1,000,000</option>
+        </select>
+      </div>
+      <div class="af-item">
+        <label>Dormitorios</label>
+        <select id="fRooms">
+          <option value="">Cualquiera</option>
+          <option value="1">1+</option>
+          <option value="2">2+</option>
+          <option value="3">3+</option>
+          <option value="4">4+</option>
+        </select>
+      </div>
+      <div class="af-item">
+        <label>Baños</label>
+        <select id="fBaths">
+          <option value="">Cualquiera</option>
+          <option value="1">1+</option>
+          <option value="2">2+</option>
+          <option value="3">3+</option>
+        </select>
+      </div>
+      <div class="af-item">
+        <label>m²</label>
+        <select id="fM2">
+          <option value="">Cualquiera</option>
+          <option value="0-100">Hasta 100</option>
+          <option value="100-200">100 – 200</option>
+          <option value="200-500">200 – 500</option>
+          <option value="500-999999">Más de 500</option>
+        </select>
+      </div>
+      <div class="af-item">
+        <label>Estacionamientos</label>
+        <select id="fParking">
+          <option value="">Cualquiera</option>
+          <option value="1">1+</option>
+          <option value="2">2+</option>
+          <option value="3">3+</option>
+        </select>
+      </div>
+      <div class="af-item af-currency">
+        <label>Ver precios en</label>
+        <div class="cur-toggle">
+          <button class="cur-btn sel" data-cur="usd">US$</button>
+          <button class="cur-btn" data-cur="pen">S/</button>
+        </div>
+      </div>
+      <button class="af-reset" id="filterReset">Limpiar filtros</button>
     </div>
 
     <div class="browse-grid">
-      <div class="props">
-        <div class="prop" style="animation-delay:.05s">
+      <div class="props" id="propsGrid">
+        <div class="prop" data-zone="La Molina" data-type="Departamento" data-price="199000" data-m2="130" data-rooms="3" data-baths="2" data-parking="2" style="animation-delay:.05s">
           <div class="ph"><img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">En venta</span></div>
           <div class="pi">
-            <div class="price">US$ 199,000</div>
+            <div class="price" data-usd="199000">US$ 199,000</div>
             <div class="pt">Departamento remodelado · 3 dorm · 130 m²</div>
             <div class="pz">La Molina</div>
             <div class="pd">Frente a colegio, con piscina y zona BBQ. 2 cocheras.</div>
           </div>
         </div>
-        <div class="prop" style="animation-delay:.12s">
+        <div class="prop" data-zone="Callao" data-type="Casa" data-price="290000" data-m2="233" data-rooms="4" data-baths="3" data-parking="2" style="animation-delay:.12s">
           <div class="ph"><img src="https://images.unsplash.com/photo-1628012209120-d9db7abf7eab?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">En venta</span></div>
           <div class="pi">
-            <div class="price">US$ 290,000</div>
-            <div class="pt">Casa · 233 m²</div>
+            <div class="price" data-usd="290000">US$ 290,000</div>
+            <div class="pt">Casa · 4 dorm · 233 m²</div>
             <div class="pz">Callao — Bellavista</div>
             <div class="pd">Amplia, ideal familia grande.</div>
           </div>
         </div>
-        <div class="prop" style="animation-delay:.19s">
+        <div class="prop" data-zone="Chosica" data-type="Casa" data-price="1800000" data-m2="9000" data-rooms="12" data-baths="6" data-parking="6" style="animation-delay:.19s">
           <div class="ph"><img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">En venta</span></div>
           <div class="pi">
-            <div class="price">US$ 1,800,000</div>
+            <div class="price" data-usd="1800000">US$ 1,800,000</div>
             <div class="pt">Casa de campo · 12 dorm · 9,000 m²</div>
             <div class="pz">Lurigancho — La Cañada, Chosica</div>
             <div class="pd">Fundo con 6 cocheras. Ideal proyecto o inversión.</div>
           </div>
         </div>
-        <div class="prop" style="animation-delay:.26s">
+        <div class="prop" data-zone="Santa Anita" data-type="Local" data-price="10000" data-m2="730" data-rooms="0" data-baths="0" data-parking="0" style="animation-delay:.26s">
           <div class="ph"><img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">Alquiler</span></div>
           <div class="pi">
-            <div class="price">US$ 10,000 /mes</div>
+            <div class="price" data-usd="10000">US$ 10,000 /mes</div>
             <div class="pt">Local comercial · 730 m²</div>
             <div class="pz">Santa Anita</div>
             <div class="pd">Acceso a vía principal.</div>
           </div>
         </div>
+        <div class="no-results" id="noResults">No hay propiedades que calcen con estos filtros ahora mismo — pero eso no significa que no podamos ayudarte. Cuéntanos qué buscas más abajo.</div>
       </div>
       <div class="mapbox">
         <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1000&q=80" alt="Mapa">
@@ -711,14 +837,25 @@
       </div>
     </div>
 
-    <div class="wishbox">
-      <h3>¿No encontraste lo que buscas?</h3>
-      <p>Cuéntanos qué esperas y te avisamos apenas entre algo que encaje — muchas de nuestras mejores propiedades se colocan antes de llegar a publicarse.</p>
-      <label>¿Qué estás buscando?</label>
-      <textarea rows="3" placeholder="Ej. depa de 2-3 dormitorios en San Miguel o Magdalena, hasta US$ 150,000... o si eres inversionista: qué tipo de propiedad o terreno buscas."></textarea>
-      <label>Tu celular o correo</label>
-      <input type="text" placeholder="Para avisarte — nada de spam, lo prometemos">
-      <div class="btn-row"><button class="btn gold">Avísenme cuando haya algo así</button></div>
+    <div class="wishbox" id="wishbox">
+      <div class="wb-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/><path d="M8 11h6M11 8v6" stroke-width="1.2"/></svg>
+      </div>
+      <div class="wb-body">
+        <h3 id="wbTitle">¿No encontraste lo que buscas?</h3>
+        <p id="wbSub">Cuéntanos qué esperas y te avisamos apenas entre algo que encaje — muchas de nuestras mejores propiedades se colocan antes de llegar a publicarse.</p>
+        <div class="wb-form" id="wbForm">
+          <label>¿Qué estás buscando?</label>
+          <textarea id="wbWish" rows="3" placeholder="Ej. depa de 2-3 dormitorios en San Miguel o Magdalena, hasta US$ 150,000... o si eres inversionista: qué tipo de propiedad o terreno buscas."></textarea>
+          <label>Tu celular o correo</label>
+          <input type="text" id="wbContact" placeholder="Para avisarte — nada de spam, lo prometemos">
+          <div class="btn-row"><button class="btn gold" id="wbBtn" onclick="submitWish()">Avísenme cuando haya algo así</button></div>
+        </div>
+        <div class="wb-done" id="wbDone">
+          <div class="wb-check">✓</div>
+          <p>Listo — quedó anotado. En cuanto tengamos algo que encaje, te escribimos.</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -820,14 +957,91 @@
     el.parentElement.querySelectorAll('.choice').forEach(c => c.classList.remove('sel'));
     el.classList.add('sel');
   }
-  function selChip(el){
-    el.classList.toggle('sel');
-    if (el.textContent.includes('Todas')) {
-      el.parentElement.querySelectorAll('.chip').forEach(c => { if (c !== el) c.classList.remove('sel'); });
-    } else {
-      el.parentElement.querySelector('.chip').classList.remove('sel');
-    }
+  // ---------- Filtros de propiedades ----------
+  const filterChipsEl = document.getElementById('filterChips');
+  const propsGrid = document.getElementById('propsGrid');
+  const noResultsEl = document.getElementById('noResults');
+  let currentCurrency = 'usd';
+  const PEN_RATE = 3.75;
+
+  if (filterChipsEl) {
+    filterChipsEl.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        filterChipsEl.querySelectorAll('.chip').forEach(c => c.classList.remove('sel'));
+        chip.classList.add('sel');
+        applyFilters();
+      });
+    });
   }
+  ['fType', 'fPrice', 'fRooms', 'fBaths', 'fM2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('change', applyFilters);
+  });
+  const filterResetBtn = document.getElementById('filterReset');
+  if (filterResetBtn) filterResetBtn.addEventListener('click', () => {
+    filterChipsEl.querySelectorAll('.chip').forEach((c, i) => c.classList.toggle('sel', i === 0));
+    ['fType', 'fPrice', 'fRooms', 'fBaths', 'fM2'].forEach(id => { document.getElementById(id).value = ''; });
+    applyFilters();
+  });
+
+  function inRange(val, rangeStr) {
+    if (!rangeStr) return true;
+    const [min, max] = rangeStr.split('-').map(Number);
+    return val >= min && val <= max;
+  }
+  function applyFilters() {
+    if (!propsGrid) return;
+    const zoneSel = filterChipsEl.querySelector('.chip.sel');
+    const zone = zoneSel ? zoneSel.dataset.v : '';
+    const type = document.getElementById('fType').value;
+    const price = document.getElementById('fPrice').value;
+    const rooms = +document.getElementById('fRooms').value || 0;
+    const baths = +document.getElementById('fBaths').value || 0;
+    const m2 = document.getElementById('fM2').value;
+    let visibleCount = 0;
+    propsGrid.querySelectorAll('.prop').forEach(card => {
+      const match =
+        (!zone || card.dataset.zone === zone) &&
+        (!type || card.dataset.type === type) &&
+        inRange(+card.dataset.price, price) &&
+        (+card.dataset.rooms >= rooms) &&
+        (+card.dataset.baths >= baths) &&
+        inRange(+card.dataset.m2, m2);
+      card.classList.toggle('hide', !match);
+      if (match) visibleCount++;
+    });
+    noResultsEl.classList.toggle('show', visibleCount === 0);
+  }
+
+  document.querySelectorAll('.cur-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.cur-btn').forEach(b => b.classList.remove('sel'));
+      btn.classList.add('sel');
+      currentCurrency = btn.dataset.cur;
+      document.querySelectorAll('.prop .price').forEach(priceEl => {
+        const usd = +priceEl.dataset.usd;
+        const isMonthly = priceEl.textContent.includes('/mes');
+        const suffix = isMonthly ? ' /mes' : '';
+        if (currentCurrency === 'pen') {
+          priceEl.textContent = 'S/ ' + Math.round(usd * PEN_RATE).toLocaleString('es-PE') + suffix;
+        } else {
+          priceEl.textContent = 'US$ ' + usd.toLocaleString('en-US') + suffix;
+        }
+      });
+    });
+  });
+
+  window.submitWish = function(){
+    const wish = document.getElementById('wbWish').value.trim();
+    const contact = document.getElementById('wbContact').value.trim();
+    if (!wish || !contact) return;
+    fetch('https://script.google.com/macros/s/AKfycbxfTavzQrge9izRxGmP0L3pB9t463mvpzsYARCCS5_6nIYkRffZnx6iZY8xhlDQ-Zoo/exec', {
+      method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ answers: [{ label: 'Búsqueda no encontrada (web)', value: 'Busca: ' + wish + '\nContacto: ' + contact }] })
+    }).catch(() => {});
+    document.getElementById('wbForm').classList.add('hide');
+    document.getElementById('wbDone').classList.add('show');
+  };
 
   // ---------- Bottom sheet "Quiero…" ----------
   const ROUTES = [
@@ -881,6 +1095,108 @@
     sheet.classList.contains('open') ? closeSheet() : openSheet();
   }
 
+  // ---------- Testimonios: inline, con aprobación pendiente detrás ----------
+  window.openTestiForm = function(){
+    document.getElementById('tiView').style.display = 'none';
+    document.getElementById('tiForm').classList.add('open');
+  };
+  window.closeTestiForm = function(){
+    document.getElementById('tiForm').classList.remove('open');
+    document.getElementById('tiView').style.display = '';
+  };
+  window.submitTesti = function(e){
+    e.preventDefault();
+    const text = document.getElementById('tiText').value.trim();
+    const name = document.getElementById('tiName').value.trim();
+    if (!text || !name) return;
+
+    // Se muestra de inmediato para quien lo escribió, marcado como pendiente —
+    // la aprobación real (para que lo vean todos) queda para revisión manual, no es automática.
+    const testisEl = document.querySelector('.testis');
+    const card = document.createElement('div');
+    card.className = 'testi rv in pending';
+    const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    card.innerHTML = `<div class="pending-tag">Pendiente de aprobación</div><div class="qm">"</div><div class="q">${esc(text)}</div><div class="who"><div><div class="nm">${esc(name)}</div><div class="dz">Enviado ahora</div></div></div>`;
+    testisEl.appendChild(card);
+
+    fetch('https://script.google.com/macros/s/AKfycbxfTavzQrge9izRxGmP0L3pB9t463mvpzsYARCCS5_6nIYkRffZnx6iZY8xhlDQ-Zoo/exec', {
+      method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ answers: [{ label: 'Testimonio nuevo (web) — pendiente de aprobación', value: name + ':\n' + text }] })
+    }).catch(() => {});
+
+    document.getElementById('tiForm').reset();
+    closeTestiForm();
+  };
+
+  // ---------- Carrusel del equipo (centro destacado + typewriter) ----------
+  const teamCards = Array.from(document.querySelectorAll('.tc-card'));
+  const teamDots = document.getElementById('teamDots');
+  teamCards.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'tc-dot';
+    d.addEventListener('click', () => { teamGoTo(i); resetTeamTimer(); });
+    teamDots.appendChild(d);
+  });
+  let teamActive = 0, teamTypeToken = 0;
+  function typeWriter(el, text, token){
+    el.textContent = '';
+    el.classList.remove('done');
+    let i = 0;
+    (function step(){
+      if (token !== teamTypeToken) return;
+      if (i <= text.length) {
+        el.textContent = text.slice(0, i);
+        i++;
+        setTimeout(step, 16);
+      } else {
+        el.classList.add('done');
+      }
+    })();
+  }
+  function renderTeam(){
+    teamTypeToken++;
+    const token = teamTypeToken;
+    teamCards.forEach((card, i) => {
+      const order = ((i - teamActive + 1) % teamCards.length + teamCards.length) % teamCards.length;
+      card.style.order = order;
+      const featured = i === teamActive;
+      card.classList.toggle('featured', featured);
+      card.classList.toggle('dim', !featured);
+      if (featured) {
+        typeWriter(card.querySelector('.tc-desc'), card.querySelector('.tc-desc').dataset.full, token);
+      }
+    });
+    document.querySelectorAll('.tc-dot').forEach((d, i) => d.classList.toggle('on', i === teamActive));
+  }
+  function teamGoTo(i){ teamActive = (i + teamCards.length) % teamCards.length; renderTeam(); }
+  window.teamNav = function(dir){ teamGoTo(teamActive + dir); resetTeamTimer(); };
+  let teamTimer;
+  function resetTeamTimer(){
+    clearInterval(teamTimer);
+    teamTimer = setInterval(() => teamGoTo(teamActive + 1), 5000);
+  }
+  renderTeam();
+  resetTeamTimer();
+
+  // "Quiero…" flota en el hueco del hero al inicio, se ancla abajo al scrollear
+  window.addEventListener('scroll', () => {
+    if (currentView !== 'home') return;
+    sheetCollapsed.classList.toggle('docked', window.scrollY > 60);
+  }, { passive: true });
+
+  // Distritos rotando en el título del hero
+  const DISTRICTS = ['San Borja', 'Santiago de Surco', 'Miraflores', 'San Isidro', 'La Molina', 'Magdalena', 'San Miguel', 'Chorrillos'];
+  let districtIdx = 0;
+  const cycleEl = document.getElementById('cycleDistrict');
+  setInterval(() => {
+    cycleEl.classList.add('swap');
+    setTimeout(() => {
+      districtIdx = (districtIdx + 1) % DISTRICTS.length;
+      cycleEl.textContent = DISTRICTS[districtIdx];
+      cycleEl.classList.remove('swap');
+    }, 450);
+  }, 2800);
+
   // Parallax sutil del hero (todas las pantallas)
   const heroInner = document.getElementById('heroInner');
   window.addEventListener('scroll', () => {
@@ -897,10 +1213,9 @@
   function setupDesktopParallax(){
     if (!desktopMQ.matches) return;
     const aboutPhoto = document.querySelector('.about-photo img');
-    const zonesImg = document.querySelector('.zones-band img');
     window.addEventListener('scroll', () => {
       if (currentView !== 'home') return;
-      [ [aboutPhoto, .04], [zonesImg, .05] ].forEach(([el, rate]) => {
+      [ [aboutPhoto, .04] ].forEach(([el, rate]) => {
         if (!el) return;
         const rect = el.getBoundingClientRect();
         const centerDist = rect.top + rect.height / 2 - window.innerHeight / 2;
