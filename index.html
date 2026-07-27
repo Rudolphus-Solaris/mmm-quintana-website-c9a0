@@ -595,7 +595,7 @@
       <div class="zones-compact rv-rise">
         <div class="zc-label">Zonas de cobertura</div>
         <div class="zones">
-          <span class="zchip">La Molina</span><span class="zchip">Surco</span><span class="zchip">Miraflores</span><span class="zchip">San Isidro</span><span class="zchip">San Borja</span><span class="zchip">Magdalena</span><span class="zchip">San Miguel</span><span class="zchip">Ate</span><span class="zchip">Chorrillos</span><span class="zchip">Callao</span><span class="zchip od">Trujillo · bajo demanda</span><span class="zchip od">Pisco · bajo demanda</span>
+          <span class="zchip">Lima</span><span class="zchip">Ate</span><span class="zchip">Barranco</span><span class="zchip">Breña</span><span class="zchip">Chorrillos</span><span class="zchip">Comas</span><span class="zchip">El Agustino</span><span class="zchip">Independencia</span><span class="zchip">Jesús María</span><span class="zchip">La Molina</span><span class="zchip">La Victoria</span><span class="zchip">Lince</span><span class="zchip">Los Olivos</span><span class="zchip">Magdalena del Mar</span><span class="zchip">Miraflores</span><span class="zchip">Pueblo Libre</span><span class="zchip">Puente Piedra</span><span class="zchip">Rímac</span><span class="zchip">San Borja</span><span class="zchip">San Isidro</span><span class="zchip">San Juan de Lurigancho</span><span class="zchip">San Juan de Miraflores</span><span class="zchip">San Luis</span><span class="zchip">San Martín de Porres</span><span class="zchip">San Miguel</span><span class="zchip">Santa Anita</span><span class="zchip">Santiago de Surco</span><span class="zchip">Surquillo</span><span class="zchip">Villa El Salvador</span><span class="zchip">Villa María del Triunfo</span><span class="zchip">Ancón</span><span class="zchip">Carabayllo</span><span class="zchip">Chaclacayo</span><span class="zchip">Cieneguilla</span><span class="zchip">Lurigancho-Chosica</span><span class="zchip">Lurín</span><span class="zchip">Pachacámac</span><span class="zchip">Pucusana</span><span class="zchip">Punta Hermosa</span><span class="zchip">Punta Negra</span><span class="zchip">San Bartolo</span><span class="zchip">Santa María del Mar</span><span class="zchip">Santa Rosa</span><span class="zchip">Callao</span><span class="zchip">Bellavista</span><span class="zchip">Carmen de la Legua Reynoso</span><span class="zchip">La Perla</span><span class="zchip">La Punta</span><span class="zchip">Ventanilla</span><span class="zchip">Mi Perú</span><span class="zchip od">Trujillo · bajo demanda</span><span class="zchip od">Pisco · bajo demanda</span>
         </div>
         <p class="zc-note">¿No ves tu zona aquí? Cuéntanos igual — a veces sí podemos ayudarte. <a href="https://wa.me/51947176425?text=Hola%2C%20quiero%20consultar%20por%20una%20zona%20que%20no%20vi%20en%20la%20lista" target="_blank">Escríbenos</a>.</p>
       </div>
@@ -607,7 +607,7 @@
       <div class="stats">
         <div class="stat"><div class="n" data-count="200">0</div><div class="l">Operaciones cerradas</div></div>
         <div class="stat"><div class="n" data-count="12">0</div><div class="l">Años de experiencia</div></div>
-        <div class="stat"><div class="n" data-count="13">0</div><div class="l">Distritos de Lima y Callao</div></div>
+        <div class="stat"><div class="n" data-count="50">0</div><div class="l">Distritos de Lima y Callao</div></div>
         <div class="stat"><div class="n" data-count="100">0</div><div class="l">% acompañamiento hasta la inscripción</div></div>
       </div>
     </div>
@@ -748,6 +748,14 @@
 
     <div class="advfilters">
       <div class="af-item">
+        <label>Operación</label>
+        <select id="fOp">
+          <option value="">Cualquiera</option>
+          <option value="En venta">En venta</option>
+          <option value="Alquiler">Alquiler</option>
+        </select>
+      </div>
+      <div class="af-item">
         <label>Tipo</label>
         <select id="fType">
           <option value="">Cualquiera</option>
@@ -817,7 +825,7 @@
 
     <div class="browse-grid">
       <div class="props" id="propsGrid">
-        <div class="prop" data-zone="La Molina" data-type="Departamento" data-price="199000" data-m2="130" data-rooms="3" data-baths="2" data-parking="2" style="animation-delay:.05s">
+        <div class="prop" data-op="En venta" data-zone="La Molina" data-type="Departamento" data-price="199000" data-m2="130" data-rooms="3" data-baths="2" data-parking="2" style="animation-delay:.05s">
           <div class="ph"><img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">En venta</span></div>
           <div class="pi">
             <div class="price" data-usd="199000">US$ 199,000</div>
@@ -826,7 +834,7 @@
             <div class="pd">Frente a colegio, con piscina y zona BBQ. 2 cocheras.</div>
           </div>
         </div>
-        <div class="prop" data-zone="Callao" data-type="Casa" data-price="290000" data-m2="233" data-rooms="4" data-baths="3" data-parking="2" style="animation-delay:.12s">
+        <div class="prop" data-op="En venta" data-zone="Callao" data-type="Casa" data-price="290000" data-m2="233" data-rooms="4" data-baths="3" data-parking="2" style="animation-delay:.12s">
           <div class="ph"><img src="https://images.unsplash.com/photo-1628012209120-d9db7abf7eab?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">En venta</span></div>
           <div class="pi">
             <div class="price" data-usd="290000">US$ 290,000</div>
@@ -835,7 +843,7 @@
             <div class="pd">Amplia, ideal familia grande.</div>
           </div>
         </div>
-        <div class="prop" data-zone="Chosica" data-type="Casa" data-price="1800000" data-m2="9000" data-rooms="12" data-baths="6" data-parking="6" style="animation-delay:.19s">
+        <div class="prop" data-op="En venta" data-zone="Chosica" data-type="Casa" data-price="1800000" data-m2="9000" data-rooms="12" data-baths="6" data-parking="6" style="animation-delay:.19s">
           <div class="ph"><img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">En venta</span></div>
           <div class="pi">
             <div class="price" data-usd="1800000">US$ 1,800,000</div>
@@ -844,7 +852,7 @@
             <div class="pd">Fundo con 6 cocheras. Ideal proyecto o inversión.</div>
           </div>
         </div>
-        <div class="prop" data-zone="Santa Anita" data-type="Local" data-price="10000" data-m2="730" data-rooms="0" data-baths="0" data-parking="0" style="animation-delay:.26s">
+        <div class="prop" data-op="Alquiler" data-zone="Santa Anita" data-type="Local" data-price="10000" data-m2="730" data-rooms="0" data-baths="0" data-parking="0" style="animation-delay:.26s">
           <div class="ph"><img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">Alquiler</span></div>
           <div class="pi">
             <div class="price" data-usd="10000">US$ 10,000 /mes</div>
@@ -976,9 +984,13 @@
     for (let i = 1; i <= 3; i++) document.getElementById('d' + i).classList.toggle('on', i <= n);
   }
   function startBrowse(kind){
+    const op = kind === 'comprar' ? 'En venta' : 'Alquiler';
     document.getElementById('browse-title').textContent =
       kind === 'comprar' ? 'Propiedades en venta' : 'Propiedades en alquiler';
+    const fOpEl = document.getElementById('fOp');
+    if (fOpEl) fOpEl.value = op;
     go('browse');
+    applyFilters();
   }
   function selChoice(el){
     el.parentElement.querySelectorAll('.choice').forEach(c => c.classList.remove('sel'));
@@ -1000,14 +1012,14 @@
       });
     });
   }
-  ['fType', 'fPrice', 'fRooms', 'fBaths', 'fM2'].forEach(id => {
+  ['fOp', 'fType', 'fPrice', 'fRooms', 'fBaths', 'fM2'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('change', applyFilters);
   });
   const filterResetBtn = document.getElementById('filterReset');
   if (filterResetBtn) filterResetBtn.addEventListener('click', () => {
     filterChipsEl.querySelectorAll('.chip').forEach((c, i) => c.classList.toggle('sel', i === 0));
-    ['fType', 'fPrice', 'fRooms', 'fBaths', 'fM2'].forEach(id => { document.getElementById(id).value = ''; });
+    ['fOp', 'fType', 'fPrice', 'fRooms', 'fBaths', 'fM2'].forEach(id => { document.getElementById(id).value = ''; });
     applyFilters();
   });
 
@@ -1020,6 +1032,7 @@
     if (!propsGrid) return;
     const zoneSel = filterChipsEl.querySelector('.chip.sel');
     const zone = zoneSel ? zoneSel.dataset.v : '';
+    const op = document.getElementById('fOp').value;
     const type = document.getElementById('fType').value;
     const price = document.getElementById('fPrice').value;
     const rooms = +document.getElementById('fRooms').value || 0;
@@ -1029,6 +1042,7 @@
     propsGrid.querySelectorAll('.prop').forEach(card => {
       const match =
         (!zone || card.dataset.zone === zone) &&
+        (!op || card.dataset.op === op) &&
         (!type || card.dataset.type === type) &&
         inRange(+card.dataset.price, price) &&
         (+card.dataset.rooms >= rooms) &&
@@ -1206,14 +1220,29 @@
   renderTeam();
   resetTeamTimer();
 
-  // Distritos rotando en el título del hero
-  const DISTRICTS = ['San Borja', 'Santiago de Surco', 'Miraflores', 'San Isidro', 'La Molina', 'Magdalena', 'San Miguel', 'Ate', 'Chorrillos', 'Callao'];
+  // Distritos rotando en el título del hero — los 43 de Lima + los 7 del Callao (50 en total), orden aleatorio
+  const DISTRICTS = [
+    'Lima', 'Ate', 'Barranco', 'Breña', 'Chorrillos', 'Comas', 'El Agustino', 'Independencia',
+    'Jesús María', 'La Molina', 'La Victoria', 'Lince', 'Los Olivos', 'Magdalena del Mar', 'Miraflores',
+    'Pueblo Libre', 'Puente Piedra', 'Rímac', 'San Borja', 'San Isidro', 'San Juan de Lurigancho',
+    'San Juan de Miraflores', 'San Luis', 'San Martín de Porres', 'San Miguel', 'Santa Anita',
+    'Santiago de Surco', 'Surquillo', 'Villa El Salvador', 'Villa María del Triunfo', 'Ancón',
+    'Carabayllo', 'Chaclacayo', 'Cieneguilla', 'Lurigancho-Chosica', 'Lurín', 'Pachacámac', 'Pucusana',
+    'Punta Hermosa', 'Punta Negra', 'San Bartolo', 'Santa María del Mar', 'Santa Rosa',
+    'Callao', 'Bellavista', 'Carmen de la Legua Reynoso', 'La Perla', 'La Punta', 'Ventanilla', 'Mi Perú'
+  ];
   let districtIdx = 0;
   const cycleEl = document.getElementById('cycleDistrict');
+  function nextRandomDistrictIdx(){
+    if (DISTRICTS.length < 2) return 0;
+    let next;
+    do { next = Math.floor(Math.random() * DISTRICTS.length); } while (next === districtIdx);
+    return next;
+  }
   setInterval(() => {
     cycleEl.classList.add('swap');
     setTimeout(() => {
-      districtIdx = (districtIdx + 1) % DISTRICTS.length;
+      districtIdx = nextRandomDistrictIdx();
       cycleEl.textContent = DISTRICTS[districtIdx];
       cycleEl.classList.remove('swap');
     }, 450);
