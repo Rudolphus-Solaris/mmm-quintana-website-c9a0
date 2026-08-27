@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <style>
   /* =====================================================================
      UMBRAL — sistema de diseño propio de esta alternativa.
@@ -66,18 +67,18 @@
   .hero .veil{position:absolute;inset:0;background:linear-gradient(180deg, rgba(5,7,16,.94) 0%, rgba(5,7,16,.8) 48%, rgba(5,7,16,.98) 100%);}
   .hero .vignette{position:absolute;inset:0;background:radial-gradient(ellipse 60% 55% at 50% 46%, rgba(2,3,8,.6), transparent 70%);}
   .hero .grain{position:absolute;inset:0;opacity:.06;mix-blend-mode:overlay;pointer-events:none;z-index:2;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");}
-  .hero .motes{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:2;}
-  .hero .motes span{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--gold-bright);opacity:0;box-shadow:0 0 8px 1px rgba(228,190,120,.6);animation:moteDrift 14s ease-in-out infinite;}
-  .hero .motes span:nth-child(1){left:8%;top:78%;animation-delay:0s;animation-duration:16s;}
-  .hero .motes span:nth-child(2){left:18%;top:30%;animation-delay:1.4s;animation-duration:12s;}
-  .hero .motes span:nth-child(3){left:28%;top:60%;animation-delay:2.8s;animation-duration:18s;}
-  .hero .motes span:nth-child(4){left:40%;top:20%;animation-delay:.7s;animation-duration:15s;}
-  .hero .motes span:nth-child(5){left:55%;top:70%;animation-delay:3.6s;animation-duration:13s;}
-  .hero .motes span:nth-child(6){left:65%;top:35%;animation-delay:2s;animation-duration:17s;}
-  .hero .motes span:nth-child(7){left:74%;top:65%;animation-delay:5s;animation-duration:14s;}
-  .hero .motes span:nth-child(8){left:83%;top:25%;animation-delay:.2s;animation-duration:19s;}
-  .hero .motes span:nth-child(9){left:91%;top:55%;animation-delay:4.2s;animation-duration:12s;}
-  .hero .motes span:nth-child(10){left:50%;top:45%;animation-delay:6s;animation-duration:20s;}
+  .motes{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:2;}
+  .motes span{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--gold-bright);opacity:0;box-shadow:0 0 8px 1px rgba(228,190,120,.6);animation:moteDrift 14s ease-in-out infinite;}
+  .motes span:nth-child(1){left:8%;top:78%;animation-delay:0s;animation-duration:16s;}
+  .motes span:nth-child(2){left:18%;top:30%;animation-delay:1.4s;animation-duration:12s;}
+  .motes span:nth-child(3){left:28%;top:60%;animation-delay:2.8s;animation-duration:18s;}
+  .motes span:nth-child(4){left:40%;top:20%;animation-delay:.7s;animation-duration:15s;}
+  .motes span:nth-child(5){left:55%;top:70%;animation-delay:3.6s;animation-duration:13s;}
+  .motes span:nth-child(6){left:65%;top:35%;animation-delay:2s;animation-duration:17s;}
+  .motes span:nth-child(7){left:74%;top:65%;animation-delay:5s;animation-duration:14s;}
+  .motes span:nth-child(8){left:83%;top:25%;animation-delay:.2s;animation-duration:19s;}
+  .motes span:nth-child(9){left:91%;top:55%;animation-delay:4.2s;animation-duration:12s;}
+  .motes span:nth-child(10){left:50%;top:45%;animation-delay:6s;animation-duration:20s;}
   @keyframes moteDrift{
     0%{opacity:0;transform:translateY(0) scale(.6);}
     12%{opacity:.7;}
@@ -101,12 +102,14 @@
   .hero .inner{position:relative;z-index:3;text-align:center;padding:112px 22px 172px;max-width:880px;margin:0 auto;text-shadow:0 2px 34px rgba(0,0,0,.5);opacity:0;animation:rise 1s var(--ease) .75s both;}
   .hero .eyebrow{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-bright);font-weight:700;margin-bottom:18px;}
   .hero h1{font-family:var(--display);font-weight:300;font-size:clamp(30px,7.5vw,60px);color:#fff;margin:0 0 22px;line-height:1.12;text-wrap:balance;}
-  .hero .ticker{display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.06);border:1px solid rgba(228,190,120,.3);border-radius:999px;padding:8px 18px 8px 14px;backdrop-filter:blur(6px);}
+  .hero .ticker{display:flex;align-items:center;gap:8px;width:min(90vw,300px);margin:0 auto;background:rgba(255,255,255,.06);border:1px solid rgba(228,190,120,.3);border-radius:999px;padding:8px 16px;backdrop-filter:blur(6px);}
   .hero .tk-dot{width:6px;height:6px;border-radius:50%;background:var(--gold-bright);box-shadow:0 0 6px 1px rgba(228,190,120,.7);animation:tkPulse 2s ease-in-out infinite;flex-shrink:0;}
   @keyframes tkPulse{0%,100%{opacity:.5;transform:scale(.85);}50%{opacity:1;transform:scale(1.15);}}
-  .hero .tk-label{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.65);font-weight:600;}
-  .hero .tk-city{font-family:var(--display);font-style:italic;font-weight:500;font-size:15px;color:var(--gold-bright);display:inline-block;filter:blur(0);transition:opacity .6s var(--ease), transform .6s var(--ease), filter .6s var(--ease);}
-  .hero .tk-city.swap{opacity:0;transform:translateY(6px);filter:blur(3px);}
+  .hero .tk-label{font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,255,255,.65);font-weight:600;white-space:nowrap;flex-shrink:0;}
+  .hero .tk-city{font-family:var(--display);font-style:italic;font-weight:500;font-size:14px;color:var(--gold-bright);display:block;flex:1;min-width:0;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;filter:blur(0);transition:opacity .55s var(--ease), transform .55s var(--ease), filter .55s var(--ease);}
+  .hero .tk-city.long{font-size:12px;}
+  .hero .tk-city.longer{font-size:10.5px;}
+  .hero .tk-city.swap{opacity:0;transform:translateY(4px);filter:blur(2px);}
   .hero p.sub{font-family:var(--display);font-weight:400;color:rgba(255,255,255,.75);font-size:14px;letter-spacing:.02em;max-width:56ch;margin:22px auto 0;}
   .hero .tagline{position:relative;font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(19px,3.2vw,29px);color:#fff;margin-top:22px;letter-spacing:.01em;}
   .hero .tagline::before{content:"";position:absolute;left:50%;top:50%;width:340px;height:120px;transform:translate(-50%,-50%);background:radial-gradient(ellipse, rgba(228,190,120,.18), transparent 70%);pointer-events:none;z-index:-1;}
@@ -134,12 +137,12 @@
   .sheet-head{padding:6px 22px 14px;flex-shrink:0;}
   .sheet-head .st{font-family:var(--display);font-weight:300;font-style:italic;font-size:22px;color:var(--brand);}
   .sheet-body{overflow-y:auto;padding:0 16px 20px;display:flex;flex-direction:column;gap:10px;}
-  .sroute{display:flex;align-items:center;gap:14px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:12px;text-align:left;cursor:pointer;transition:all .25s var(--ease);}
+  .sroute{display:flex;align-items:center;gap:14px;background:var(--card);border:1.5px solid var(--line);border-left:3px solid var(--gold);border-radius:16px;padding:12px;text-align:left;cursor:pointer;transition:all .25s var(--ease);}
   .sroute:active{transform:scale(.98);border-color:var(--gold);}
   .sroute .simg{width:60px;height:60px;border-radius:var(--arch);background-size:cover;background-position:center;flex-shrink:0;}
   .sroute .simg.simg-wa{background:var(--wa);display:flex;align-items:center;justify-content:center;}
   .sroute .simg.simg-wa svg{width:26px;height:26px;fill:#fff;}
-  .sroute .sn{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);font-weight:700;}
+  .sroute .sn{display:inline-block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);font-weight:700;background:var(--gold-bg);border-radius:99px;padding:2px 9px;margin-bottom:3px;}
   .sroute h4{font-family:var(--display);font-weight:400;font-size:16.5px;margin:2px 0 3px;color:var(--brand);}
   .sroute p{font-size:12px;color:var(--ink-soft);margin:0;line-height:1.45;}
   .sroute .sgo{font-size:18px;color:var(--gold);flex-shrink:0;}
@@ -181,7 +184,7 @@
   .about-photo .badge .bl{font-size:10px;color:var(--ink-soft);letter-spacing:.05em;text-transform:uppercase;font-weight:600;}
   .about-copy blockquote{font-family:var(--display);font-weight:400;font-style:italic;font-size:19px;color:var(--brand);border-left:3px solid var(--gold);padding-left:18px;margin:22px 0;line-height:1.5;}
 
-  .team-carousel{display:flex;align-items:center;gap:8px;}
+  .team-carousel{display:flex;align-items:center;gap:8px;margin-top:44px;}
   .tc-arrow{flex-shrink:0;width:34px;height:34px;border-radius:50%;background:var(--card);border:1.5px solid var(--line);color:var(--brand);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s var(--ease);}
   .tc-arrow:hover{border-color:var(--gold);background:var(--gold-bg);}
   .tc-cards{flex:1;display:flex;gap:10px;min-width:0;}
@@ -209,10 +212,16 @@
   .stat .n{font-family:var(--display);font-weight:300;font-size:36px;color:var(--gold-bright);line-height:1;}
   .stat .l{font-size:11.5px;opacity:.75;margin-top:8px;letter-spacing:.03em;}
 
+  #testimonios{background:var(--brand);padding-bottom:52px;position:relative;overflow:hidden;}
+  #testimonios::after{content:"";position:absolute;right:-90px;top:20%;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle, rgba(228,190,120,.14), transparent 70%);pointer-events:none;}
+  #testimonios .wrap{position:relative;z-index:2;}
+  #testimonios .s-eyebrow{color:var(--gold-bright);}
+  #testimonios h2{color:#fff;}
+  #testimonios .lead{color:rgba(255,255,255,.72);}
   .testis{display:flex;flex-direction:column;gap:16px;}
   .testi{background:var(--card);border-radius:16px;padding:26px 22px;box-shadow:var(--sh);display:flex;flex-direction:column;transition:transform .4s var(--ease), box-shadow .4s var(--ease);}
   .testi .qm{font-family:var(--display);font-size:42px;line-height:.6;color:var(--gold);margin-bottom:14px;}
-  .testi .q{font-size:13.5px;color:var(--ink);flex:1;line-height:1.7;}
+  .testi .q{font-family:var(--display);font-style:italic;font-weight:400;font-size:15.5px;color:var(--ink);flex:1;line-height:1.65;}
   .testi .who{margin-top:18px;display:flex;align-items:center;gap:11px;border-top:1px solid var(--line);padding-top:14px;}
   .testi .ava{width:38px;height:38px;border-radius:50%;object-fit:cover;}
   .testi .who .nm{font-size:13px;font-weight:700;color:var(--brand);}
@@ -241,12 +250,62 @@
   .zc-note{font-size:12.5px;color:var(--ink-soft);margin:14px 0 0;}
   .zc-note a{color:var(--gold);font-weight:700;text-decoration:none;border-bottom:1px solid var(--gold);}
 
-  .final-cta{margin:44px 0 0;text-align:center;}
-  .fc-label{font-family:var(--display);font-style:italic;font-weight:300;font-size:17px;color:var(--brand);margin-bottom:16px;}
+  /* ---------- Variante "Extendida": Nosotros también oscuro (panel de revisión) ---------- */
+  body.dark-ext #nosotros{background:var(--brand);position:relative;overflow:hidden;}
+  body.dark-ext #nosotros::before{content:"";position:absolute;left:-80px;top:10%;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle, rgba(228,190,120,.14), transparent 70%);pointer-events:none;}
+  body.dark-ext #nosotros .wrap{position:relative;z-index:2;}
+  body.dark-ext #nosotros .s-eyebrow{color:var(--gold-bright);}
+  body.dark-ext #nosotros h2{color:#fff;}
+  body.dark-ext #nosotros .lead{color:rgba(255,255,255,.72);}
+  body.dark-ext #nosotros .about-copy blockquote{color:#fff;border-left-color:var(--gold-bright);}
+  body.dark-ext #nosotros .zones-compact{border-top-color:rgba(255,255,255,.15);}
+  body.dark-ext #nosotros .zc-label{color:rgba(255,255,255,.6);}
+  body.dark-ext #nosotros .zchip{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);color:rgba(255,255,255,.82);}
+  body.dark-ext #nosotros .zc-note{color:rgba(255,255,255,.6);}
+  body.dark-ext #nosotros .zc-note a{color:var(--gold-bright);border-color:var(--gold-bright);}
+  body.dark-ext #nosotros .photo-note{color:rgba(255,255,255,.5);}
+  body.dark-ext #nosotros .tc-arrow{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);color:#fff;}
+
+  /* ---------- Zonas interactivas: mapa real + clusters (firma de la sección) ---------- */
+  .zonemap-wrap, .zoneclusters-wrap{background:var(--brand);border-radius:20px;padding:16px;position:relative;overflow:hidden;box-shadow:var(--sh-lift);}
+  .zoneclusters-wrap{display:none;}
+  body.zones-clusters .zonemap-wrap{display:none;}
+  body.zones-clusters .zoneclusters-wrap{display:block;}
+  .zonemap-legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+  .zl-btn{background:rgba(255,255,255,.07);border:1px solid rgba(228,190,120,.35);color:rgba(255,255,255,.85);font-family:var(--sans);font-size:11px;font-weight:600;border-radius:999px;padding:6px 12px;cursor:pointer;transition:all .2s var(--ease);}
+  .zl-btn.sel{background:var(--gold-bg);border-color:var(--gold);color:var(--gold);}
+  .zonemap-canvas{height:320px;border-radius:14px;overflow:hidden;background:#0a0e18;}
+  .zonemap-canvas .zonemap-tiles-dark{filter:invert(1) hue-rotate(180deg) brightness(.92) contrast(.88) saturate(.7);}
+  .zonemap-canvas .leaflet-popup-content-wrapper{background:var(--card);color:var(--ink);border-radius:10px;font-family:var(--sans);}
+  .zonemap-canvas .leaflet-popup-tip{background:var(--card);}
+  .zonemap-canvas .leaflet-control-attribution{background:rgba(11,15,26,.75);color:rgba(255,255,255,.55);}
+  .zonemap-canvas .leaflet-control-attribution a{color:var(--gold-bright);}
+
+  .zc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .zc-card{background:rgba(255,255,255,.05);border:1.5px solid rgba(228,190,120,.25);border-radius:14px;padding:14px;text-align:left;cursor:pointer;transition:all .25s var(--ease);}
+  .zc-card.sel{background:var(--gold-bg);border-color:var(--gold);}
+  .zc-card-n{display:block;font-family:var(--display);font-style:italic;font-size:16px;color:#fff;}
+  .zc-card.sel .zc-card-n{color:var(--brand);}
+  .zc-card-c{display:block;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-top:4px;font-weight:600;}
+  .zc-card.sel .zc-card-c{color:var(--gold);}
+  .zc-districts{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12);}
+  .zc-districts .zchip{background:rgba(255,255,255,.08);border-color:rgba(228,190,120,.3);color:#fff;animation:rise .35s var(--ease) both;}
+
+  .zc-full{margin-top:18px;}
+  .zc-full summary{cursor:pointer;font-size:12.5px;font-weight:700;color:var(--gold);list-style:none;display:inline-flex;align-items:center;gap:5px;}
+  .zc-full summary::-webkit-details-marker{display:none;}
+  .zc-full summary::after{content:"▾";transition:transform .25s var(--ease);}
+  .zc-full[open] summary::after{transform:rotate(180deg);}
+  .zc-full .zones{margin-top:14px;}
+
+  .final-cta-band{background:var(--brand);margin-top:44px;padding:44px 0;position:relative;overflow:hidden;}
+  .final-cta-band::after{content:"";position:absolute;left:-70px;bottom:-90px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle, rgba(228,190,120,.16), transparent 70%);pointer-events:none;}
+  .final-cta{text-align:center;position:relative;z-index:2;}
+  .fc-label{font-family:var(--display);font-style:italic;font-weight:300;font-size:17px;color:var(--gold-bright);margin-bottom:16px;}
   .fc-btns{display:flex;flex-direction:column;gap:10px;}
-  .fc-btn{background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:14px 20px;font-size:14px;font-weight:700;color:var(--brand);cursor:pointer;transition:all .25s var(--ease);font-family:var(--sans);text-decoration:none;display:inline-block;text-align:center;}
+  .fc-btn{background:var(--gold);border:1.5px solid var(--gold);border-radius:999px;padding:14px 20px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;transition:all .25s var(--ease);font-family:var(--sans);text-decoration:none;display:inline-block;text-align:center;}
   .fc-btn-wa{background:var(--wa);border-color:var(--wa);color:#fff;}
-  .fc-btn:hover{border-color:var(--gold);background:var(--gold-bg);transform:translateY(-2px);}
+  .fc-btn:hover{background:#976526;border-color:#976526;transform:translateY(-2px);box-shadow:var(--sh);}
   .fc-btn-wa:hover{background:var(--wa-dark);border-color:var(--wa-dark);color:#fff;transform:translateY(-2px);}
 
   footer{background:var(--brand);color:#B9BFCF;padding:48px 0 100px;margin-top:70px;}
@@ -380,13 +439,17 @@
     .wrap{padding:0 28px;}
     .hero .inner{padding:158px 28px 164px;}
     .hero p.sub{font-size:17px;}
+    .hero .ticker{width:360px;padding:9px 20px;}
+    .hero .tk-city{font-size:16px;}
+    .hero .tk-city.long{font-size:14px;}
+    .hero .tk-city.longer{font-size:12.5px;}
 
     .routes-band{margin-top:-118px;padding-bottom:16px;}
     .routes{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
-    .route{position:relative;height:250px;border-radius:var(--arch);overflow:hidden;cursor:pointer;border:none;padding:0;text-align:left;box-shadow:var(--sh);transition:transform .45s var(--ease), box-shadow .45s var(--ease);opacity:0;animation:rise .8s var(--ease) forwards;}
+    .route{position:relative;height:250px;border-radius:var(--arch);overflow:hidden;cursor:pointer;border:none;border-bottom:4px solid var(--gold);padding:0;text-align:left;box-shadow:var(--sh);transition:transform .45s var(--ease), box-shadow .45s var(--ease), border-color .3s var(--ease);opacity:0;animation:rise .8s var(--ease) forwards;}
     .route:nth-child(1){animation-delay:.55s;} .route:nth-child(2){animation-delay:.68s;}
     .route:nth-child(3){animation-delay:.81s;} .route:nth-child(4){animation-delay:.94s;}
-    .route:hover{transform:translateY(-7px);box-shadow:var(--sh-lift);}
+    .route:hover{transform:translateY(-7px);box-shadow:var(--sh-lift);border-color:var(--gold-bright);}
     .route .rimg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform 1.4s var(--ease), filter .4s var(--ease);}
     .route:hover .rimg{transform:scale(1.14);filter:brightness(.85);}
     .route .rveil{position:absolute;inset:0;background:linear-gradient(180deg, rgba(20,31,56,.28) 0%, rgba(20,31,56,.94) 100%);transition:background .4s var(--ease);}
@@ -424,7 +487,7 @@
     .about-photo .badge .bn{font-size:25px;}
     .about-copy blockquote{font-size:21px;padding-left:20px;margin:26px 0;}
 
-    .team-carousel{gap:16px;}
+    .team-carousel{gap:16px;margin-top:72px;}
     .tc-arrow{width:44px;height:44px;font-size:22px;}
     .tc-cards{gap:16px;}
     .tc-card{display:block;height:420px;opacity:.5;transform:scale(.92);}
@@ -445,7 +508,10 @@
     .ti-view{flex-direction:row;align-items:center;justify-content:space-between;}
     .testi-invite{margin-top:22px;padding:24px 30px;}
     .zones-compact{margin-top:48px;padding-top:34px;}
-    .final-cta{margin:60px 0 0;}
+    .zonemap-wrap, .zoneclusters-wrap{padding:22px;}
+    .zonemap-canvas{height:420px;}
+    .zc-grid{grid-template-columns:repeat(3,1fr);gap:12px;}
+    .final-cta-band{margin-top:60px;padding:64px 0;}
     .fc-btns{flex-direction:row;justify-content:center;flex-wrap:wrap;}
     .fc-btn{padding:14px 26px;}
 
@@ -484,6 +550,12 @@
   @media (min-width: 1200px){
     .props{grid-template-columns:1fr 1fr;}
   }
+
+  /* ---------- Panel de revisión (temporal — se retira al elegir versión final) ---------- */
+  .review-panel{position:fixed;left:14px;bottom:14px;z-index:200;background:#fff;border:2px dashed var(--gold);border-radius:14px;padding:12px 16px;box-shadow:var(--sh-lift);font-family:var(--sans);max-width:240px;}
+  .rp-title{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+  .rp-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12.5px;color:var(--ink);padding:5px 0;cursor:pointer;}
+  .rp-row input{flex-shrink:0;width:34px;height:20px;accent-color:var(--gold);cursor:pointer;}
 
   /* ---------- Movimiento reducido ---------- */
   @media (prefers-reduced-motion: reduce){
@@ -605,7 +677,7 @@
         </div>
       </div>
 
-      <div class="team-carousel rv-scale" style="margin-top:44px;">
+      <div class="team-carousel rv-scale">
         <button class="tc-arrow prev" onclick="teamNav(-1)" aria-label="Anterior">‹</button>
         <div class="tc-cards" id="teamCards">
           <div class="tc-card" data-i="0">
@@ -643,15 +715,30 @@
 
       <div class="zones-compact rv-rise">
         <div class="zc-label">Zonas de cobertura</div>
-        <div class="zones">
-          <span class="zchip">Lima</span><span class="zchip">Ate</span><span class="zchip">Barranco</span><span class="zchip">Breña</span><span class="zchip">Chorrillos</span><span class="zchip">Comas</span><span class="zchip">El Agustino</span><span class="zchip">Independencia</span><span class="zchip">Jesús María</span><span class="zchip">La Molina</span><span class="zchip">La Victoria</span><span class="zchip">Lince</span><span class="zchip">Los Olivos</span><span class="zchip">Magdalena del Mar</span><span class="zchip">Miraflores</span><span class="zchip">Pueblo Libre</span><span class="zchip">Puente Piedra</span><span class="zchip">Rímac</span><span class="zchip">San Borja</span><span class="zchip">San Isidro</span><span class="zchip">San Juan de Lurigancho</span><span class="zchip">San Juan de Miraflores</span><span class="zchip">San Luis</span><span class="zchip">San Martín de Porres</span><span class="zchip">San Miguel</span><span class="zchip">Santa Anita</span><span class="zchip">Santiago de Surco</span><span class="zchip">Surquillo</span><span class="zchip">Villa El Salvador</span><span class="zchip">Villa María del Triunfo</span><span class="zchip">Ancón</span><span class="zchip">Carabayllo</span><span class="zchip">Chaclacayo</span><span class="zchip">Cieneguilla</span><span class="zchip">Lurigancho-Chosica</span><span class="zchip">Lurín</span><span class="zchip">Pachacámac</span><span class="zchip">Pucusana</span><span class="zchip">Punta Hermosa</span><span class="zchip">Punta Negra</span><span class="zchip">San Bartolo</span><span class="zchip">Santa María del Mar</span><span class="zchip">Santa Rosa</span><span class="zchip">Callao</span><span class="zchip">Bellavista</span><span class="zchip">Carmen de la Legua Reynoso</span><span class="zchip">La Perla</span><span class="zchip">La Punta</span><span class="zchip">Ventanilla</span><span class="zchip">Mi Perú</span><span class="zchip od">Trujillo · bajo demanda</span><span class="zchip od">Pisco · bajo demanda</span>
+
+        <div class="zonemap-wrap" id="zonesMapWrap">
+          <div class="zonemap-legend" id="zoneLegend"></div>
+          <div id="leafletMap" class="zonemap-canvas"></div>
         </div>
+
+        <div class="zoneclusters-wrap" id="zonesClustersWrap">
+          <div class="zc-grid" id="zoneClusterGrid"></div>
+          <div class="zc-districts" id="zoneClusterDistricts"></div>
+        </div>
+
+        <details class="zc-full">
+          <summary>Ver la lista completa de distritos</summary>
+          <div class="zones">
+            <span class="zchip">Lima</span><span class="zchip">Ate</span><span class="zchip">Barranco</span><span class="zchip">Breña</span><span class="zchip">Chorrillos</span><span class="zchip">Comas</span><span class="zchip">El Agustino</span><span class="zchip">Independencia</span><span class="zchip">Jesús María</span><span class="zchip">La Molina</span><span class="zchip">La Victoria</span><span class="zchip">Lince</span><span class="zchip">Los Olivos</span><span class="zchip">Magdalena del Mar</span><span class="zchip">Miraflores</span><span class="zchip">Pueblo Libre</span><span class="zchip">Puente Piedra</span><span class="zchip">Rímac</span><span class="zchip">San Borja</span><span class="zchip">San Isidro</span><span class="zchip">San Juan de Lurigancho</span><span class="zchip">San Juan de Miraflores</span><span class="zchip">San Luis</span><span class="zchip">San Martín de Porres</span><span class="zchip">San Miguel</span><span class="zchip">Santa Anita</span><span class="zchip">Santiago de Surco</span><span class="zchip">Surquillo</span><span class="zchip">Villa El Salvador</span><span class="zchip">Villa María del Triunfo</span><span class="zchip">Ancón</span><span class="zchip">Carabayllo</span><span class="zchip">Chaclacayo</span><span class="zchip">Cieneguilla</span><span class="zchip">Lurigancho-Chosica</span><span class="zchip">Lurín</span><span class="zchip">Pachacámac</span><span class="zchip">Pucusana</span><span class="zchip">Punta Hermosa</span><span class="zchip">Punta Negra</span><span class="zchip">San Bartolo</span><span class="zchip">Santa María del Mar</span><span class="zchip">Santa Rosa</span><span class="zchip">Callao</span><span class="zchip">Bellavista</span><span class="zchip">Carmen de la Legua Reynoso</span><span class="zchip">La Perla</span><span class="zchip">La Punta</span><span class="zchip">Ventanilla</span><span class="zchip">Mi Perú</span><span class="zchip od">Trujillo · bajo demanda</span><span class="zchip od">Pisco · bajo demanda</span><span class="zchip od">Piura · bajo demanda</span>
+          </div>
+        </details>
         <p class="zc-note">¿No ves tu zona aquí? Cuéntanos igual — a veces sí podemos ayudarte. <a href="https://wa.me/51947176425?text=Hola%2C%20quiero%20consultar%20por%20una%20zona%20que%20no%20vi%20en%20la%20lista" target="_blank">Escríbenos</a>.</p>
       </div>
     </div>
   </section>
 
   <div class="stats-band rv-scale">
+    <div class="motes" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
     <div class="wrap">
       <div class="stats">
         <div class="stat"><div class="n" data-count="200">0</div><div class="l">Operaciones cerradas</div></div>
@@ -663,6 +750,7 @@
   </div>
 
   <section class="free" id="testimonios">
+    <div class="motes" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
     <div class="wrap">
       <div class="s-eyebrow rv">Testimonios</div>
       <h2 class="rv">Historias reales, contadas por sus protagonistas</h2>
@@ -707,15 +795,17 @@
     </div>
   </section>
 
-  <div class="wrap">
-    <div class="final-cta rv-bounce">
-      <div class="fc-label">¿Con qué te ayudamos?</div>
-      <div class="fc-btns">
-        <button class="fc-btn" onclick="startFlow('vender')">Vender mi propiedad</button>
-        <button class="fc-btn" onclick="startFlow('alquilar')">Alquilar mi propiedad</button>
-        <button class="fc-btn" onclick="startBrowse('comprar')">Comprar</button>
-        <button class="fc-btn" onclick="startBrowse('rentar')">Rentar</button>
-        <a class="fc-btn fc-btn-wa" href="https://wa.me/51947176425?text=Hola%2C%20quiero%20una%20asesor%C3%ADa" target="_blank">Asesoría</a>
+  <div class="final-cta-band rv-scale">
+    <div class="wrap">
+      <div class="final-cta">
+        <div class="fc-label">¿Con qué te ayudamos?</div>
+        <div class="fc-btns">
+          <button class="fc-btn" onclick="startFlow('vender')">Vender mi propiedad</button>
+          <button class="fc-btn" onclick="startFlow('alquilar')">Alquilar mi propiedad</button>
+          <button class="fc-btn" onclick="startBrowse('comprar')">Comprar</button>
+          <button class="fc-btn" onclick="startBrowse('rentar')">Rentar</button>
+          <a class="fc-btn fc-btn-wa" href="https://wa.me/51947176425?text=Hola%2C%20quiero%20una%20asesor%C3%ADa" target="_blank">Asesoría</a>
+        </div>
       </div>
     </div>
   </div>
@@ -984,6 +1074,13 @@
   <div class="sheet-body" id="sheetBody"></div>
 </div>
 
+<div class="review-panel" id="reviewPanel">
+  <div class="rp-title">Vista previa — solo para revisión</div>
+  <label class="rp-row"><span>Nosotros: fondo oscuro</span><input type="checkbox" id="toggleDarkExt"></label>
+  <label class="rp-row"><span>Zonas: clusters (en vez de mapa)</span><input type="checkbox" id="toggleZonesVariant"></label>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
   const hdr = document.getElementById('hdr');
   const mmenu = document.getElementById('mmenu');
@@ -1290,7 +1387,10 @@
     cycleEl.classList.add('swap');
     setTimeout(() => {
       districtIdx = nextRandomDistrictIdx();
-      cycleEl.textContent = DISTRICTS[districtIdx];
+      const name = DISTRICTS[districtIdx];
+      cycleEl.textContent = name;
+      cycleEl.classList.toggle('longer', name.length > 20);
+      cycleEl.classList.toggle('long', name.length > 13 && name.length <= 20);
       cycleEl.classList.remove('swap');
     }, 600);
   }, 3400);
@@ -1347,6 +1447,118 @@
       requestAnimationFrame(tick);
     });
   }
+
+  // ---------- Zonas de cobertura: datos compartidos (mapa + clusters) ----------
+  // Coordenadas aproximadas (centroide visual del distrito) — para ubicar, no para medir.
+  const ZONES = {
+    centro:  { label:'Lima Centro',  items:[
+      {n:'Lima', lat:-12.0464, lng:-77.0428}, {n:'Breña', lat:-12.0586, lng:-77.0506},
+      {n:'La Victoria', lat:-12.0703, lng:-77.0175}, {n:'Rímac', lat:-12.0294, lng:-77.0281},
+      {n:'San Luis', lat:-12.0728, lng:-77.0064}
+    ]},
+    moderna: { label:'Lima Moderna', items:[
+      {n:'San Isidro', lat:-12.0969, lng:-77.0364}, {n:'Miraflores', lat:-12.1211, lng:-77.0296},
+      {n:'San Borja', lat:-12.1088, lng:-76.9986}, {n:'Santiago de Surco', lat:-12.1352, lng:-76.9931},
+      {n:'Barranco', lat:-12.1447, lng:-77.0219}, {n:'Jesús María', lat:-12.0735, lng:-77.0489},
+      {n:'Lince', lat:-12.0847, lng:-77.0339}, {n:'Magdalena del Mar', lat:-12.0928, lng:-77.0725},
+      {n:'Pueblo Libre', lat:-12.0736, lng:-77.0644}, {n:'San Miguel', lat:-12.0775, lng:-77.0917},
+      {n:'Surquillo', lat:-12.1108, lng:-77.0139}
+    ]},
+    norte:   { label:'Lima Norte',   items:[
+      {n:'Los Olivos', lat:-11.9698, lng:-77.0705}, {n:'Comas', lat:-11.9349, lng:-77.0517},
+      {n:'Independencia', lat:-11.9897, lng:-77.0503}, {n:'San Martín de Porres', lat:-12.0006, lng:-77.0858},
+      {n:'Puente Piedra', lat:-11.8636, lng:-77.0791}, {n:'Carabayllo', lat:-11.8492, lng:-77.0197},
+      {n:'Ancón', lat:-11.7739, lng:-77.1783}, {n:'Santa Rosa', lat:-11.7897, lng:-77.1719}
+    ]},
+    este:    { label:'Lima Este',    items:[
+      {n:'Ate', lat:-12.0267, lng:-76.9186}, {n:'La Molina', lat:-12.0797, lng:-76.9358},
+      {n:'Santa Anita', lat:-12.0431, lng:-76.9714}, {n:'San Juan de Lurigancho', lat:-11.9706, lng:-77.0004},
+      {n:'El Agustino', lat:-12.0389, lng:-77.0011}, {n:'Lurigancho-Chosica', lat:-11.9333, lng:-76.7042},
+      {n:'Chaclacayo', lat:-11.9789, lng:-76.7739}, {n:'Cieneguilla', lat:-12.0797, lng:-76.8339}
+    ]},
+    sur:     { label:'Lima Sur',     items:[
+      {n:'Chorrillos', lat:-12.1750, lng:-77.0086}, {n:'San Juan de Miraflores', lat:-12.1633, lng:-76.9722},
+      {n:'Villa El Salvador', lat:-12.2119, lng:-76.9364}, {n:'Villa María del Triunfo', lat:-12.1614, lng:-76.9433},
+      {n:'Lurín', lat:-12.2733, lng:-76.8703}, {n:'Pachacámac', lat:-12.2306, lng:-76.8342},
+      {n:'Pucusana', lat:-12.4822, lng:-76.7975}, {n:'Punta Hermosa', lat:-12.3319, lng:-76.8253},
+      {n:'Punta Negra', lat:-12.3600, lng:-76.8000}, {n:'San Bartolo', lat:-12.3897, lng:-76.7728},
+      {n:'Santa María del Mar', lat:-12.4211, lng:-76.7908}
+    ]},
+    callao:  { label:'Callao',       items:[
+      {n:'Callao', lat:-12.0567, lng:-77.1181}, {n:'Bellavista', lat:-12.0644, lng:-77.1200},
+      {n:'La Perla', lat:-12.0708, lng:-77.1197}, {n:'La Punta', lat:-12.0708, lng:-77.1614},
+      {n:'Carmen de la Legua Reynoso', lat:-12.0517, lng:-77.1042}, {n:'Ventanilla', lat:-11.8747, lng:-77.1281},
+      {n:'Mi Perú', lat:-11.8567, lng:-77.1108}
+    ]}
+  };
+
+  // ---------- Variante A: mapa real (Leaflet + CartoDB dark, sin API key) ----------
+  let leafletMap = null;
+  const zoneMarkers = {};
+  function initLeafletMap(){
+    if (leafletMap || typeof L === 'undefined' || !document.getElementById('leafletMap')) return;
+    leafletMap = L.map('leafletMap', { scrollWheelZoom:false }).setView([-12.02, -77.02], 10.3);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19,
+      className: 'zonemap-tiles-dark'
+    }).addTo(leafletMap);
+    Object.entries(ZONES).forEach(([key, z]) => {
+      zoneMarkers[key] = z.items.map(d => {
+        const m = L.circleMarker([d.lat, d.lng], { radius:6, color:'#E4BE78', weight:1.5, fillColor:'#E4BE78', fillOpacity:.75 }).addTo(leafletMap);
+        m.bindPopup(`<b>${d.n}</b><br>${z.label}`);
+        return m;
+      });
+    });
+    buildMapLegend();
+  }
+  function buildMapLegend(){
+    const legend = document.getElementById('zoneLegend');
+    if (!legend) return;
+    legend.innerHTML = Object.entries(ZONES).map(([key, z]) =>
+      `<button class="zl-btn sel" data-zone="${key}">${z.label}</button>`).join('');
+    legend.querySelectorAll('.zl-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const on = btn.classList.toggle('sel');
+        zoneMarkers[btn.dataset.zone].forEach(m => m.setStyle({ opacity: on ? 1 : .1, fillOpacity: on ? .75 : .06 }));
+      });
+    });
+  }
+
+  // ---------- Variante B: clusters (sin dependencias externas) ----------
+  let zoneActive = 'moderna';
+  function renderZoneClusters(){
+    const grid = document.getElementById('zoneClusterGrid');
+    if (!grid) return;
+    grid.innerHTML = Object.entries(ZONES).map(([key, z]) => `
+      <button class="zc-card${key === zoneActive ? ' sel' : ''}" data-zone="${key}">
+        <span class="zc-card-n">${z.label}</span>
+        <span class="zc-card-c">${z.items.length} distritos</span>
+      </button>`).join('');
+    grid.querySelectorAll('.zc-card').forEach(btn => {
+      btn.addEventListener('click', () => { zoneActive = btn.dataset.zone; renderZoneClusters(); renderZoneClusterDistricts(); });
+    });
+  }
+  function renderZoneClusterDistricts(){
+    const el = document.getElementById('zoneClusterDistricts');
+    if (!el) return;
+    el.innerHTML = ZONES[zoneActive].items.map(d => `<span class="zchip">${d.n}</span>`).join('');
+  }
+  renderZoneClusters();
+  renderZoneClusterDistricts();
+  initLeafletMap();
+
+  // ---------- Panel de revisión (temporal) ----------
+  const toggleDarkExt = document.getElementById('toggleDarkExt');
+  if (toggleDarkExt) toggleDarkExt.addEventListener('change', () => {
+    document.body.classList.toggle('dark-ext', toggleDarkExt.checked);
+  });
+  const toggleZonesVariant = document.getElementById('toggleZonesVariant');
+  if (toggleZonesVariant) toggleZonesVariant.addEventListener('change', () => {
+    const showClusters = toggleZonesVariant.checked;
+    document.body.classList.toggle('zones-clusters', showClusters);
+    if (!showClusters && leafletMap) setTimeout(() => leafletMap.invalidateSize(), 60);
+  });
 </script>
 </body>
 </html>
