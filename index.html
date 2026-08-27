@@ -6,23 +6,27 @@
 <title>Quintana Propiedades — Inmobiliaria en Lima</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,300;0,400;0,500;1,400;1,500&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <style>
   /* =====================================================================
-     MOBILE-FIRST: todo lo de abajo es la base para pantallas pequeñas.
-     Las mejoras para tablet/desktop entran por min-width, nunca al revés.
+     UMBRAL — sistema de diseño propio de esta alternativa.
+     Mobile-first: la base de abajo es para pantallas chicas; las mejoras
+     de tablet/desktop entran por min-width, nunca al revés.
      ===================================================================== */
   :root{
-    --bg:#F7F3EC; --bg-2:#EFE9DD; --card:#FFFFFF;
-    --navy:#141F38; --navy-2:#1E2C4E;
-    --ink:#1C1B24; --ink-soft:#4E4D5C;
-    --gold:#C08A2D; --gold-bright:#E3A93C; --gold-bg:#F5EBD6;
-    --line:#E3DCCC;
-    --display:"Fraunces", Georgia, serif;
-    --sans:"Inter", -apple-system, "Segoe UI", Roboto, sans-serif;
-    --sh:0 2px 10px rgba(20,31,56,.07), 0 10px 34px rgba(20,31,56,.08);
-    --sh-lift:0 8px 22px rgba(20,31,56,.16), 0 24px 60px rgba(20,31,56,.18);
+    --bg:#F3EEE4; --bg-2:#E7DFCC; --card:#FAF6EE;
+    --brand:#0B0F1A; --brand-2:#151D30; --brand-deep:#050710;
+    --ink:#1A1A1F; --ink-soft:#5A5868;
+    --gold:#7E561F; --gold-bright:#E4BE78; --gold-bg:#F2E4C6;
+    --line:#DED2B8;
+    --wa:#1DA851; --wa-dark:#178C44;
+    --display:"Newsreader", Georgia, serif;
+    --sans:"Schibsted Grotesk", -apple-system, "Segoe UI", Roboto, sans-serif;
+    --sh:0 2px 10px rgba(10,14,26,.09), 0 10px 34px rgba(10,14,26,.1);
+    --sh-lift:0 8px 22px rgba(10,14,26,.22), 0 24px 60px rgba(10,14,26,.24);
     --ease:cubic-bezier(.22,.8,.3,1);
+    --arch:120px 120px 14px 14px;
     --safe-b:env(safe-area-inset-bottom, 0px);
   }
   *{box-sizing:border-box;}
@@ -30,58 +34,91 @@
   body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.65;font-size:15px;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
   img{display:block;max-width:100%;}
   button{font-family:var(--sans);}
+  em{font-style:italic;}
 
   /* ---------- Header ---------- */
   header{position:fixed;top:0;left:0;right:0;z-index:90;transition:all .4s var(--ease);padding:14px 0;}
-  header.solid, header.on-inner{background:rgba(247,243,236,.95);backdrop-filter:blur(12px);padding:10px 0;box-shadow:0 1px 0 var(--line);}
+  header.solid, header.on-inner{background:rgba(11,15,26,.92);backdrop-filter:blur(12px);padding:10px 0;box-shadow:0 1px 0 rgba(255,255,255,.08);}
   .hwrap{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
   .logo{display:flex;align-items:center;text-decoration:none;}
-  .logo img{height:36px;width:auto;transition:opacity .3s;}
+  .logo img{height:34px;width:auto;transition:opacity .3s;}
   .logo .l-dark{display:none;}
-  header.solid .logo .l-light, header.on-inner .logo .l-light, header.menu-open .logo .l-light{display:none;}
-  header.solid .logo .l-dark, header.on-inner .logo .l-dark, header.menu-open .logo .l-dark{display:block;}
   nav{display:none;}
   .btn-wa{display:none;}
 
-  /* Hamburguesa — visible por defecto (mobile) */
   .burger{display:block;background:none;border:none;cursor:pointer;padding:8px;z-index:95;}
   .burger span{display:block;width:22px;height:2.5px;border-radius:2px;background:#fff;margin:5px 0;transition:all .3s var(--ease);}
-  header.solid .burger span, header.on-inner .burger span, header.menu-open .burger span{background:var(--navy);}
   header.menu-open .burger span:nth-child(1){transform:translateY(7.5px) rotate(45deg);}
   header.menu-open .burger span:nth-child(2){opacity:0;}
   header.menu-open .burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg);}
-  .mobile-menu{display:block;position:fixed;top:0;left:0;right:0;z-index:89;background:var(--bg);padding:78px 22px 26px;box-shadow:var(--sh-lift);transform:translateY(-105%);transition:transform .45s var(--ease);}
+  .mobile-menu{display:block;position:fixed;top:0;left:0;right:0;z-index:89;background:var(--brand);padding:78px 22px 26px;box-shadow:var(--sh-lift);transform:translateY(-105%);transition:transform .45s var(--ease);}
   .mobile-menu.open{transform:none;}
-  .mobile-menu a{display:block;padding:13px 4px;font-size:16px;font-weight:600;color:var(--navy);text-decoration:none;border-bottom:1px solid var(--line);}
+  .mobile-menu a{display:block;padding:13px 4px;font-size:16px;font-weight:600;color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.12);}
   .mobile-menu a:last-child{border-bottom:none;}
+  .mm-cta{background:var(--gold-bright);color:var(--brand) !important;text-align:center;border-radius:999px;padding:14px 4px !important;margin-bottom:14px;border-bottom:none !important;font-weight:700 !important;}
 
   .wrap{max-width:1200px;margin:0 auto;padding:0 20px;}
 
-  /* ---------- Hero ---------- */
-  .hero{position:relative;overflow:hidden;}
-  .hero .bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80') center/cover;animation:heroZoom 16s var(--ease) both;}
-  @keyframes heroZoom{from{transform:scale(1.1);}to{transform:scale(1.01);}}
-  .hero .veil{position:absolute;inset:0;background:linear-gradient(180deg, rgba(11,17,32,.92) 0%, rgba(11,17,32,.72) 50%, rgba(11,17,32,.96) 100%);}
-  .hero .vignette{position:absolute;inset:0;background:radial-gradient(ellipse 60% 55% at 50% 46%, rgba(9,14,28,.55), transparent 70%);}
-  .hero .grain{position:absolute;inset:0;opacity:.05;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");}
-  .hero .inner{position:relative;z-index:3;text-align:center;padding:104px 22px 168px;max-width:880px;margin:0 auto;text-shadow:0 2px 34px rgba(0,0,0,.5);}
-  .hero h1{font-family:var(--display);font-weight:300;font-size:clamp(26px,7vw,54px);color:#fff;margin:0 0 14px;line-height:1.14;text-wrap:balance;opacity:0;animation:rise 1s .2s var(--ease) forwards;}
-  .hero h1 em{font-style:italic;color:var(--gold-bright);}
-  .hero p.sub{color:rgba(255,255,255,.92);font-size:14.5px;max-width:56ch;margin:0 auto;opacity:0;animation:rise 1s .4s var(--ease) forwards;}
-  .hero .tagline{font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(18px,3vw,27px);color:var(--gold-bright);margin-top:20px;letter-spacing:.03em;opacity:0;animation:rise 1s .6s var(--ease) forwards, taglineGlow 3.4s ease-in-out 1.8s infinite;}
+  /* ---------- Hero + puertas ---------- */
+  .hero{position:relative;overflow:hidden;background:var(--brand);}
+  .hero .bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80') center/cover;transform:scale(1.06);filter:saturate(.85) brightness(.9);}
+  .hero .veil{position:absolute;inset:0;background:linear-gradient(180deg, rgba(5,7,16,.94) 0%, rgba(5,7,16,.8) 48%, rgba(5,7,16,.98) 100%);}
+  .hero .vignette{position:absolute;inset:0;background:radial-gradient(ellipse 60% 55% at 50% 46%, rgba(2,3,8,.6), transparent 70%);}
+  .hero .grain{position:absolute;inset:0;opacity:.06;mix-blend-mode:overlay;pointer-events:none;z-index:2;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");}
+  .motes{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:2;}
+  .motes span{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--gold-bright);opacity:0;box-shadow:0 0 8px 1px rgba(228,190,120,.6);animation:moteDrift 14s ease-in-out infinite;}
+  .motes span:nth-child(1){left:8%;top:78%;animation-delay:0s;animation-duration:16s;}
+  .motes span:nth-child(2){left:18%;top:30%;animation-delay:1.4s;animation-duration:12s;}
+  .motes span:nth-child(3){left:28%;top:60%;animation-delay:2.8s;animation-duration:18s;}
+  .motes span:nth-child(4){left:40%;top:20%;animation-delay:.7s;animation-duration:15s;}
+  .motes span:nth-child(5){left:55%;top:70%;animation-delay:3.6s;animation-duration:13s;}
+  .motes span:nth-child(6){left:65%;top:35%;animation-delay:2s;animation-duration:17s;}
+  .motes span:nth-child(7){left:74%;top:65%;animation-delay:5s;animation-duration:14s;}
+  .motes span:nth-child(8){left:83%;top:25%;animation-delay:.2s;animation-duration:19s;}
+  .motes span:nth-child(9){left:91%;top:55%;animation-delay:4.2s;animation-duration:12s;}
+  .motes span:nth-child(10){left:50%;top:45%;animation-delay:6s;animation-duration:20s;}
+  @keyframes moteDrift{
+    0%{opacity:0;transform:translateY(0) scale(.6);}
+    12%{opacity:.7;}
+    50%{opacity:.35;transform:translateY(-38px) scale(1);}
+    88%{opacity:.5;}
+    100%{opacity:0;transform:translateY(-84px) scale(.6);}
+  }
+  .hero .door{position:absolute;top:-2px;bottom:-2px;width:51%;background:
+      linear-gradient(90deg, rgba(255,255,255,.05) 0 2px, transparent 2px 34px) repeat-x,
+      var(--brand);
+    background-size:34px 100%, auto;
+    z-index:6;transform:translateX(0);}
+  .hero .door-l{left:0;right:auto;border-right:1px solid rgba(255,255,255,.08);animation:doorOpenL 1.1s cubic-bezier(.65,0,.2,1) .4s both;}
+  .hero .door-r{right:0;left:auto;border-left:1px solid rgba(255,255,255,.08);animation:doorOpenR 1.1s cubic-bezier(.65,0,.2,1) .4s both;}
+  @keyframes doorOpenL{from{transform:translateX(0);}to{transform:translateX(-100%);}}
+  @keyframes doorOpenR{from{transform:translateX(0);}to{transform:translateX(100%);}}
   @keyframes rise{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:none;}}
-  @keyframes taglineGlow{0%,100%{text-shadow:0 0 4px rgba(227,169,60,.35);filter:brightness(1);}50%{text-shadow:0 0 22px rgba(227,169,60,.95),0 0 42px rgba(227,169,60,.5);filter:brightness(1.3);}}
-  .hero h1 em{display:inline-block;transition:opacity .45s var(--ease), transform .45s var(--ease);}
-  .hero h1 em.swap{opacity:0;transform:translateY(8px);}
+  .hero .door::after{content:"";position:absolute;top:50%;width:5px;height:34px;border-radius:99px;background:var(--gold-bright);opacity:.85;transform:translateY(-50%);}
+  .hero .door-l::after{right:22px;}
+  .hero .door-r::after{left:22px;}
+  .hero .inner{position:relative;z-index:3;text-align:center;padding:112px 22px 172px;max-width:880px;margin:0 auto;text-shadow:0 2px 34px rgba(0,0,0,.5);opacity:0;animation:rise 1s var(--ease) .75s both;}
+  .hero .eyebrow{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-bright);font-weight:700;margin-bottom:18px;}
+  .hero h1{font-family:var(--display);font-weight:300;font-size:clamp(30px,7.5vw,60px);color:#fff;margin:0 0 22px;line-height:1.12;text-wrap:balance;}
+  .hero .ticker{display:inline-flex;align-items:center;gap:8px;max-width:92vw;margin:0 auto;background:rgba(255,255,255,.06);border:1px solid rgba(228,190,120,.3);border-radius:999px;padding:8px 16px;backdrop-filter:blur(6px);overflow:hidden;white-space:nowrap;transition:width .5s var(--ease);}
+  .hero .tk-dot{width:6px;height:6px;border-radius:50%;background:var(--gold-bright);box-shadow:0 0 6px 1px rgba(228,190,120,.7);animation:tkPulse 2s ease-in-out infinite;flex-shrink:0;}
+  @keyframes tkPulse{0%,100%{opacity:.5;transform:scale(.85);}50%{opacity:1;transform:scale(1.15);}}
+  .hero .tk-label{font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,255,255,.9);font-weight:600;white-space:nowrap;flex-shrink:0;}
+  .hero .tk-city{font-family:var(--display);font-style:italic;font-weight:500;font-size:14px;color:var(--gold-bright);display:inline-block;white-space:nowrap;filter:blur(0);transition:opacity .4s var(--ease), transform .4s var(--ease), filter .4s var(--ease);}
+  .hero .tk-city.swap{opacity:0;transform:translateY(4px);filter:blur(2px);}
+  .hero p.sub{font-family:var(--display);font-weight:400;color:rgba(255,255,255,.92);font-size:14px;letter-spacing:.02em;max-width:56ch;margin:22px auto 0;}
+  .hero .tagline{position:relative;font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(19px,3.2vw,29px);color:#fff;margin-top:22px;letter-spacing:.01em;}
+  .hero .tagline::before{content:"";position:absolute;left:50%;top:50%;width:340px;height:120px;transform:translate(-50%,-50%);background:radial-gradient(ellipse, rgba(228,190,120,.18), transparent 70%);pointer-events:none;z-index:-1;}
 
-  /* ---------- Rutas: grid clásico (se activa solo desde tablet) ---------- */
-  .routes-band{position:relative;z-index:5;}
+  /* ---------- Rutas ---------- */
+  .routes-outer{position:relative;z-index:5;background:var(--brand);}
+  .routes-band{padding-bottom:1px;}
   .routes{display:none;}
 
-  /* ---------- Bottom sheet "Quiero…" (mobile-first, por defecto) ---------- */
+  /* ---------- Bottom sheet "Quiero…" ---------- */
   .sheet-collapsed{position:fixed;left:14px;right:14px;bottom:calc(14px + var(--safe-b));z-index:70;background:rgba(20,31,56,.92);backdrop-filter:blur(14px);border-radius:18px;padding:13px 16px;display:flex;align-items:center;gap:12px;box-shadow:var(--sh-lift);cursor:pointer;border:1px solid rgba(255,255,255,.1);transition:transform .3s var(--ease);}
   .sheet-collapsed:active{transform:scale(.98);}
-  .sheet-collapsed .thumb{width:40px;height:40px;border-radius:11px;background-size:cover;background-position:center;flex-shrink:0;}
+  .sheet-collapsed .thumb{width:40px;height:40px;border-radius:var(--arch);background-size:cover;background-position:center;flex-shrink:0;}
   .sheet-collapsed .txt{flex:1;min-width:0;}
   .sheet-collapsed .lbl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-bright);font-weight:700;}
   .sheet-collapsed .cur{font-family:var(--display);font-size:16px;color:#fff;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -95,64 +132,66 @@
   .sheet.open{transform:translateY(0);}
   .sheet-handle{width:38px;height:4px;border-radius:99px;background:var(--line);margin:12px auto 4px;flex-shrink:0;}
   .sheet-head{padding:6px 22px 14px;flex-shrink:0;}
-  .sheet-head .st{font-family:var(--display);font-weight:300;font-style:italic;font-size:22px;color:var(--navy);}
+  .sheet-head .st{font-family:var(--display);font-weight:300;font-style:italic;font-size:22px;color:var(--brand);}
   .sheet-body{overflow-y:auto;padding:0 16px 20px;display:flex;flex-direction:column;gap:10px;}
-  .sroute{display:flex;align-items:center;gap:14px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:12px;text-align:left;cursor:pointer;transition:all .25s var(--ease);}
+  .sroute{display:flex;align-items:center;gap:14px;background:var(--card);border:1.5px solid var(--line);border-left:3px solid var(--gold);border-radius:16px;padding:12px;text-align:left;cursor:pointer;transition:all .25s var(--ease);}
   .sroute:active{transform:scale(.98);border-color:var(--gold);}
-  .sroute .simg{width:64px;height:64px;border-radius:12px;background-size:cover;background-position:center;flex-shrink:0;}
-  .sroute .simg.simg-wa{background:#1DA851;display:flex;align-items:center;justify-content:center;}
-  .sroute .simg.simg-wa svg{width:28px;height:28px;fill:#fff;}
-  .sroute .sn{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);font-weight:700;}
-  .sroute h4{font-family:var(--display);font-weight:400;font-size:16.5px;margin:2px 0 3px;color:var(--navy);}
+  .sroute .simg{width:60px;height:60px;border-radius:var(--arch);background-size:cover;background-position:center;flex-shrink:0;}
+  .sroute .simg.simg-wa{background:var(--wa);display:flex;align-items:center;justify-content:center;}
+  .sroute .simg.simg-wa svg{width:26px;height:26px;fill:#fff;}
+  .sroute .sn{display:inline-block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);font-weight:700;background:var(--gold-bg);border-radius:99px;padding:2px 9px;margin-bottom:3px;}
+  .sroute h4{font-family:var(--display);font-weight:400;font-size:16.5px;margin:2px 0 3px;color:var(--brand);}
   .sroute p{font-size:12px;color:var(--ink-soft);margin:0;line-height:1.45;}
   .sroute .sgo{font-size:18px;color:var(--gold);flex-shrink:0;}
 
   .routes-hint{display:none;}
 
-  /* ---------- Reveal on scroll — cada sección con su propia firma ---------- */
-  .rv{opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease), transform .8s var(--ease);}
+  /* ---------- Reveal on scroll — dos firmas, con propósito ---------- */
+  .rv{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease), transform .8s var(--ease);}
   .rv.in{opacity:1;transform:none;}
   .rv.d1{transition-delay:.08s;} .rv.d2{transition-delay:.16s;} .rv.d3{transition-delay:.24s;}
-
-  .rv-left{opacity:0;transform:translateX(-42px);transition:opacity .9s var(--ease), transform .9s var(--ease);}
+  .rv-left{opacity:0;transform:translateX(-36px);transition:opacity .85s var(--ease), transform .85s var(--ease);}
   .rv-left.in{opacity:1;transform:none;}
-  .rv-right{opacity:0;transform:translateX(42px);transition:opacity .9s var(--ease), transform .9s var(--ease);}
+  .rv-right{opacity:0;transform:translateX(36px);transition:opacity .85s var(--ease), transform .85s var(--ease);}
   .rv-right.in{opacity:1;transform:none;}
-  .rv-scale{opacity:0;transform:scale(.9);transition:opacity .7s var(--ease), transform .7s cubic-bezier(.22,1.3,.36,1);}
+  .rv-scale{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease), transform .8s var(--ease);}
   .rv-scale.in{opacity:1;transform:none;}
-  .rv-rise{opacity:0;transform:translateY(52px);transition:opacity 1s var(--ease), transform 1s cubic-bezier(.16,1,.3,1);}
+  .rv-rise{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease), transform .8s var(--ease);}
   .rv-rise.in{opacity:1;transform:none;}
-  .rv-bounce{opacity:0;transform:translateY(40px) scale(.94);transition:opacity .6s var(--ease), transform .7s cubic-bezier(.34,1.56,.64,1);}
+  .rv-bounce{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease), transform .8s var(--ease);}
   .rv-bounce.in{opacity:1;transform:none;}
-  .rv-card{opacity:0;transform:translateY(30px) rotate(-2.5deg);transition:opacity .8s var(--ease), transform .8s cubic-bezier(.22,1.2,.36,1);}
+  .rv-card{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease), transform .8s var(--ease);}
   .rv-card.in{opacity:1;transform:none;}
 
+  /* ---------- Divisor arco (firma de sección) ---------- */
+  .arch-div{display:flex;justify-content:center;padding:8px 0;color:var(--line);}
+  .arch-div svg{width:64px;height:20px;}
+
   /* ---------- Secciones ---------- */
-  section.free{padding:56px 0 8px;}
+  section.free{padding:52px 0 8px;}
   .s-eyebrow{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:12px;}
-  section.free h2{font-family:var(--display);font-weight:300;font-size:clamp(24px,7vw,42px);color:var(--navy);margin:0 0 14px;line-height:1.16;text-wrap:balance;}
+  section.free h2{font-family:var(--display);font-weight:300;font-size:clamp(24px,7vw,42px);color:var(--brand);margin:0 0 14px;line-height:1.16;text-wrap:balance;}
   section.free .lead{color:var(--ink-soft);max-width:60ch;font-size:14.5px;margin-bottom:28px;}
 
   .about-split{display:flex;flex-direction:column;gap:26px;}
-  .about-photo{position:relative;border-radius:18px;overflow:hidden;box-shadow:var(--sh-lift);}
-  .about-photo img{width:100%;height:280px;object-fit:cover;transition:transform 1.4s var(--ease);}
-  .about-photo .badge{position:absolute;bottom:16px;left:16px;background:rgba(247,243,236,.94);backdrop-filter:blur(8px);border-radius:13px;padding:11px 16px;box-shadow:var(--sh);}
-  .about-photo .badge .bn{font-family:var(--display);font-size:22px;color:var(--navy);}
+  .about-photo{position:relative;}
+  .about-photo img{width:100%;height:300px;object-fit:cover;border-radius:var(--arch);box-shadow:var(--sh-lift);transition:transform 1.4s var(--ease);}
+  .about-photo .badge{position:absolute;bottom:16px;left:16px;background:rgba(241,236,226,.94);backdrop-filter:blur(8px);border-radius:13px;padding:11px 16px;box-shadow:var(--sh);}
+  .about-photo .badge .bn{font-family:var(--display);font-size:22px;color:var(--brand);}
   .about-photo .badge .bl{font-size:10px;color:var(--ink-soft);letter-spacing:.05em;text-transform:uppercase;font-weight:600;}
-  .about-copy blockquote{font-family:var(--display);font-weight:300;font-style:italic;font-size:18px;color:var(--navy);border-left:3px solid var(--gold);padding-left:18px;margin:22px 0;line-height:1.5;}
+  .about-copy blockquote{font-family:var(--display);font-weight:400;font-style:italic;font-size:19px;color:var(--brand);border-left:3px solid var(--gold);padding-left:18px;margin:22px 0;line-height:1.5;}
 
-  .team-carousel{display:flex;align-items:center;gap:8px;}
-  .tc-arrow{flex-shrink:0;width:34px;height:34px;border-radius:50%;background:var(--card);border:1.5px solid var(--line);color:var(--navy);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s var(--ease);}
+  .team-carousel{display:flex;align-items:center;gap:8px;margin-top:44px;}
+  .tc-arrow{flex-shrink:0;width:34px;height:34px;border-radius:50%;background:var(--card);border:1.5px solid var(--line);color:var(--brand);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s var(--ease);}
   .tc-arrow:hover{border-color:var(--gold);background:var(--gold-bg);}
   .tc-cards{flex:1;display:flex;gap:10px;min-width:0;}
-  .tc-card{display:none;position:relative;border-radius:16px;overflow:hidden;box-shadow:var(--sh);height:340px;flex:1;min-width:0;transition:opacity .5s var(--ease), transform .5s var(--ease);}
-  .tc-card.featured{display:block;opacity:1;transform:none;z-index:2;box-shadow:var(--sh-lift);animation:tcPop .5s var(--ease);}
-  @keyframes tcPop{from{opacity:0;transform:scale(.96);}to{opacity:1;transform:none;}}
+  .tc-card{display:none;position:relative;overflow:hidden;box-shadow:var(--sh);height:340px;flex:1;min-width:0;border-radius:var(--arch);transition:opacity .5s var(--ease), transform .5s var(--ease);}
+  .tc-card.featured{display:block;opacity:1;transform:none;z-index:2;box-shadow:var(--sh-lift);}
   .tc-card img{width:100%;height:100%;object-fit:cover;}
   .tc-card .tc-veil{position:absolute;inset:0;background:linear-gradient(180deg, transparent 40%, rgba(20,31,56,.92) 100%);}
-  .tc-card .tc-txt{position:absolute;left:0;right:0;bottom:0;padding:16px;color:#fff;}
+  .tc-card .tc-txt{position:absolute;left:0;right:0;bottom:0;padding:18px;color:#fff;}
   .tc-card h4{font-family:var(--display);font-weight:400;font-size:17px;margin:0 0 3px;}
-  .tc-card .role{font-size:9.5px;color:var(--gold-bright);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;}
+  .tc-card .role{font-size:9.5px;color:var(--gold);background:rgba(255,255,255,.92);display:inline-block;border-radius:99px;padding:3px 10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px;}
   .tc-card .tc-desc{font-size:11.5px;color:rgba(255,255,255,.85);margin:0;line-height:1.5;display:none;min-height:2.4em;}
   .tc-card .tc-desc::after{content:"";display:inline-block;width:2px;height:1em;background:var(--gold-bright);margin-left:2px;vertical-align:middle;animation:caret .8s step-end infinite;}
   .tc-card.featured .tc-desc{display:block;}
@@ -163,71 +202,115 @@
   .tc-dot.on{background:var(--gold);width:18px;border-radius:4px;}
   .photo-note{font-size:11px;color:var(--ink-soft);text-align:right;margin-top:10px;font-style:italic;}
 
-  .stats-band{background:var(--navy);margin-top:56px;padding:44px 0;position:relative;overflow:hidden;}
-  .stats-band::after{content:"";position:absolute;right:-80px;top:-80px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle, rgba(192,138,45,.25), transparent 70%);}
+  .stats-band{background:var(--brand);margin-top:0;padding:44px 0;position:relative;overflow:hidden;}
+  .stats-band::after{content:"";position:absolute;right:-80px;top:-80px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle, rgba(126,86,31,.35), transparent 70%);}
   .stats{display:grid;grid-template-columns:1fr 1fr;gap:26px;position:relative;z-index:2;}
   .stat{text-align:center;color:#fff;}
   .stat .n{font-family:var(--display);font-weight:300;font-size:36px;color:var(--gold-bright);line-height:1;}
-  .stat .l{font-size:11.5px;opacity:.75;margin-top:8px;letter-spacing:.03em;}
+  .stat .l{font-size:11.5px;opacity:.92;margin-top:8px;letter-spacing:.03em;}
 
+  #testimonios{background:var(--brand);padding-bottom:52px;position:relative;overflow:hidden;}
+  #testimonios::after{content:"";position:absolute;right:-90px;top:20%;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle, rgba(228,190,120,.14), transparent 70%);pointer-events:none;}
+  #testimonios .wrap{position:relative;z-index:2;}
+  #testimonios .s-eyebrow{color:var(--gold-bright);}
+  #testimonios h2{color:#fff;}
+  #testimonios .lead{color:rgba(255,255,255,.92);}
   .testis{display:flex;flex-direction:column;gap:16px;}
   .testi{background:var(--card);border-radius:16px;padding:26px 22px;box-shadow:var(--sh);display:flex;flex-direction:column;transition:transform .4s var(--ease), box-shadow .4s var(--ease);}
   .testi .qm{font-family:var(--display);font-size:42px;line-height:.6;color:var(--gold);margin-bottom:14px;}
-  .testi .q{font-size:13.5px;color:var(--ink);flex:1;line-height:1.7;}
+  .testi .q{font-family:var(--display);font-style:italic;font-weight:400;font-size:15.5px;color:var(--ink);flex:1;line-height:1.65;}
   .testi .who{margin-top:18px;display:flex;align-items:center;gap:11px;border-top:1px solid var(--line);padding-top:14px;}
   .testi .ava{width:38px;height:38px;border-radius:50%;object-fit:cover;}
-  .testi .who .nm{font-size:13px;font-weight:700;color:var(--navy);}
+  .testi .who .nm{font-size:13px;font-weight:700;color:var(--brand);}
   .testi .who .dz{font-size:11px;color:var(--ink-soft);}
 
-  .testi-invite{margin-top:16px;background:var(--gold-bg);border:1px solid rgba(192,138,45,.4);border-radius:16px;padding:20px 22px;}
+  .testi-invite{margin-top:16px;background:var(--gold-bg);border:1px solid rgba(126,86,31,.3);border-radius:16px;padding:20px 22px;}
   .ti-view{display:flex;flex-direction:column;gap:14px;align-items:flex-start;}
-  .testi-invite h4{font-family:var(--display);font-weight:400;font-size:18px;color:var(--navy);margin:0 0 4px;}
+  .testi-invite h4{font-family:var(--display);font-weight:400;font-size:18px;color:var(--brand);margin:0 0 4px;}
   .testi-invite p{font-size:13px;color:var(--ink-soft);margin:0;}
-  .btn-testi{background:var(--navy);color:#fff;border:none;border-radius:999px;padding:11px 22px;font-size:13px;font-weight:700;cursor:pointer;transition:all .25s var(--ease);white-space:nowrap;flex-shrink:0;font-family:var(--sans);}
-  .btn-testi:hover{transform:translateY(-2px);background:var(--navy-2);}
+  .btn-testi{background:var(--brand);color:#fff;border:none;border-radius:999px;padding:11px 22px;font-size:13px;font-weight:700;cursor:pointer;transition:all .25s var(--ease);white-space:nowrap;flex-shrink:0;font-family:var(--sans);}
+  .btn-testi:hover{transform:translateY(-2px);background:var(--brand-2);}
   .btn-testi-cancel{background:none;border:none;color:var(--ink-soft);font-size:13px;font-weight:700;cursor:pointer;padding:11px 6px;font-family:var(--sans);}
   .ti-form{display:none;flex-direction:column;gap:4px;}
   .ti-form.open{display:flex;}
   .ti-form label{margin:10px 0 6px;}
   .ti-form label:first-child{margin-top:0;}
   .ti-form-btns{display:flex;align-items:center;gap:6px;margin-top:14px;}
-  .testi.pending{border:1.5px dashed rgba(192,138,45,.5);}
+  .testi.pending{border:1.5px dashed rgba(126,86,31,.5);}
   .testi .pending-tag{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--gold);background:var(--gold-bg);border-radius:99px;padding:3px 10px;margin-bottom:10px;}
 
   .zones-compact{margin-top:34px;padding-top:28px;border-top:1px solid var(--line);}
   .zc-label{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:700;margin-bottom:12px;}
   .zones{display:flex;flex-wrap:wrap;gap:7px;}
   .zchip{background:var(--bg-2);border:1px solid var(--line);border-radius:999px;padding:6px 13px;font-size:11.5px;color:var(--ink-soft);font-weight:600;}
-  .zchip.od{background:var(--gold-bg);border-color:rgba(192,138,45,.4);color:var(--gold);}
+  .zchip.od{background:var(--gold-bg);border-color:rgba(126,86,31,.4);color:var(--gold);}
   .zc-note{font-size:12.5px;color:var(--ink-soft);margin:14px 0 0;}
   .zc-note a{color:var(--gold);font-weight:700;text-decoration:none;border-bottom:1px solid var(--gold);}
 
-  .final-cta{margin:44px 0 0;text-align:center;}
-  .fc-label{font-family:var(--display);font-style:italic;font-weight:300;font-size:17px;color:var(--navy);margin-bottom:16px;}
-  .fc-btns{display:flex;flex-direction:column;gap:10px;}
-  .fc-btn{background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:14px 20px;font-size:14px;font-weight:700;color:var(--navy);cursor:pointer;transition:all .25s var(--ease);font-family:var(--sans);text-decoration:none;display:inline-block;text-align:center;}
-  .fc-btn-wa{background:#1DA851;border-color:#1DA851;color:#fff;}
-  .fc-btn:hover{border-color:var(--gold);background:var(--gold-bg);transform:translateY(-2px);}
-  .fc-btn-wa:hover{background:#189145;border-color:#189145;color:#fff;transform:translateY(-2px);}
+  /* ---------- Nosotros: oscuro (elegido tras revisión) ---------- */
+  #nosotros{background:var(--brand);position:relative;overflow:hidden;}
+  #nosotros::before{content:"";position:absolute;left:-80px;top:10%;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle, rgba(228,190,120,.14), transparent 70%);pointer-events:none;}
+  #nosotros .wrap{position:relative;z-index:2;}
+  #nosotros .s-eyebrow{color:var(--gold-bright);}
+  #nosotros h2{color:#fff;}
+  #nosotros .lead{color:rgba(255,255,255,.92);}
+  #nosotros .about-copy blockquote{color:#fff;border-left-color:var(--gold-bright);}
+  #nosotros .zones-compact{border-top-color:rgba(255,255,255,.18);}
+  #nosotros .zc-label{color:#fff;}
+  #nosotros .zchip{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.2);color:#fff;}
+  #nosotros .zc-note{color:rgba(255,255,255,.85);}
+  #nosotros .zc-note a{color:var(--gold-bright);border-color:var(--gold-bright);}
+  #nosotros .photo-note{color:rgba(255,255,255,.7);}
+  #nosotros .tc-arrow{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.25);color:#fff;}
+  #nosotros .zc-full summary{color:var(--gold-bright);}
 
-  footer{background:var(--navy);color:#B9BFCF;padding:48px 0 100px;margin-top:70px;}
+  /* ---------- Zonas: mapa coroplético (firma de la sección) ---------- */
+  .choropleth-wrap{background:var(--brand);border-radius:20px;padding:16px;position:relative;overflow:hidden;box-shadow:var(--sh-lift);}
+  .zonemap-canvas{height:360px;border-radius:14px;overflow:hidden;background:#0a0e18;}
+  .zonemap-canvas .zonemap-tiles-dark, .browse-map-canvas .zonemap-tiles-dark{filter:invert(1) hue-rotate(180deg) brightness(.92) contrast(.88) saturate(.7);}
+  .zonemap-canvas .leaflet-popup-content-wrapper{background:var(--card);color:var(--ink);border-radius:10px;font-family:var(--sans);}
+  .zonemap-canvas .leaflet-popup-tip{background:var(--card);}
+  .zonemap-canvas .leaflet-control-attribution{background:rgba(11,15,26,.75);color:rgba(255,255,255,.55);}
+  .zonemap-canvas .leaflet-control-attribution a{color:var(--gold-bright);}
+  .zonemap-canvas .district-poly{transition:fill-opacity .2s var(--ease), fill .2s var(--ease);}
+  .choropleth-legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;padding:0 2px;}
+  .cl-item{display:flex;align-items:center;gap:7px;font-size:11px;color:rgba(255,255,255,.75);font-weight:600;}
+  .cl-swatch{width:12px;height:12px;border-radius:4px;flex-shrink:0;}
+
+  .zc-full{margin-top:18px;}
+  .zc-full summary{cursor:pointer;font-size:12.5px;font-weight:700;color:var(--gold);list-style:none;display:inline-flex;align-items:center;gap:5px;}
+  .zc-full summary::-webkit-details-marker{display:none;}
+  .zc-full summary::after{content:"▾";transition:transform .25s var(--ease);}
+  .zc-full[open] summary::after{transform:rotate(180deg);}
+  .zc-full .zones{margin-top:14px;}
+
+  .final-cta-band{background:var(--brand);margin-top:0;padding:60px 0;position:relative;overflow:hidden;}
+  .fc-canvas{position:absolute;inset:0;pointer-events:none;}
+  .final-cta{text-align:center;position:relative;z-index:2;}
+  .fc-label{font-family:var(--display);font-style:italic;font-weight:300;font-size:18px;color:var(--gold-bright);margin-bottom:18px;}
+  .fc-btns{display:flex;flex-direction:column;gap:10px;}
+  .fc-btn{background:transparent;border:1.5px solid var(--gold-bright);border-radius:999px;padding:14px 20px;font-size:14px;font-weight:700;color:var(--gold-bright);cursor:pointer;transition:all .25s var(--ease);font-family:var(--sans);text-decoration:none;display:inline-block;text-align:center;}
+  .fc-btn-wa{background:var(--wa);border-color:var(--wa);color:#fff;}
+  .fc-btn:hover{background:rgba(228,190,120,.14);transform:translateY(-2px);}
+  .fc-btn-wa:hover{background:var(--wa-dark);border-color:var(--wa-dark);color:#fff;transform:translateY(-2px);}
+
+  footer{background:var(--brand);color:rgba(255,255,255,.85);padding:48px 0 100px;margin-top:0;}
   footer .fgrid{display:flex;flex-direction:column;gap:32px;max-width:1200px;margin:0 auto;padding:0 20px;}
-  footer .flogo-img{height:60px;margin-bottom:12px;}
-  footer p, footer a{font-size:13px;color:#98A0B5;text-decoration:none;line-height:1.8;}
-  .footer-tagline{font-family:var(--display);font-style:italic;font-weight:300;font-size:19px;color:var(--gold-bright);animation:footerGlow 3.2s ease-in-out infinite;}
-  @keyframes footerGlow{0%,100%{text-shadow:0 0 4px rgba(227,169,60,.3);filter:brightness(1);}50%{text-shadow:0 0 20px rgba(227,169,60,.9),0 0 38px rgba(227,169,60,.45);filter:brightness(1.3);}}
+  footer .flogo-img{height:58px;margin-bottom:12px;}
+  footer p, footer a{font-size:13px;color:rgba(255,255,255,.82);text-decoration:none;line-height:1.8;}
+  .footer-tagline{font-family:var(--display);font-style:italic;font-weight:300;font-size:19px;color:var(--gold-bright);}
   footer a:hover{color:#fff;}
   footer h5{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-bright);margin:0 0 13px;}
   footer li{margin-bottom:8px;list-style:none;}
   footer ul{margin:0;padding:0;}
-  footer .fbottom{max-width:1200px;margin:32px auto 0;padding:22px 20px 0;border-top:1px solid rgba(255,255,255,.1);font-size:12px;color:#8890A5;font-style:italic;font-family:var(--display);}
+  footer .fbottom{max-width:1200px;margin:32px auto 0;padding:22px 20px 0;border-top:1px solid rgba(255,255,255,.1);font-size:12px;color:rgba(255,255,255,.7);font-style:italic;font-family:var(--display);}
 
   /* ---------- Vistas ---------- */
   .view{display:none;}
   .view.active{display:block;animation:viewIn .5s var(--ease);}
   @keyframes viewIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
 
-  /* ---------- Flujo propietario (lado "calmo" — audiencia propietario) ---------- */
+  /* ---------- Flujo propietario ---------- */
   .flow-shell{min-height:100vh;}
   .flow-side{display:none;}
   .flow-main{padding:88px 20px 56px;display:flex;flex-direction:column;justify-content:center;max-width:640px;margin:0 auto;}
@@ -236,73 +319,123 @@
   .step-dot{flex:1;height:4px;border-radius:99px;background:var(--line);overflow:hidden;position:relative;}
   .step-dot::after{content:"";position:absolute;inset:0;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .6s var(--ease);}
   .step-dot.on::after{transform:scaleX(1);}
-  .flow-main h2{font-family:var(--display);font-weight:300;font-size:clamp(22px,6vw,36px);color:var(--navy);margin:0 0 10px;line-height:1.18;text-wrap:balance;}
+  .flow-main h2{font-family:var(--display);font-weight:300;font-size:clamp(22px,6vw,36px);color:var(--brand);margin:0 0 10px;line-height:1.18;text-wrap:balance;}
   .flow-main .sub{color:var(--ink-soft);margin-bottom:26px;font-size:14px;}
   .fstep{display:none;}
   .fstep.on{display:block;animation:viewIn .45s var(--ease);}
   .choices{display:flex;flex-direction:column;gap:10px;margin-bottom:6px;}
-  .choice{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:16px;cursor:pointer;text-align:left;font-size:14px;font-weight:600;color:var(--navy);transition:all .25s var(--ease);}
+  .choice{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:16px;cursor:pointer;text-align:left;font-size:14px;font-weight:600;color:var(--brand);transition:all .25s var(--ease);}
   .choice.sel{border-color:var(--gold);background:var(--gold-bg);}
-  label{display:block;font-size:11.5px;font-weight:700;color:var(--navy);margin:18px 0 8px;letter-spacing:.04em;text-transform:uppercase;}
+  label{display:block;font-size:11.5px;font-weight:700;color:var(--brand);margin:18px 0 8px;letter-spacing:.04em;text-transform:uppercase;}
   input[type=text], input[type=tel], textarea{width:100%;padding:14px 15px;border:1.5px solid var(--line);border-radius:13px;background:var(--card);font-size:15px;color:var(--ink);font-family:var(--sans);transition:border-color .25s, box-shadow .25s;}
-  input:focus, textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 4px rgba(192,138,45,.12);}
+  input:focus, textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 4px rgba(126,86,31,.14);}
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:none;border-radius:13px;padding:15px 24px;font-size:14px;font-weight:700;cursor:pointer;transition:all .25s var(--ease);text-decoration:none;font-family:var(--sans);}
-  .btn.primary{background:var(--navy);color:#fff;}
+  .btn.primary{background:var(--brand);color:#fff;}
   .btn.gold{background:var(--gold);color:#fff;}
-  .btn.wa{background:#1DA851;color:#fff;width:100%;font-size:15px;padding:16px;box-shadow:0 6px 18px rgba(29,168,81,.3);}
-  .btn.call{background:var(--card);color:var(--navy);border:1.5px solid var(--line);width:100%;font-size:15px;padding:16px;margin-top:12px;}
+  .btn.wa{background:var(--wa);color:#fff;width:100%;font-size:15px;padding:16px;box-shadow:0 6px 18px rgba(29,168,81,.3);}
+  .btn.call{background:var(--card);color:var(--brand);border:1.5px solid var(--line);width:100%;font-size:15px;padding:16px;margin-top:12px;}
   .btn-row{margin-top:26px;display:flex;flex-direction:column;gap:12px;}
-  .trust{display:flex;align-items:center;gap:14px;background:var(--gold-bg);border:1px solid rgba(192,138,45,.4);border-radius:16px;padding:16px;margin:6px 0 24px;}
+  .trust{display:flex;align-items:center;gap:14px;background:var(--gold-bg);border:1px solid rgba(126,86,31,.3);border-radius:16px;padding:16px;margin:6px 0 24px;}
   .trust img{width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0;}
   .trust .tt{font-size:12.5px;color:var(--ink);line-height:1.55;}
-  .trust .tt b{color:var(--navy);}
+  .trust .tt b{color:var(--brand);}
 
-  /* ---------- Explorador (lado "dinámico" — audiencia comprador/inquilino) ---------- */
+  /* ---------- Explorador ---------- */
   .browse{max-width:1200px;margin:0 auto;padding:88px 20px 56px;}
-  .browse h2{font-family:var(--display);font-weight:300;font-size:clamp(24px,7vw,40px);color:var(--navy);margin:0 0 8px;}
+  .browse h2{font-family:var(--display);font-weight:300;font-size:clamp(24px,7vw,40px);color:var(--brand);margin:0 0 8px;}
   .browse .sub{color:var(--ink-soft);margin-bottom:20px;font-size:14px;}
-  .filters{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin:0 -20px 22px;padding-left:20px;padding-right:20px;scrollbar-width:none;}
-  .filters::-webkit-scrollbar{display:none;}
   .chip{flex-shrink:0;background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:9px 16px;font-size:12.5px;font-weight:600;color:var(--ink-soft);cursor:pointer;transition:all .2s var(--ease);white-space:nowrap;}
-  .chip.sel{background:var(--navy);border-color:var(--navy);color:#fff;transform:scale(1.04);}
+  .chip.sel{background:var(--brand);border-color:var(--brand);color:#fff;transform:scale(1.04);}
 
-  .advfilters{display:grid;grid-template-columns:1fr 1fr;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:22px;}
-  .af-item{display:flex;flex-direction:column;gap:5px;}
-  .af-item label{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);}
-  .af-item select{width:100%;padding:10px 11px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);font-size:13px;color:var(--ink);font-family:var(--sans);}
-  .af-item select:focus{outline:none;border-color:var(--gold);}
+  /* ---------- Buscador ---------- */
+  .searchbar{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+  .sb-input{display:flex;align-items:center;gap:9px;background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;transition:border-color .2s var(--ease);}
+  .sb-input:focus-within{border-color:var(--gold);}
+  .sb-input svg{width:17px;height:17px;color:var(--ink-soft);flex-shrink:0;}
+  .sb-input input{flex:1;min-width:0;border:none;background:none;outline:none;font-size:14px;color:var(--ink);font-family:var(--sans);}
+  .sb-input input::placeholder{color:var(--ink-soft);}
+  .sb-more{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:12px 16px;font-size:13px;font-weight:700;color:var(--brand);cursor:pointer;font-family:var(--sans);transition:all .2s var(--ease);}
+  .sb-more:hover{border-color:var(--gold);}
+  .sb-more svg{width:16px;height:16px;color:var(--gold);}
+  .sb-more-count{display:none;background:var(--gold);color:#fff;font-size:10.5px;font-weight:700;border-radius:99px;padding:2px 7px;}
+  .sb-more-count.show{display:inline-block;}
+
+  /* ---------- Filtros rápidos ---------- */
+  .quickfilters{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+  .qf-group{display:flex;gap:7px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+  .qf-group::-webkit-scrollbar{display:none;}
+
+  .results-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px;flex-wrap:wrap;}
+  .results-count{font-size:13px;color:var(--ink-soft);font-weight:600;}
+  .sort-wrap{display:flex;align-items:center;gap:8px;}
+  .sort-wrap label{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft);}
+  .sort-wrap select{padding:8px 10px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);font-size:12.5px;color:var(--ink);font-family:var(--sans);}
+  .sort-wrap select:focus{outline:none;border-color:var(--gold);}
+
   .cur-toggle{display:flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden;}
   .cur-btn{flex:1;background:var(--bg);border:none;padding:9px 6px;font-size:12.5px;font-weight:700;color:var(--ink-soft);cursor:pointer;font-family:var(--sans);}
-  .cur-btn.sel{background:var(--navy);color:#fff;}
-  .af-reset{grid-column:1/-1;background:none;border:none;color:var(--gold);font-weight:700;font-size:12.5px;cursor:pointer;text-align:left;padding:2px 0 0;font-family:var(--sans);}
+  .cur-btn.sel{background:var(--brand);color:#fff;}
+  .af-reset{background:none;border:none;color:var(--gold);font-weight:700;font-size:12.5px;cursor:pointer;text-align:left;padding:12px 0;font-family:var(--sans);}
   .browse-grid{display:flex;flex-direction:column;gap:18px;}
   .props{display:flex;flex-direction:column;gap:14px;}
   .prop.hide{opacity:0;transform:scale(.92);max-height:0;margin:0;padding:0;border:0;pointer-events:none;box-shadow:none;}
   .no-results{display:none;text-align:center;padding:30px 20px;color:var(--ink-soft);font-size:13.5px;background:var(--card);border-radius:16px;border:1px dashed var(--line);}
   .no-results.show{display:block;}
-  .prop{background:var(--card);border-radius:16px;overflow:hidden;box-shadow:var(--sh);cursor:pointer;transition:transform .4s var(--ease), box-shadow .4s var(--ease), opacity .35s var(--ease), max-height .4s var(--ease);opacity:0;transform:translateY(16px) scale(.98);animation:propIn .5s var(--ease) forwards;max-height:600px;}
+  .prop{background:var(--card);border-radius:16px;overflow:hidden;box-shadow:var(--sh);cursor:pointer;transition:transform .4s var(--ease), box-shadow .4s var(--ease), opacity .35s var(--ease), max-height .4s var(--ease);opacity:0;transform:translateY(16px) scale(.98);animation:propIn .5s var(--ease) forwards;max-height:700px;}
   @keyframes propIn{to{opacity:1;transform:none;}}
   .prop .ph{height:170px;overflow:hidden;position:relative;}
   .prop .ph img{width:100%;height:100%;object-fit:cover;transition:transform 1.1s var(--ease);}
   .prop .ptag{position:absolute;top:11px;left:11px;background:rgba(20,31,56,.85);backdrop-filter:blur(4px);color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:5px 11px;}
+  .prop .pfav{position:absolute;top:9px;right:9px;width:32px;height:32px;border-radius:50%;background:rgba(11,15,26,.55);backdrop-filter:blur(4px);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s var(--ease);}
+  .prop .pfav .heart{width:16px;height:16px;color:#fff;transition:all .2s var(--ease);}
+  .prop .pfav:hover{background:rgba(11,15,26,.75);}
+  .prop .pfav.on .heart{color:var(--gold-bright);fill:var(--gold-bright);}
   .prop .pi{padding:15px 16px 16px;}
-  .prop .price{font-family:var(--display);font-size:19px;color:var(--navy);}
+  .prop .price{font-family:var(--display);font-size:19px;color:var(--brand);}
   .prop .pt{font-size:12px;font-weight:600;color:var(--ink);margin:3px 0 1px;}
   .prop .pz{font-size:11.5px;color:var(--gold);font-weight:700;letter-spacing:.03em;}
-  .prop .pd{font-size:11.5px;color:var(--ink-soft);margin-top:6px;line-height:1.5;}
-  .mapbox{border-radius:16px;height:220px;position:relative;overflow:hidden;box-shadow:var(--sh);}
-  .mapbox img{width:100%;height:100%;object-fit:cover;filter:saturate(.75);}
-  .mapbox .mveil{position:absolute;inset:0;background:rgba(20,31,56,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#fff;text-align:center;padding:22px;}
-  .mapbox .mveil b{font-family:var(--display);font-weight:400;font-size:17px;}
-  .mapbox .mveil span{font-size:12px;color:rgba(255,255,255,.8);max-width:34ch;}
-  .wishbox{margin-top:24px;background:var(--navy);border-radius:18px;padding:30px 24px;box-shadow:var(--sh-lift);position:relative;overflow:hidden;display:flex;flex-direction:column;gap:16px;}
-  .wishbox::after{content:"";position:absolute;right:-60px;bottom:-90px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle, rgba(192,138,45,.3), transparent 70%);animation:wbPulse 5s ease-in-out infinite;}
-  @keyframes wbPulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.15);opacity:.7;}}
-  .wb-icon{position:relative;z-index:2;width:46px;height:46px;border-radius:50%;background:rgba(227,169,60,.15);border:1.5px solid rgba(227,169,60,.4);display:flex;align-items:center;justify-content:center;color:var(--gold-bright);flex-shrink:0;}
+  .prop .ptags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+  .prop .pchip{font-size:10px;font-weight:600;background:var(--bg-2);color:var(--ink-soft);border-radius:99px;padding:3px 9px;}
+  .prop .pchip.pet{background:var(--gold-bg);color:var(--gold);}
+  .prop .pd{font-size:11.5px;color:var(--ink-soft);margin-top:8px;line-height:1.5;}
+  .mapbox{border-radius:16px;height:280px;position:relative;overflow:hidden;box-shadow:var(--sh);background:#0a0e18;}
+  .browse-map-canvas{width:100%;height:100%;}
+  .browse-map-canvas .leaflet-popup-content-wrapper{background:var(--card);color:var(--ink);border-radius:10px;font-family:var(--sans);}
+  .browse-map-canvas .leaflet-popup-tip{background:var(--card);}
+  .browse-map-canvas .leaflet-control-attribution{background:rgba(11,15,26,.75);color:rgba(255,255,255,.55);font-size:9px;}
+  .browse-map-canvas .leaflet-control-attribution a{color:var(--gold-bright);}
+  .bm-popup{font-size:12.5px;}
+  .bm-popup b{font-family:var(--display);font-size:14px;color:var(--brand);display:block;margin-bottom:2px;}
+
+  /* ---------- Más filtros: hoja / panel ---------- */
+  .mf-scrim{position:fixed;inset:0;background:rgba(9,13,24,.55);z-index:210;opacity:0;pointer-events:none;transition:opacity .35s var(--ease);}
+  .mf-scrim.show{opacity:1;pointer-events:auto;}
+  .mf-panel{position:fixed;left:0;right:0;bottom:0;z-index:211;background:var(--bg);border-radius:22px 22px 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.3);transform:translateY(100%);transition:transform .4s var(--ease);max-height:82vh;display:flex;flex-direction:column;}
+  .mf-panel.open{transform:translateY(0);}
+  .mf-handle{width:38px;height:4px;border-radius:99px;background:var(--line);margin:12px auto 2px;flex-shrink:0;}
+  .mf-head{display:flex;align-items:center;justify-content:space-between;padding:8px 20px 12px;flex-shrink:0;border-bottom:1px solid var(--line);}
+  .mf-title{font-family:var(--display);font-weight:400;font-style:italic;font-size:19px;color:var(--brand);}
+  .mf-close{background:var(--card);border:1px solid var(--line);width:30px;height:30px;border-radius:50%;font-size:13px;color:var(--ink-soft);cursor:pointer;}
+  .mf-body{overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:20px;}
+  .mf-row label{display:block;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:9px;}
+  .mf-range{display:flex;align-items:center;gap:8px;}
+  .mf-range input{width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:11px;background:var(--card);font-size:14px;color:var(--ink);font-family:var(--sans);}
+  .mf-range input:focus{outline:none;border-color:var(--gold);}
+  .mf-range span{color:var(--ink-soft);flex-shrink:0;}
+  .mf-toggle{display:flex;align-items:center;gap:11px;background:none;border:none;padding:0;cursor:pointer;font-size:13.5px;font-weight:600;color:var(--ink);font-family:var(--sans);text-align:left;}
+  .mf-toggle-track{width:38px;height:22px;border-radius:99px;background:var(--line);position:relative;flex-shrink:0;transition:background .2s var(--ease);}
+  .mf-toggle-thumb{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:var(--sh);transition:transform .2s var(--ease);}
+  .mf-toggle[data-on="true"] .mf-toggle-track{background:var(--gold);}
+  .mf-toggle[data-on="true"] .mf-toggle-thumb{transform:translateX(16px);}
+  .mf-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 20px;border-top:1px solid var(--line);flex-shrink:0;padding-bottom:calc(14px + var(--safe-b));}
+  .mf-foot .btn{flex-shrink:0;padding:13px 22px;}
+  .wishbox{margin-top:24px;background:var(--brand);border-radius:18px;padding:30px 24px;box-shadow:var(--sh-lift);position:relative;overflow:hidden;display:flex;flex-direction:column;gap:16px;}
+  .wishbox::after{content:"";position:absolute;right:-60px;bottom:-90px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle, rgba(126,86,31,.35), transparent 70%);}
+  .wb-icon{position:relative;z-index:2;width:46px;height:46px;border-radius:50%;background:rgba(228,190,120,.15);border:1.5px solid rgba(228,190,120,.4);display:flex;align-items:center;justify-content:center;color:var(--gold-bright);flex-shrink:0;}
   .wb-icon svg{width:22px;height:22px;}
   .wb-body{position:relative;z-index:2;}
   .wishbox h3{font-family:var(--display);font-weight:300;font-size:23px;color:#fff;margin:0 0 9px;}
-  .wishbox p{font-size:13px;color:#B9BFCF;margin:0 0 16px;max-width:70ch;}
+  .wishbox p{font-size:13px;color:rgba(255,255,255,.85);margin:0 0 16px;max-width:70ch;}
   .wishbox label{color:var(--gold-bright);position:relative;z-index:2;}
   .wishbox input, .wishbox textarea{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.2);color:#fff;position:relative;z-index:2;}
   .wishbox input::placeholder, .wishbox textarea::placeholder{color:#8890A5;}
@@ -311,15 +444,13 @@
   .wb-done{display:none;align-items:center;gap:14px;}
   .wb-done.show{display:flex;}
   .wb-done p{margin:0;}
-  .wb-check{flex-shrink:0;width:34px;height:34px;border-radius:50%;background:var(--good-bg,rgba(76,169,122,.2));border:1.5px solid #4CA97A;color:#4CA97A;display:flex;align-items:center;justify-content:center;font-weight:800;}
+  .wb-check{flex-shrink:0;width:34px;height:34px;border-radius:50%;background:rgba(76,169,122,.2);border:1.5px solid #4CA97A;color:#4CA97A;display:flex;align-items:center;justify-content:center;font-weight:800;}
 
   /* =====================================================================
-     TABLET / DESKTOP — mejoras progresivas desde acá arriba.
+     TABLET / DESKTOP
      ===================================================================== */
   @media (min-width: 640px){
     body{font-size:16px;}
-    .team{flex-direction:row;}
-    .person{height:340px;}
     .stats{grid-template-columns:repeat(4,1fr);}
     .browse-grid{flex-direction:row;align-items:flex-start;}
     .props{flex:1.15;display:grid;grid-template-columns:1fr 1fr;gap:16px;}
@@ -331,28 +462,33 @@
     header{padding:18px 0;}
     header.solid, header.on-inner{padding:11px 0;}
     .hwrap{padding:0 28px;}
-    .logo img{height:46px;}
+    .logo img{height:44px;}
     nav{display:flex;gap:26px;align-items:center;}
     nav a{color:rgba(255,255,255,.85);text-decoration:none;font-size:13.5px;font-weight:600;letter-spacing:.02em;transition:color .25s;}
     nav a:hover{color:#fff;}
-    header.solid nav a, header.on-inner nav a{color:var(--ink-soft);}
-    header.solid nav a:hover, header.on-inner nav a:hover{color:var(--navy);}
-    .btn-wa{display:inline-flex;background:#1DA851;color:#fff;border-radius:999px;padding:9px 18px;font-size:12.5px;font-weight:700;text-decoration:none;align-items:center;gap:7px;transition:all .25s var(--ease);box-shadow:0 4px 14px rgba(29,168,81,.35);white-space:nowrap;}
+    header.solid nav a, header.on-inner nav a{color:rgba(255,255,255,.8);}
+    header.solid nav a:hover, header.on-inner nav a:hover{color:var(--gold-bright);}
+    nav a.nav-cta{background:var(--gold-bright);color:var(--brand);padding:8px 18px;border-radius:999px;font-weight:700;}
+    nav a.nav-cta:hover{background:#fff;color:var(--brand);}
+    header.solid nav a.nav-cta, header.on-inner nav a.nav-cta{color:var(--brand);}
+    header.solid nav a.nav-cta:hover, header.on-inner nav a.nav-cta:hover{color:var(--brand);}
+    .btn-wa{display:inline-flex;background:var(--wa);color:#fff;border-radius:999px;padding:9px 18px;font-size:12.5px;font-weight:700;text-decoration:none;align-items:center;gap:7px;transition:all .25s var(--ease);box-shadow:0 4px 14px rgba(29,168,81,.35);white-space:nowrap;}
     .btn-wa:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(29,168,81,.45);}
     .btn-wa svg{width:14px;height:14px;fill:currentColor;}
     .burger, .mobile-menu{display:none !important;}
 
     .wrap{padding:0 28px;}
-    .hero .inner{padding:150px 28px 160px;}
+    .hero .inner{padding:158px 28px 164px;}
     .hero p.sub{font-size:17px;}
+    .hero .ticker{padding:9px 20px;}
+    .hero .tk-city{font-size:16px;}
 
-    /* Grid de rutas clásico reemplaza al bottom sheet */
     .routes-band{margin-top:-118px;padding-bottom:16px;}
     .routes{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
-    .route{position:relative;height:250px;border-radius:16px;overflow:hidden;cursor:pointer;border:none;padding:0;text-align:left;box-shadow:var(--sh);transition:transform .45s var(--ease), box-shadow .45s var(--ease);opacity:0;animation:rise .8s var(--ease) forwards;}
+    .route{position:relative;height:250px;border-radius:var(--arch);overflow:hidden;cursor:pointer;border:none;border-bottom:4px solid var(--gold);padding:0;text-align:left;box-shadow:var(--sh);transition:transform .45s var(--ease), box-shadow .45s var(--ease), border-color .3s var(--ease);opacity:0;animation:rise .8s var(--ease) forwards;}
     .route:nth-child(1){animation-delay:.55s;} .route:nth-child(2){animation-delay:.68s;}
     .route:nth-child(3){animation-delay:.81s;} .route:nth-child(4){animation-delay:.94s;}
-    .route:hover{transform:translateY(-7px);box-shadow:var(--sh-lift);}
+    .route:hover{transform:translateY(-7px);box-shadow:var(--sh-lift);border-color:var(--gold-bright);}
     .route .rimg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform 1.4s var(--ease), filter .4s var(--ease);}
     .route:hover .rimg{transform:scale(1.14);filter:brightness(.85);}
     .route .rveil{position:absolute;inset:0;background:linear-gradient(180deg, rgba(20,31,56,.28) 0%, rgba(20,31,56,.94) 100%);transition:background .4s var(--ease);}
@@ -367,15 +503,15 @@
     .icon-contract .pen-group{animation:penMove 2.8s ease-in-out infinite;}
     @keyframes writeLine{0%,10%{stroke-dashoffset:8;}45%,65%{stroke-dashoffset:0;}100%{stroke-dashoffset:8;}}
     @keyframes penMove{0%,10%{transform:translate(-8px,0);}45%,65%{transform:translate(0,0);}100%{transform:translate(-8px,0);}}
-
     .icon-door .door-panel-group{transform-box:fill-box;transform-origin:0% 50%;animation:doorOpen 2.8s ease-in-out infinite;}
     @keyframes doorOpen{0%,10%{transform:scaleX(1) skewY(0deg);}45%,65%{transform:scaleX(.22) skewY(10deg);}100%{transform:scaleX(1) skewY(0deg);}}
+
     .route h3{font-family:var(--display);font-weight:400;font-size:19.5px;margin:0 0 5px;line-height:1.2;}
     .route p{font-size:12.5px;color:rgba(255,255,255,.78);margin:0;max-height:0;overflow:hidden;opacity:0;transition:all .45s var(--ease);}
     .route:hover p{max-height:80px;opacity:1;margin-bottom:7px;}
     .route .go{font-size:12px;font-weight:700;color:var(--gold-bright);letter-spacing:.04em;}
-    .routes-hint{display:block;text-align:center;font-size:13.5px;color:var(--ink-soft);padding:24px 0 8px;}
-    .routes-hint a{color:var(--gold);font-weight:700;text-decoration:none;border-bottom:1px solid var(--gold);}
+    .routes-hint{display:block;text-align:center;font-size:13.5px;color:rgba(255,255,255,.6);padding:24px 0 8px;}
+    .routes-hint a{color:var(--gold-bright);font-weight:700;text-decoration:none;border-bottom:1px solid var(--gold-bright);}
 
     .sheet-collapsed, .sheet, .sheet-scrim{display:none !important;}
 
@@ -384,23 +520,22 @@
     section.free .lead{font-size:16px;margin-bottom:36px;}
     .about-split{flex-direction:row;align-items:center;gap:48px;}
     .about-split > *{flex:1;}
-    .about-photo img{height:500px;}
-    .about-photo:hover img{transform:scale(1.05);}
+    .about-photo img{height:520px;}
+    .about-photo:hover img{transform:scale(1.04);}
     .about-photo .badge{bottom:20px;left:20px;padding:13px 19px;}
     .about-photo .badge .bn{font-size:25px;}
-    .about-copy blockquote{font-size:20px;padding-left:20px;margin:26px 0;}
+    .about-copy blockquote{font-size:21px;padding-left:20px;margin:26px 0;}
 
-    .team-carousel{gap:16px;}
+    .team-carousel{gap:16px;margin-top:72px;}
     .tc-arrow{width:44px;height:44px;font-size:22px;}
     .tc-cards{gap:16px;}
-    .tc-card{display:block;height:420px;opacity:.5;transform:scale(.92);animation:none;}
-    .tc-card.featured{opacity:1;transform:scale(1.04) translateY(-6px);animation:none;}
+    .tc-card{display:block;height:420px;opacity:.5;transform:scale(.92);}
+    .tc-card.featured{opacity:1;transform:scale(1.04) translateY(-6px);}
     .tc-card .tc-txt{padding:24px;}
     .tc-card h4{font-size:22px;}
-    .tc-card .role{font-size:11px;}
     .tc-card .tc-desc{font-size:13.5px;}
 
-    .stats-band{margin-top:76px;padding:58px 0;}
+    .stats-band{padding:58px 0;}
     .stats{gap:26px;}
     .stat .n{font-size:48px;}
     .stat .l{font-size:12.5px;margin-top:9px;}
@@ -412,37 +547,44 @@
     .ti-view{flex-direction:row;align-items:center;justify-content:space-between;}
     .testi-invite{margin-top:22px;padding:24px 30px;}
     .zones-compact{margin-top:48px;padding-top:34px;}
-    .final-cta{margin:60px 0 0;}
+    .choropleth-wrap{padding:22px;}
+    .zonemap-canvas{height:460px;}
+    .final-cta-band{padding:64px 0;}
     .fc-btns{flex-direction:row;justify-content:center;flex-wrap:wrap;}
     .fc-btn{padding:14px 26px;}
 
-    footer{padding:58px 0 40px;margin-top:100px;}
+    footer{padding:58px 0 40px;}
     footer .fgrid{flex-direction:row;gap:40px;padding:0 28px;}
     footer .fgrid > div:first-child{flex:2;}
     footer .fgrid > div{flex:1;}
-    footer .flogo-img{height:74px;}
+    footer .flogo-img{height:72px;}
     footer .fbottom{margin:40px auto 0;padding:24px 28px 0;}
 
-    /* Flujo propietario: recupera panel lateral con cita — mantiene ritmo calmo */
     .flow-shell{display:grid;grid-template-columns:1fr 1fr;}
     .flow-side{display:block;position:relative;overflow:hidden;min-height:100vh;}
     .flow-side .fimg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1400&q=80') center/cover;}
-    .flow-side .fveil{position:absolute;inset:0;background:linear-gradient(200deg, rgba(20,31,56,.5), rgba(20,31,56,.85));}
+    .flow-side .fveil{position:absolute;inset:0;background:linear-gradient(200deg, rgba(20,31,56,.5), rgba(20,31,56,.87));}
     .flow-side .fquote{position:absolute;bottom:52px;left:40px;right:40px;color:#fff;}
     .flow-side .fquote .fq{font-family:var(--display);font-weight:300;font-style:italic;font-size:23px;line-height:1.45;}
     .flow-side .fquote .fa{margin-top:13px;font-size:12.5px;color:var(--gold-bright);letter-spacing:.08em;text-transform:uppercase;font-weight:700;}
     .flow-main{padding:104px 64px 72px;}
     .btn-row{flex-direction:row;}
 
-    /* Explorador: más denso y con motion, coherente con la energía "dinámica" */
     .browse{padding:110px 28px 80px;}
     .browse h2{font-size:clamp(26px,3.8vw,40px);}
     .browse .sub{font-size:15px;margin-bottom:26px;}
-    .filters{margin:0 0 18px;padding:0;overflow:visible;flex-wrap:wrap;}
     .chip{padding:8px 18px;font-size:13px;}
-    .chip:hover{border-color:var(--gold);color:var(--navy);}
-    .advfilters{grid-template-columns:repeat(6,1fr) auto;align-items:end;gap:12px;padding:18px 20px;}
-    .af-reset{grid-column:auto;white-space:nowrap;}
+    .chip:hover{border-color:var(--gold);color:var(--brand);}
+
+    .searchbar{flex-direction:row;}
+    .sb-input{flex:1;}
+    .sb-more{flex-shrink:0;position:relative;}
+    .quickfilters{flex-direction:row;flex-wrap:wrap;}
+    .qf-group{overflow-x:visible;}
+    .mf-panel{left:auto;right:28px;top:170px;bottom:auto;width:380px;max-height:min(560px,80vh);border-radius:18px;box-shadow:var(--sh-lift);transform:translateY(12px) scale(.97);opacity:0;pointer-events:none;transition:transform .25s var(--ease), opacity .2s var(--ease);}
+    .mf-panel.open{transform:translateY(0) scale(1);opacity:1;pointer-events:auto;}
+    .mf-handle{display:none;}
+    .mf-scrim{background:transparent;}
     .mapbox{border-radius:16px;}
     .prop:hover{transform:translateY(-6px) scale(1.01);box-shadow:var(--sh-lift);}
     .prop:hover .ph img{transform:scale(1.1) rotate(.4deg);}
@@ -453,26 +595,32 @@
   @media (min-width: 1200px){
     .props{grid-template-columns:1fr 1fr;}
   }
+
+  /* ---------- Movimiento reducido ---------- */
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;}
+    html{scroll-behavior:auto;}
+  }
 </style>
 </head>
 <body>
 
 <header id="hdr">
   <div class="hwrap">
-    <a class="logo" href="#" onclick="go('home');return false;"><!--BRAND-LOGO--><img class="l-light" src="assets/quintana-logo-trim.png" alt="Quintana Propiedades"><img class="l-dark" src="assets/quintana-logo-dark.png" alt="Quintana Propiedades"><!--/BRAND-LOGO--></a>
+    <a class="logo" href="#" onclick="go('home');return false;"><img class="l-light" src="assets/quintana-logo-trim.png" alt="Quintana Propiedades"><img class="l-dark" src="assets/quintana-logo-dark.png" alt="Quintana Propiedades"></a>
     <nav>
       <a href="#" onclick="go('home');return false;">Inicio</a>
-      <a href="#" onclick="startBrowse('comprar');return false;">Propiedades</a>
       <a href="#nosotros" onclick="goAnchor('nosotros');return false;">Nosotros</a>
       <a href="#testimonios" onclick="goAnchor('testimonios');return false;">Testimonios</a>
+      <a class="nav-cta" href="#" onclick="startBrowse('comprar');return false;">Ver propiedades</a>
     </nav>
     <a class="btn-wa" href="https://wa.me/51947176425?text=Hola%2C%20quiero%20conversar%20sobre%20una%20propiedad" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.4 14.1c-.2.7-1.3 1.3-1.8 1.3-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5s.8 1.9.8 2c.1.1.1.3 0 .5l-.4.6c-.1.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1.1 2.2 1.4 2.5 1.5.3.1.5.1.7-.1l.9-1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.7-.2 1.1z"/></svg> Conversemos</a>
     <button class="burger" onclick="toggleMenu()" aria-label="Menú"><span></span><span></span><span></span></button>
   </div>
 </header>
 <div class="mobile-menu" id="mmenu">
+  <a class="mm-cta" href="#" onclick="closeMenu();startBrowse('comprar');return false;">Ver propiedades →</a>
   <a href="#" onclick="closeMenu();go('home');return false;">Inicio</a>
-  <a href="#" onclick="closeMenu();startBrowse('comprar');return false;">Propiedades</a>
   <a href="#" onclick="closeMenu();goAnchor('nosotros');return false;">Nosotros</a>
   <a href="#" onclick="closeMenu();goAnchor('testimonios');return false;">Testimonios</a>
   <a href="#" onclick="closeMenu();startFlow('vender');return false;">Vender mi propiedad</a>
@@ -482,18 +630,32 @@
 <!-- ============ VISTA: HOME ============ -->
 <div class="view active" id="view-home">
 
-  <div class="hero">
+  <div class="hero" id="heroEl">
     <div class="bg" id="heroBg"></div>
     <div class="veil"></div>
     <div class="vignette"></div>
-    <div class="grain"></div>
-    <div class="inner" id="heroInner">
-      <h1>Vende, alquila, compra o renta,<br>en <em id="cycleDistrict">San Borja</em>.</h1>
-      <p class="sub">Doce años. Más de 200 familias. Cero sorpresas.</p>
-      <div class="tagline">Cada llave, un nuevo inicio.</div>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="motes" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
     </div>
+    <div class="inner" id="heroInner">
+      <div class="eyebrow">Quintana Propiedades</div>
+      <h1>Vende, alquila, compra<br>o renta, en Lima y provincia.</h1>
+      <div class="ticker">
+        <span class="tk-dot"></span>
+        <span class="tk-label">Trabajamos en</span>
+        <span class="tk-city" id="cycleDistrict">San Borja</span>
+      </div>
+      <div class="tagline">Cada llave, un nuevo inicio.</div>
+      <p class="sub">Doce años. Más de 200 familias. Cero sorpresas.</p>
+    </div>
+    <div class="door door-l"></div>
+    <div class="door door-r"></div>
   </div>
 
+  <section class="routes-outer" id="routesOuter">
+  <canvas class="fc-canvas" id="routesCanvas" aria-hidden="true"></canvas>
   <div class="wrap routes-band">
     <div class="routes">
       <button class="route" onclick="startFlow('vender')">
@@ -539,6 +701,7 @@
     </div>
     <div class="routes-hint">¿Solo mirando? Perfecto — <a href="#nosotros" onclick="goAnchor('nosotros');return false;">conócenos primero</a> o <a href="https://wa.me/51947176425?text=Hola%2C%20tengo%20una%20consulta" target="_blank">escríbenos directamente</a>.</div>
   </div>
+  </section>
 
   <section class="free" id="nosotros">
     <div class="wrap">
@@ -552,19 +715,19 @@
           <h2>Doce años acompañando decisiones importantes</h2>
           <p class="lead" style="margin-bottom:0;">Vender o alquilar una propiedad no es como vender una gaseosa. Hay historia, hay emociones y hay mucho en juego.</p>
           <blockquote>"Vemos a cada cliente como una persona, no como una cifra. Por eso hablamos con franqueza, en cada paso."</blockquote>
-          <p class="lead" style="margin-bottom:0;font-size:13.5px;">— Oscar Ayala Quintana, fundador</p>
+          <p class="lead" style="margin-bottom:0;font-size:13.5px;">— Oscar Quintana, fundador</p>
         </div>
       </div>
 
-      <div class="team-carousel rv-scale" style="margin-top:44px;">
+      <div class="team-carousel rv-scale">
         <button class="tc-arrow prev" onclick="teamNav(-1)" aria-label="Anterior">‹</button>
         <div class="tc-cards" id="teamCards">
           <div class="tc-card" data-i="0">
-            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80" alt="Oscar Ayala Quintana">
+            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80" alt="Oscar Quintana">
             <div class="tc-veil"></div>
             <div class="tc-txt">
               <div class="role">Fundador</div>
-              <h4>Oscar Ayala Quintana</h4>
+              <h4>Oscar Quintana</h4>
               <p class="tc-desc" data-full="12 años en el rubro y más de 200 operaciones cerradas. Fundó la empresa para hacer las cosas como se debe: con la persona al centro."></p>
             </div>
           </div>
@@ -594,15 +757,26 @@
 
       <div class="zones-compact rv-rise">
         <div class="zc-label">Zonas de cobertura</div>
-        <div class="zones">
-          <span class="zchip">Lima</span><span class="zchip">Ate</span><span class="zchip">Barranco</span><span class="zchip">Breña</span><span class="zchip">Chorrillos</span><span class="zchip">Comas</span><span class="zchip">El Agustino</span><span class="zchip">Independencia</span><span class="zchip">Jesús María</span><span class="zchip">La Molina</span><span class="zchip">La Victoria</span><span class="zchip">Lince</span><span class="zchip">Los Olivos</span><span class="zchip">Magdalena del Mar</span><span class="zchip">Miraflores</span><span class="zchip">Pueblo Libre</span><span class="zchip">Puente Piedra</span><span class="zchip">Rímac</span><span class="zchip">San Borja</span><span class="zchip">San Isidro</span><span class="zchip">San Juan de Lurigancho</span><span class="zchip">San Juan de Miraflores</span><span class="zchip">San Luis</span><span class="zchip">San Martín de Porres</span><span class="zchip">San Miguel</span><span class="zchip">Santa Anita</span><span class="zchip">Santiago de Surco</span><span class="zchip">Surquillo</span><span class="zchip">Villa El Salvador</span><span class="zchip">Villa María del Triunfo</span><span class="zchip">Ancón</span><span class="zchip">Carabayllo</span><span class="zchip">Chaclacayo</span><span class="zchip">Cieneguilla</span><span class="zchip">Lurigancho-Chosica</span><span class="zchip">Lurín</span><span class="zchip">Pachacámac</span><span class="zchip">Pucusana</span><span class="zchip">Punta Hermosa</span><span class="zchip">Punta Negra</span><span class="zchip">San Bartolo</span><span class="zchip">Santa María del Mar</span><span class="zchip">Santa Rosa</span><span class="zchip">Callao</span><span class="zchip">Bellavista</span><span class="zchip">Carmen de la Legua Reynoso</span><span class="zchip">La Perla</span><span class="zchip">La Punta</span><span class="zchip">Ventanilla</span><span class="zchip">Mi Perú</span><span class="zchip od">Trujillo · bajo demanda</span><span class="zchip od">Pisco · bajo demanda</span>
+
+        <div class="choropleth-wrap" id="choroplethWrap">
+          <div id="leafletMap" class="zonemap-canvas"></div>
+          <div class="choropleth-legend" id="choroplethLegend"></div>
         </div>
+
+        <details class="zc-full">
+          <summary>Ver la lista completa de distritos</summary>
+          <div class="zones">
+            <span class="zchip">Lima</span><span class="zchip">Ate</span><span class="zchip">Barranco</span><span class="zchip">Breña</span><span class="zchip">Chorrillos</span><span class="zchip">Comas</span><span class="zchip">El Agustino</span><span class="zchip">Independencia</span><span class="zchip">Jesús María</span><span class="zchip">La Molina</span><span class="zchip">La Victoria</span><span class="zchip">Lince</span><span class="zchip">Los Olivos</span><span class="zchip">Magdalena del Mar</span><span class="zchip">Miraflores</span><span class="zchip">Pueblo Libre</span><span class="zchip">Puente Piedra</span><span class="zchip">Rímac</span><span class="zchip">San Borja</span><span class="zchip">San Isidro</span><span class="zchip">San Juan de Lurigancho</span><span class="zchip">San Juan de Miraflores</span><span class="zchip">San Luis</span><span class="zchip">San Martín de Porres</span><span class="zchip">San Miguel</span><span class="zchip">Santa Anita</span><span class="zchip">Santiago de Surco</span><span class="zchip">Surquillo</span><span class="zchip">Villa El Salvador</span><span class="zchip">Villa María del Triunfo</span><span class="zchip">Ancón</span><span class="zchip">Carabayllo</span><span class="zchip">Chaclacayo</span><span class="zchip">Cieneguilla</span><span class="zchip">Lurigancho-Chosica</span><span class="zchip">Lurín</span><span class="zchip">Pachacámac</span><span class="zchip">Pucusana</span><span class="zchip">Punta Hermosa</span><span class="zchip">Punta Negra</span><span class="zchip">San Bartolo</span><span class="zchip">Santa María del Mar</span><span class="zchip">Santa Rosa</span><span class="zchip">Callao</span><span class="zchip">Bellavista</span><span class="zchip">Carmen de la Legua Reynoso</span><span class="zchip">La Perla</span><span class="zchip">La Punta</span><span class="zchip">Ventanilla</span><span class="zchip">Mi Perú</span><span class="zchip od">Trujillo · bajo demanda</span><span class="zchip od">Pisco · bajo demanda</span><span class="zchip od">Piura · bajo demanda</span>
+          </div>
+        </details>
         <p class="zc-note">¿No ves tu zona aquí? Cuéntanos igual — a veces sí podemos ayudarte. <a href="https://wa.me/51947176425?text=Hola%2C%20quiero%20consultar%20por%20una%20zona%20que%20no%20vi%20en%20la%20lista" target="_blank">Escríbenos</a>.</p>
       </div>
     </div>
   </section>
 
-  <div class="stats-band rv-scale">
+  <div class="stats-band rv-scale" id="statsBand">
+    <canvas class="fc-canvas" id="statsCanvas" aria-hidden="true"></canvas>
+    <div class="motes" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
     <div class="wrap">
       <div class="stats">
         <div class="stat"><div class="n" data-count="200">0</div><div class="l">Operaciones cerradas</div></div>
@@ -614,6 +788,7 @@
   </div>
 
   <section class="free" id="testimonios">
+    <div class="motes" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
     <div class="wrap">
       <div class="s-eyebrow rv">Testimonios</div>
       <h2 class="rv">Historias reales, contadas por sus protagonistas</h2>
@@ -658,22 +833,25 @@
     </div>
   </section>
 
-  <div class="wrap">
-    <div class="final-cta rv-bounce">
-      <div class="fc-label">¿Con qué te ayudamos?</div>
-      <div class="fc-btns">
-        <button class="fc-btn" onclick="startFlow('vender')">Vender mi propiedad</button>
-        <button class="fc-btn" onclick="startFlow('alquilar')">Alquilar mi propiedad</button>
-        <button class="fc-btn" onclick="startBrowse('comprar')">Comprar</button>
-        <button class="fc-btn" onclick="startBrowse('rentar')">Rentar</button>
-        <a class="fc-btn fc-btn-wa" href="https://wa.me/51947176425?text=Hola%2C%20quiero%20una%20asesor%C3%ADa" target="_blank">Asesoría</a>
+  <div class="final-cta-band rv-scale" id="finalCtaBand">
+    <canvas class="fc-canvas" id="fcCanvas" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <div class="final-cta">
+        <div class="fc-label">¿Con qué te ayudamos?</div>
+        <div class="fc-btns">
+          <button class="fc-btn" onclick="startFlow('vender')">Vender mi propiedad</button>
+          <button class="fc-btn" onclick="startFlow('alquilar')">Alquilar mi propiedad</button>
+          <button class="fc-btn" onclick="startBrowse('comprar')">Comprar</button>
+          <button class="fc-btn" onclick="startBrowse('rentar')">Rentar</button>
+          <a class="fc-btn fc-btn-wa" href="https://wa.me/51947176425?text=Hola%2C%20quiero%20una%20asesor%C3%ADa" target="_blank">Asesoría</a>
+        </div>
       </div>
     </div>
   </div>
 
 </div>
 
-<!-- ============ VISTA: FLUJO PROPIETARIO (calmo) ============ -->
+<!-- ============ VISTA: FLUJO PROPIETARIO ============ -->
 <div class="view" id="view-flow">
   <div class="flow-shell">
     <div class="flow-side">
@@ -681,7 +859,7 @@
       <div class="fveil"></div>
       <div class="fquote">
         <div class="fq">"Te contamos la verdad sobre tu propiedad, con franqueza y cuidado. Por eso nuestros clientes vuelven."</div>
-        <div class="fa">Oscar Ayala Quintana · Fundador</div>
+        <div class="fa">Oscar Quintana · Fundador</div>
       </div>
     </div>
     <div class="flow-main">
@@ -718,7 +896,7 @@
         <p class="sub">Elige cómo prefieres que empiece la conversación:</p>
         <div class="trust">
           <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&q=80" alt="Oscar">
-          <div class="tt"><b>Oscar Ayala Quintana</b> — fundador, 12 años de experiencia — revisará personalmente tu caso y <b>te responde en menos de 1 hora</b> en horario de oficina.</div>
+          <div class="tt"><b>Oscar Quintana</b> — fundador, 12 años de experiencia — revisará personalmente tu caso y <b>te responde en menos de 1 hora</b> en horario de oficina.</div>
         </div>
         <a class="btn wa" href="#">Escríbenos ahora</a>
         <a class="btn call" href="#">Prefiero que me llamen</a>
@@ -727,105 +905,63 @@
   </div>
 </div>
 
-<!-- ============ VISTA: EXPLORADOR (dinámico) ============ -->
+<!-- ============ VISTA: EXPLORADOR ============ -->
 <div class="view" id="view-browse">
   <div class="browse">
     <button class="back" onclick="go('home')">← Volver al inicio</button>
     <h2 id="browse-title">Propiedades en venta</h2>
     <p class="sub">Explora con calma — cada ficha tiene toda la información, sin sorpresas guardadas para después.</p>
 
-    <div class="filters" id="filterChips">
-      <button class="chip sel" data-f="zone" data-v="">Todos los distritos</button>
-      <button class="chip" data-f="zone" data-v="La Molina">La Molina</button>
-      <button class="chip" data-f="zone" data-v="Callao">Callao</button>
-      <button class="chip" data-f="zone" data-v="Chosica">Chosica</button>
-      <button class="chip" data-f="zone" data-v="Santa Anita">Santa Anita</button>
-      <button class="chip" data-f="zone" data-v="San Isidro">San Isidro</button>
-      <button class="chip" data-f="zone" data-v="Miraflores">Miraflores</button>
-      <button class="chip" data-f="zone" data-v="Surco">Surco</button>
-      <button class="chip" data-f="zone" data-v="San Borja">San Borja</button>
+    <div class="searchbar">
+      <div class="sb-input">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" id="fSearch" placeholder="Distrito, característica... ej. San Borja, piscina, mascotas">
+      </div>
+      <button class="sb-more" id="moreFiltersBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+        Más filtros<span class="sb-more-count" id="moreFiltersCount"></span>
+      </button>
     </div>
 
-    <div class="advfilters">
-      <div class="af-item">
-        <label>Operación</label>
-        <select id="fOp">
-          <option value="">Cualquiera</option>
-          <option value="En venta">En venta</option>
-          <option value="Alquiler">Alquiler</option>
+    <div class="quickfilters">
+      <div class="qf-group" id="opGroup">
+        <button class="chip sel" data-v="">Todos</button>
+        <button class="chip" data-v="En venta">Venta</button>
+        <button class="chip" data-v="Alquiler">Alquiler</button>
+      </div>
+      <div class="qf-group" id="typeGroup">
+        <button class="chip sel" data-v="">Cualquier tipo</button>
+        <button class="chip" data-v="Departamento">Depa</button>
+        <button class="chip" data-v="Casa">Casa</button>
+        <button class="chip" data-v="Terreno">Terreno</button>
+        <button class="chip" data-v="Local">Local</button>
+      </div>
+      <div class="qf-group" id="roomsGroup">
+        <button class="chip sel" data-v="0">Dorm.</button>
+        <button class="chip" data-v="1">1+</button>
+        <button class="chip" data-v="2">2+</button>
+        <button class="chip" data-v="3">3+</button>
+        <button class="chip" data-v="4">4+</button>
+      </div>
+      <div class="qf-group" id="sectorGroup"></div>
+    </div>
+
+    <div class="results-bar">
+      <div class="results-count" id="resultsCount"></div>
+      <div class="sort-wrap">
+        <label for="fSort">Ordenar</label>
+        <select id="fSort">
+          <option value="relevancia">Relevancia</option>
+          <option value="precio-asc">Precio: menor a mayor</option>
+          <option value="precio-desc">Precio: mayor a menor</option>
+          <option value="m2-desc">m²: mayor a menor</option>
         </select>
       </div>
-      <div class="af-item">
-        <label>Tipo</label>
-        <select id="fType">
-          <option value="">Cualquiera</option>
-          <option value="Departamento">Departamento</option>
-          <option value="Casa">Casa</option>
-          <option value="Terreno">Terreno</option>
-          <option value="Local">Local comercial</option>
-        </select>
-      </div>
-      <div class="af-item">
-        <label>Precio (US$)</label>
-        <select id="fPrice">
-          <option value="">Cualquiera</option>
-          <option value="0-200000">Hasta $200,000</option>
-          <option value="200000-500000">$200,000 – $500,000</option>
-          <option value="500000-1000000">$500,000 – $1,000,000</option>
-          <option value="1000000-999999999">Más de $1,000,000</option>
-        </select>
-      </div>
-      <div class="af-item">
-        <label>Dormitorios</label>
-        <select id="fRooms">
-          <option value="">Cualquiera</option>
-          <option value="1">1+</option>
-          <option value="2">2+</option>
-          <option value="3">3+</option>
-          <option value="4">4+</option>
-        </select>
-      </div>
-      <div class="af-item">
-        <label>Baños</label>
-        <select id="fBaths">
-          <option value="">Cualquiera</option>
-          <option value="1">1+</option>
-          <option value="2">2+</option>
-          <option value="3">3+</option>
-        </select>
-      </div>
-      <div class="af-item">
-        <label>m²</label>
-        <select id="fM2">
-          <option value="">Cualquiera</option>
-          <option value="0-100">Hasta 100</option>
-          <option value="100-200">100 – 200</option>
-          <option value="200-500">200 – 500</option>
-          <option value="500-999999">Más de 500</option>
-        </select>
-      </div>
-      <div class="af-item">
-        <label>Estacionamientos</label>
-        <select id="fParking">
-          <option value="">Cualquiera</option>
-          <option value="1">1+</option>
-          <option value="2">2+</option>
-          <option value="3">3+</option>
-        </select>
-      </div>
-      <div class="af-item af-currency">
-        <label>Ver precios en</label>
-        <div class="cur-toggle">
-          <button class="cur-btn sel" data-cur="usd">US$</button>
-          <button class="cur-btn" data-cur="pen">S/</button>
-        </div>
-      </div>
-      <button class="af-reset" id="filterReset">Limpiar filtros</button>
     </div>
 
     <div class="browse-grid">
       <div class="props" id="propsGrid">
-        <div class="prop" data-op="En venta" data-zone="La Molina" data-type="Departamento" data-price="199000" data-m2="130" data-rooms="3" data-baths="2" data-parking="2" style="animation-delay:.05s">
+        <div class="prop" data-id="p1" data-op="En venta" data-zone="La Molina" data-sector="este" data-type="Departamento" data-price="199000" data-m2="130" data-rooms="3" data-baths="2" data-parking="2" data-pets="true" data-amenities="Piscina,Áreas verdes" data-lat="-12.0797" data-lng="-76.9358">
           <div class="ph"><img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">En venta</span></div>
           <div class="pi">
             <div class="price" data-usd="199000">US$ 199,000</div>
@@ -834,7 +970,7 @@
             <div class="pd">Frente a colegio, con piscina y zona BBQ. 2 cocheras.</div>
           </div>
         </div>
-        <div class="prop" data-op="En venta" data-zone="Callao" data-type="Casa" data-price="290000" data-m2="233" data-rooms="4" data-baths="3" data-parking="2" style="animation-delay:.12s">
+        <div class="prop" data-id="p2" data-op="En venta" data-zone="Callao" data-sector="callao" data-type="Casa" data-price="290000" data-m2="233" data-rooms="4" data-baths="3" data-parking="2" data-pets="true" data-amenities="Terraza,Seguridad 24h" data-lat="-12.0567" data-lng="-77.1181">
           <div class="ph"><img src="https://images.unsplash.com/photo-1628012209120-d9db7abf7eab?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">En venta</span></div>
           <div class="pi">
             <div class="price" data-usd="290000">US$ 290,000</div>
@@ -843,7 +979,7 @@
             <div class="pd">Amplia, ideal familia grande.</div>
           </div>
         </div>
-        <div class="prop" data-op="En venta" data-zone="Chosica" data-type="Casa" data-price="1800000" data-m2="9000" data-rooms="12" data-baths="6" data-parking="6" style="animation-delay:.19s">
+        <div class="prop" data-id="p3" data-op="En venta" data-zone="Lurigancho-Chosica" data-sector="este" data-type="Casa" data-price="1800000" data-m2="9000" data-rooms="12" data-baths="6" data-parking="6" data-pets="true" data-amenities="Áreas verdes,Piscina,Parrilla" data-lat="-11.9333" data-lng="-76.7042">
           <div class="ph"><img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">En venta</span></div>
           <div class="pi">
             <div class="price" data-usd="1800000">US$ 1,800,000</div>
@@ -852,7 +988,7 @@
             <div class="pd">Fundo con 6 cocheras. Ideal proyecto o inversión.</div>
           </div>
         </div>
-        <div class="prop" data-op="Alquiler" data-zone="Santa Anita" data-type="Local" data-price="10000" data-m2="730" data-rooms="0" data-baths="0" data-parking="0" style="animation-delay:.26s">
+        <div class="prop" data-id="p4" data-op="Alquiler" data-zone="Santa Anita" data-sector="este" data-type="Local" data-price="10000" data-m2="730" data-rooms="0" data-baths="0" data-parking="0" data-pets="false" data-amenities="" data-lat="-12.0431" data-lng="-76.9714">
           <div class="ph"><img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">Alquiler</span></div>
           <div class="pi">
             <div class="price" data-usd="10000">US$ 10,000 /mes</div>
@@ -861,14 +997,118 @@
             <div class="pd">Acceso a vía principal.</div>
           </div>
         </div>
+        <div class="prop" data-id="p5" data-op="En venta" data-zone="Miraflores" data-sector="moderna" data-type="Departamento" data-price="320000" data-m2="110" data-rooms="2" data-baths="2" data-parking="1" data-pets="false" data-amenities="Gimnasio,Ascensor,Seguridad 24h" data-lat="-12.1211" data-lng="-77.0296">
+          <div class="ph"><img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">En venta</span></div>
+          <div class="pi">
+            <div class="price" data-usd="320000">US$ 320,000</div>
+            <div class="pt">Departamento con vista · 2 dorm · 110 m²</div>
+            <div class="pz">Miraflores</div>
+            <div class="pd">A media cuadra del malecón, edificio con gimnasio.</div>
+          </div>
+        </div>
+        <div class="prop" data-id="p6" data-op="Alquiler" data-zone="San Isidro" data-sector="moderna" data-type="Departamento" data-price="1400" data-m2="95" data-rooms="2" data-baths="2" data-parking="1" data-pets="true" data-amenities="Gimnasio,Ascensor,Amoblado" data-lat="-12.0969" data-lng="-77.0364">
+          <div class="ph"><img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">Alquiler</span></div>
+          <div class="pi">
+            <div class="price" data-usd="1400">US$ 1,400 /mes</div>
+            <div class="pt">Departamento ejecutivo amoblado · 2 dorm · 95 m²</div>
+            <div class="pz">San Isidro</div>
+            <div class="pd">Ideal para ejecutivos, cerca al distrito financiero.</div>
+          </div>
+        </div>
+        <div class="prop" data-id="p7" data-op="En venta" data-zone="San Borja" data-sector="moderna" data-type="Departamento" data-price="245000" data-m2="140" data-rooms="3" data-baths="2" data-parking="2" data-pets="true" data-amenities="Áreas verdes,Piscina" data-lat="-12.1088" data-lng="-76.9986">
+          <div class="ph"><img src="https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">En venta</span></div>
+          <div class="pi">
+            <div class="price" data-usd="245000">US$ 245,000</div>
+            <div class="pt">Departamento familiar · 3 dorm · 140 m²</div>
+            <div class="pz">San Borja</div>
+            <div class="pd">Cerca a colegios y parques, condominio con piscina.</div>
+          </div>
+        </div>
+        <div class="prop" data-id="p8" data-op="En venta" data-zone="Santiago de Surco" data-sector="moderna" data-type="Casa" data-price="410000" data-m2="210" data-rooms="4" data-baths="3" data-parking="2" data-pets="true" data-amenities="Piscina,Parrilla,Seguridad 24h" data-lat="-12.1352" data-lng="-76.9931">
+          <div class="ph"><img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">En venta</span></div>
+          <div class="pi">
+            <div class="price" data-usd="410000">US$ 410,000</div>
+            <div class="pt">Casa en condominio cerrado · 4 dorm · 210 m²</div>
+            <div class="pz">Santiago de Surco</div>
+            <div class="pd">Condominio con áreas comunes y seguridad 24h.</div>
+          </div>
+        </div>
+        <div class="prop" data-id="p9" data-op="Alquiler" data-zone="Barranco" data-sector="moderna" data-type="Departamento" data-price="900" data-m2="60" data-rooms="1" data-baths="1" data-parking="0" data-pets="false" data-amenities="Amoblado,Ascensor" data-lat="-12.1447" data-lng="-77.0219">
+          <div class="ph"><img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">Alquiler</span></div>
+          <div class="pi">
+            <div class="price" data-usd="900">US$ 900 /mes</div>
+            <div class="pt">Loft amoblado · 1 dorm · 60 m²</div>
+            <div class="pz">Barranco</div>
+            <div class="pd">A pasos del malecón y la zona bohemia.</div>
+          </div>
+        </div>
+        <div class="prop" data-id="p10" data-op="En venta" data-zone="Jesús María" data-sector="moderna" data-type="Departamento" data-price="175000" data-m2="85" data-rooms="2" data-baths="2" data-parking="1" data-pets="true" data-amenities="Ascensor,Áreas verdes" data-lat="-12.0735" data-lng="-77.0489">
+          <div class="ph"><img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">En venta</span></div>
+          <div class="pi">
+            <div class="price" data-usd="175000">US$ 175,000</div>
+            <div class="pt">Departamento reciente · 2 dorm · 85 m²</div>
+            <div class="pz">Jesús María</div>
+            <div class="pd">Cerca a Campo de Marte, zona tranquila y central.</div>
+          </div>
+        </div>
+        <div class="prop" data-id="p11" data-op="En venta" data-zone="Los Olivos" data-sector="norte" data-type="Departamento" data-price="98000" data-m2="70" data-rooms="2" data-baths="1" data-parking="1" data-pets="true" data-amenities="Ascensor,Seguridad 24h" data-lat="-11.9698" data-lng="-77.0705">
+          <div class="ph"><img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">En venta</span></div>
+          <div class="pi">
+            <div class="price" data-usd="98000">US$ 98,000</div>
+            <div class="pt">Departamento nuevo · 2 dorm · 70 m²</div>
+            <div class="pz">Los Olivos</div>
+            <div class="pd">Estreno, cerca a Plaza Norte.</div>
+          </div>
+        </div>
+        <div class="prop" data-id="p12" data-op="Alquiler" data-zone="San Martín de Porres" data-sector="norte" data-type="Casa" data-price="700" data-m2="120" data-rooms="3" data-baths="2" data-parking="1" data-pets="true" data-amenities="Áreas verdes" data-lat="-12.0006" data-lng="-77.0858">
+          <div class="ph"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">Alquiler</span></div>
+          <div class="pi">
+            <div class="price" data-usd="700">US$ 700 /mes</div>
+            <div class="pt">Casa de dos pisos · 3 dorm · 120 m²</div>
+            <div class="pz">San Martín de Porres</div>
+            <div class="pd">Patio propio, ideal familia con mascotas.</div>
+          </div>
+        </div>
+        <div class="prop" data-id="p13" data-op="En venta" data-zone="Lima" data-sector="centro" data-type="Departamento" data-price="89000" data-m2="65" data-rooms="1" data-baths="1" data-parking="0" data-pets="false" data-amenities="Ascensor" data-lat="-12.0464" data-lng="-77.0428">
+          <div class="ph"><img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">En venta</span></div>
+          <div class="pi">
+            <div class="price" data-usd="89000">US$ 89,000</div>
+            <div class="pt">Departamento remodelado · 1 dorm · 65 m²</div>
+            <div class="pz">Lima (Cercado)</div>
+            <div class="pd">Edificio histórico remodelado, zona céntrica.</div>
+          </div>
+        </div>
+        <div class="prop" data-id="p14" data-op="Alquiler" data-zone="Breña" data-sector="centro" data-type="Departamento" data-price="550" data-m2="55" data-rooms="1" data-baths="1" data-parking="0" data-pets="false" data-amenities="" data-lat="-12.0586" data-lng="-77.0506">
+          <div class="ph"><img src="https://images.unsplash.com/photo-1502672023488-70e25813eb80?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">Alquiler</span></div>
+          <div class="pi">
+            <div class="price" data-usd="550">US$ 550 /mes</div>
+            <div class="pt">Departamento compacto · 1 dorm · 55 m²</div>
+            <div class="pz">Breña</div>
+            <div class="pd">Buena opción para empezar, cerca al centro.</div>
+          </div>
+        </div>
+        <div class="prop" data-id="p15" data-op="En venta" data-zone="Chorrillos" data-sector="sur" data-type="Departamento" data-price="155000" data-m2="90" data-rooms="2" data-baths="2" data-parking="1" data-pets="true" data-amenities="Áreas verdes,Ascensor" data-lat="-12.1750" data-lng="-77.0086">
+          <div class="ph"><img src="https://images.unsplash.com/photo-1600607687644-c7f34b5063c1?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">En venta</span></div>
+          <div class="pi">
+            <div class="price" data-usd="155000">US$ 155,000</div>
+            <div class="pt">Departamento cerca al mar · 2 dorm · 90 m²</div>
+            <div class="pz">Chorrillos</div>
+            <div class="pd">A pocas cuadras de la Costa Verde.</div>
+          </div>
+        </div>
+        <div class="prop" data-id="p16" data-op="En venta" data-zone="Villa El Salvador" data-sector="sur" data-type="Terreno" data-price="60000" data-m2="300" data-rooms="0" data-baths="0" data-parking="0" data-pets="false" data-amenities="" data-lat="-12.2119" data-lng="-76.9364">
+          <div class="ph"><img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=80" alt=""><span class="ptag">En venta</span></div>
+          <div class="pi">
+            <div class="price" data-usd="60000">US$ 60,000</div>
+            <div class="pt">Terreno habilitado · 300 m²</div>
+            <div class="pz">Villa El Salvador</div>
+            <div class="pd">Zona en crecimiento, con todos los servicios.</div>
+          </div>
+        </div>
         <div class="no-results" id="noResults">No hay propiedades que calcen con estos filtros ahora mismo — pero eso no significa que no podamos ayudarte. Cuéntanos qué buscas más abajo.</div>
       </div>
-      <div class="mapbox">
-        <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1000&q=80" alt="Mapa">
-        <div class="mveil">
-          <b>Mapa interactivo</b>
-          <span>Aquí irá el mapa con las propiedades ubicadas por zona — busca primero por donde quieres vivir, no por una lista infinita.</span>
-        </div>
+      <div class="mapbox" id="browseMapbox">
+        <div id="browseLeafletMap" class="browse-map-canvas"></div>
       </div>
     </div>
 
@@ -895,10 +1135,66 @@
   </div>
 </div>
 
+<!-- ---------- Más filtros: hoja inferior (móvil) / panel (desktop) ---------- -->
+<div class="mf-scrim" id="mfScrim"></div>
+<div class="mf-panel" id="mfPanel">
+  <div class="mf-handle"></div>
+  <div class="mf-head">
+    <div class="mf-title">Más filtros</div>
+    <button class="mf-close" id="mfClose" aria-label="Cerrar">✕</button>
+  </div>
+  <div class="mf-body">
+    <div class="mf-row">
+      <label>Precio (<span id="mfCurLabel">US$</span>)</label>
+      <div class="mf-range"><input type="number" id="fPriceMin" placeholder="Desde" inputmode="numeric"><span>–</span><input type="number" id="fPriceMax" placeholder="Hasta" inputmode="numeric"></div>
+    </div>
+    <div class="mf-row">
+      <label>Superficie (m²)</label>
+      <div class="mf-range"><input type="number" id="fM2Min" placeholder="Desde" inputmode="numeric"><span>–</span><input type="number" id="fM2Max" placeholder="Hasta" inputmode="numeric"></div>
+    </div>
+    <div class="mf-row">
+      <label>Baños</label>
+      <div class="qf-group" id="bathsGroup">
+        <button class="chip sel" data-v="0">Cualquiera</button>
+        <button class="chip" data-v="1">1+</button>
+        <button class="chip" data-v="2">2+</button>
+        <button class="chip" data-v="3">3+</button>
+      </div>
+    </div>
+    <div class="mf-row">
+      <label>Estacionamientos</label>
+      <div class="qf-group" id="parkingGroup">
+        <button class="chip sel" data-v="0">Cualquiera</button>
+        <button class="chip" data-v="1">1+</button>
+        <button class="chip" data-v="2">2+</button>
+        <button class="chip" data-v="3">3+</button>
+      </div>
+    </div>
+    <div class="mf-row">
+      <label>Mascotas</label>
+      <button class="mf-toggle" id="petsToggle" type="button" data-on="false">
+        <span class="mf-toggle-track"><span class="mf-toggle-thumb"></span></span>
+        Solo propiedades que acepten mascotas
+      </button>
+    </div>
+    <div class="mf-row">
+      <label>Moneda</label>
+      <div class="cur-toggle">
+        <button class="cur-btn sel" data-cur="usd">US$</button>
+        <button class="cur-btn" data-cur="pen">S/</button>
+      </div>
+    </div>
+  </div>
+  <div class="mf-foot">
+    <button class="af-reset" id="filterReset">Limpiar filtros</button>
+    <button class="btn primary" id="mfApply">Ver resultados</button>
+  </div>
+</div>
+
 <footer>
   <div class="fgrid">
     <div>
-      <img class="flogo-img" src="assets/quintana-logo-trim.png" alt="Quintana Propiedades"><!--BRAND-FOOTER-->
+      <img class="flogo-img" src="assets/quintana-logo-trim.png" alt="Quintana Propiedades">
       <p class="footer-tagline">Cada llave, un nuevo inicio.</p>
     </div>
     <div>
@@ -935,6 +1231,7 @@
   <div class="sheet-body" id="sheetBody"></div>
 </div>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
   const hdr = document.getElementById('hdr');
   const mmenu = document.getElementById('mmenu');
@@ -987,77 +1284,138 @@
     const op = kind === 'comprar' ? 'En venta' : 'Alquiler';
     document.getElementById('browse-title').textContent =
       kind === 'comprar' ? 'Propiedades en venta' : 'Propiedades en alquiler';
-    const fOpEl = document.getElementById('fOp');
-    if (fOpEl) fOpEl.value = op;
+    setQfGroup('opGroup', op);
     go('browse');
     applyFilters();
+    if (browseMap) setTimeout(() => browseMap.invalidateSize(), 60);
   }
   function selChoice(el){
     el.parentElement.querySelectorAll('.choice').forEach(c => c.classList.remove('sel'));
     el.classList.add('sel');
   }
   // ---------- Filtros de propiedades ----------
-  const filterChipsEl = document.getElementById('filterChips');
   const propsGrid = document.getElementById('propsGrid');
   const noResultsEl = document.getElementById('noResults');
   let currentCurrency = 'usd';
   const PEN_RATE = 3.75;
 
-  if (filterChipsEl) {
-    filterChipsEl.querySelectorAll('.chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        filterChipsEl.querySelectorAll('.chip').forEach(c => c.classList.remove('sel'));
-        chip.classList.add('sel');
-        applyFilters();
-      });
-    });
+  function qfSel(groupId){
+    const el = document.getElementById(groupId);
+    const sel = el && el.querySelector('.chip.sel');
+    return sel ? sel.dataset.v : '';
   }
-  ['fOp', 'fType', 'fPrice', 'fRooms', 'fBaths', 'fM2'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('change', applyFilters);
+  function setQfGroup(groupId, value){
+    const el = document.getElementById(groupId);
+    if (!el) return;
+    el.querySelectorAll('.chip').forEach(c => c.classList.toggle('sel', c.dataset.v === value));
+  }
+  document.querySelectorAll('.quickfilters .qf-group, #bathsGroup, #parkingGroup').forEach(group => {
+    group.addEventListener('click', e => {
+      const btn = e.target.closest('.chip');
+      if (!btn || !group.contains(btn)) return;
+      group.querySelectorAll('.chip').forEach(c => c.classList.remove('sel'));
+      btn.classList.add('sel');
+      applyFilters();
+    });
   });
-  const filterResetBtn = document.getElementById('filterReset');
-  if (filterResetBtn) filterResetBtn.addEventListener('click', () => {
-    filterChipsEl.querySelectorAll('.chip').forEach((c, i) => c.classList.toggle('sel', i === 0));
-    ['fOp', 'fType', 'fPrice', 'fRooms', 'fBaths', 'fM2'].forEach(id => { document.getElementById(id).value = ''; });
+
+  const fSearchEl = document.getElementById('fSearch');
+  if (fSearchEl) fSearchEl.addEventListener('input', applyFilters);
+  ['fPriceMin', 'fPriceMax', 'fM2Min', 'fM2Max'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', applyFilters);
+  });
+  const fSortEl = document.getElementById('fSort');
+  if (fSortEl) fSortEl.addEventListener('change', applyFilters);
+
+  const petsToggleEl = document.getElementById('petsToggle');
+  if (petsToggleEl) petsToggleEl.addEventListener('click', () => {
+    const on = petsToggleEl.dataset.on !== 'true';
+    petsToggleEl.dataset.on = on;
     applyFilters();
   });
 
-  function inRange(val, rangeStr) {
-    if (!rangeStr) return true;
-    const [min, max] = rangeStr.split('-').map(Number);
-    return val >= min && val <= max;
-  }
+  const filterResetBtn = document.getElementById('filterReset');
+  if (filterResetBtn) filterResetBtn.addEventListener('click', () => {
+    if (fSearchEl) fSearchEl.value = '';
+    ['fPriceMin', 'fPriceMax', 'fM2Min', 'fM2Max'].forEach(id => { document.getElementById(id).value = ''; });
+    if (petsToggleEl) petsToggleEl.dataset.on = 'false';
+    setQfGroup('opGroup', ''); setQfGroup('typeGroup', ''); setQfGroup('roomsGroup', '0');
+    setQfGroup('sectorGroup', ''); setQfGroup('bathsGroup', '0'); setQfGroup('parkingGroup', '0');
+    applyFilters();
+  });
+
+  function convertToUsd(val){ return currentCurrency === 'pen' ? val / PEN_RATE : val; }
+
   function applyFilters() {
     if (!propsGrid) return;
-    const zoneSel = filterChipsEl.querySelector('.chip.sel');
-    const zone = zoneSel ? zoneSel.dataset.v : '';
-    const op = document.getElementById('fOp').value;
-    const type = document.getElementById('fType').value;
-    const price = document.getElementById('fPrice').value;
-    const rooms = +document.getElementById('fRooms').value || 0;
-    const baths = +document.getElementById('fBaths').value || 0;
-    const m2 = document.getElementById('fM2').value;
+    const search = (fSearchEl ? fSearchEl.value : '').trim().toLowerCase();
+    const sector = qfSel('sectorGroup');
+    const op = qfSel('opGroup');
+    const type = qfSel('typeGroup');
+    const rooms = +qfSel('roomsGroup') || 0;
+    const baths = +qfSel('bathsGroup') || 0;
+    const parking = +qfSel('parkingGroup') || 0;
+    const petsOnly = petsToggleEl && petsToggleEl.dataset.on === 'true';
+    const priceMinEl = document.getElementById('fPriceMin'), priceMaxEl = document.getElementById('fPriceMax');
+    const m2MinEl = document.getElementById('fM2Min'), m2MaxEl = document.getElementById('fM2Max');
+    const priceMin = priceMinEl.value ? convertToUsd(+priceMinEl.value) : -Infinity;
+    const priceMax = priceMaxEl.value ? convertToUsd(+priceMaxEl.value) : Infinity;
+    const m2Min = m2MinEl.value ? +m2MinEl.value : -Infinity;
+    const m2Max = m2MaxEl.value ? +m2MaxEl.value : Infinity;
+
+    let activeCount = 0;
+    if (op) activeCount++; if (type) activeCount++; if (rooms) activeCount++; if (sector) activeCount++;
+    if (baths) activeCount++; if (parking) activeCount++; if (petsOnly) activeCount++;
+    if (priceMinEl.value || priceMaxEl.value) activeCount++;
+    if (m2MinEl.value || m2MaxEl.value) activeCount++;
+    const countEl = document.getElementById('moreFiltersCount');
+    const mfOnlyCount = (baths?1:0) + (parking?1:0) + (petsOnly?1:0) + (priceMinEl.value||priceMaxEl.value?1:0) + (m2MinEl.value||m2MaxEl.value?1:0);
+    if (countEl) { countEl.textContent = mfOnlyCount || ''; countEl.classList.toggle('show', mfOnlyCount > 0); }
+
+    const cards = Array.from(propsGrid.querySelectorAll('.prop'));
     let visibleCount = 0;
-    propsGrid.querySelectorAll('.prop').forEach(card => {
+    cards.forEach(card => {
+      const haystack = (card.dataset.zone + ' ' + card.dataset.amenities + ' ' + card.querySelector('.pt').textContent).toLowerCase();
       const match =
-        (!zone || card.dataset.zone === zone) &&
+        (!search || haystack.includes(search)) &&
+        (!sector || card.dataset.sector === sector) &&
         (!op || card.dataset.op === op) &&
         (!type || card.dataset.type === type) &&
-        inRange(+card.dataset.price, price) &&
         (+card.dataset.rooms >= rooms) &&
         (+card.dataset.baths >= baths) &&
-        inRange(+card.dataset.m2, m2);
+        (+card.dataset.parking >= parking) &&
+        (!petsOnly || card.dataset.pets === 'true') &&
+        (+card.dataset.price >= priceMin && +card.dataset.price <= priceMax) &&
+        (+card.dataset.m2 >= m2Min && +card.dataset.m2 <= m2Max);
       card.classList.toggle('hide', !match);
       if (match) visibleCount++;
     });
+
+    const sort = fSortEl ? fSortEl.value : 'relevancia';
+    if (sort !== 'relevancia') {
+      cards.sort((a, b) => {
+        if (sort === 'precio-asc') return +a.dataset.price - +b.dataset.price;
+        if (sort === 'precio-desc') return +b.dataset.price - +a.dataset.price;
+        if (sort === 'm2-desc') return +b.dataset.m2 - +a.dataset.m2;
+        return 0;
+      });
+      cards.forEach(card => propsGrid.appendChild(card));
+    }
+
     noResultsEl.classList.toggle('show', visibleCount === 0);
+    const resultsCountEl = document.getElementById('resultsCount');
+    if (resultsCountEl) resultsCountEl.textContent = visibleCount === 0 ? 'Sin resultados' :
+      (visibleCount === 1 ? '1 propiedad encontrada' : visibleCount + ' propiedades encontradas');
+
+    updateBrowseMapMarkers();
   }
 
   document.querySelectorAll('.cur-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.cur-btn').forEach(b => b.classList.remove('sel'));
       btn.classList.add('sel');
+      const prevCurrency = currentCurrency;
       currentCurrency = btn.dataset.cur;
       document.querySelectorAll('.prop .price').forEach(priceEl => {
         const usd = +priceEl.dataset.usd;
@@ -1068,6 +1426,15 @@
         } else {
           priceEl.textContent = 'US$ ' + usd.toLocaleString('en-US') + suffix;
         }
+      });
+      const curLabelEl = document.getElementById('mfCurLabel');
+      if (curLabelEl) curLabelEl.textContent = currentCurrency === 'pen' ? 'S/' : 'US$';
+      // re-expresar los rangos ya escritos en la nueva moneda, sin cambiar el rango real filtrado
+      ['fPriceMin', 'fPriceMax'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el || !el.value) return;
+        const usdVal = prevCurrency === 'pen' ? +el.value / PEN_RATE : +el.value;
+        el.value = Math.round(currentCurrency === 'pen' ? usdVal * PEN_RATE : usdVal);
       });
     });
   });
@@ -1086,11 +1453,11 @@
 
   // ---------- Bottom sheet "Quiero…" ----------
   const ROUTES = [
-    { num:'LLAVE 01', h:'Vender mi propiedad',  p:'Valorización honesta, promoción seria y acompañamiento hasta la inscripción en registros.', img:'https://images.unsplash.com/photo-1572704681866-977ba85b2d65?auto=format&fit=crop&w=300&q=80', act:() => startFlow('vender') },
-    { num:'LLAVE 02', h:'Alquilar mi propiedad', p:'Inquilinos evaluados y verificados, para tu tranquilidad de principio a fin.', img:'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=300&q=80', act:() => startFlow('alquilar') },
-    { num:'LLAVE 03', h:'Comprar una propiedad', p:'Propiedades reales con toda la información desde el inicio — sin sorpresas.', img:'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=300&q=80', act:() => startBrowse('comprar') },
-    { num:'LLAVE 04', h:'Rentar un lugar',       p:'Un lugar donde empezar de nuevo, mostrado tal como es.', img:'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=300&q=80', act:() => startBrowse('rentar') },
-    { num:'ASESORÍA', h:'Hablar con nosotros', p:'¿Tienes una duda puntual o prefieres contarnos tu caso directo? Escríbenos.', whatsapp:true, act:() => window.open('https://wa.me/51947176425?text=Hola%2C%20quiero%20más%20información', '_blank') }
+    { num:'Vender', h:'Vender mi propiedad',  p:'Valorización honesta, promoción seria y acompañamiento hasta la inscripción en registros.', img:'https://images.unsplash.com/photo-1572704681866-977ba85b2d65?auto=format&fit=crop&w=300&q=80', act:() => startFlow('vender') },
+    { num:'Alquilar', h:'Alquilar mi propiedad', p:'Inquilinos evaluados y verificados, para tu tranquilidad de principio a fin.', img:'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=300&q=80', act:() => startFlow('alquilar') },
+    { num:'Comprar', h:'Comprar una propiedad', p:'Propiedades reales con toda la información desde el inicio — sin sorpresas.', img:'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=300&q=80', act:() => startBrowse('comprar') },
+    { num:'Rentar', h:'Rentar un lugar',       p:'Un lugar donde empezar de nuevo, mostrado tal como es.', img:'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=300&q=80', act:() => startBrowse('rentar') },
+    { num:'Asesoría', h:'Hablar con nosotros', p:'¿Tienes una duda puntual o prefieres contarnos tu caso directo? Escríbenos.', whatsapp:true, act:() => window.open('https://wa.me/51947176425?text=Hola%2C%20quiero%20más%20información', '_blank') }
   ];
   const sheet = document.getElementById('sheet');
   const sheetScrim = document.getElementById('sheetScrim');
@@ -1136,7 +1503,7 @@
     sheet.classList.contains('open') ? closeSheet() : openSheet();
   }
 
-  // ---------- Testimonios: inline, con aprobación pendiente detrás ----------
+  // ---------- Testimonios ----------
   window.openTestiForm = function(){
     document.getElementById('tiView').style.display = 'none';
     document.getElementById('tiForm').classList.add('open');
@@ -1151,8 +1518,6 @@
     const name = document.getElementById('tiName').value.trim();
     if (!text || !name) return;
 
-    // Se muestra de inmediato para quien lo escribió, marcado como pendiente —
-    // la aprobación real (para que lo vean todos) queda para revisión manual, no es automática.
     const testisEl = document.querySelector('.testis');
     const card = document.createElement('div');
     card.className = 'testi rv-bounce pending';
@@ -1170,7 +1535,7 @@
     closeTestiForm();
   };
 
-  // ---------- Carrusel del equipo (centro destacado + typewriter) ----------
+  // ---------- Carrusel del equipo ----------
   const teamCards = Array.from(document.querySelectorAll('.tc-card'));
   const teamDots = document.getElementById('teamDots');
   teamCards.forEach((_, i) => {
@@ -1220,7 +1585,7 @@
   renderTeam();
   resetTeamTimer();
 
-  // Distritos rotando en el título del hero — los 43 de Lima + los 7 del Callao (50 en total), orden aleatorio
+  // Distritos rotando en el título del hero
   const DISTRICTS = [
     'Lima', 'Ate', 'Barranco', 'Breña', 'Chorrillos', 'Comas', 'El Agustino', 'Independencia',
     'Jesús María', 'La Molina', 'La Victoria', 'Lince', 'Los Olivos', 'Magdalena del Mar', 'Miraflores',
@@ -1239,14 +1604,22 @@
     do { next = Math.floor(Math.random() * DISTRICTS.length); } while (next === districtIdx);
     return next;
   }
+  const tickerEl = document.querySelector('.hero .ticker');
   setInterval(() => {
+    const startWidth = tickerEl.getBoundingClientRect().width;
+    tickerEl.style.width = startWidth + 'px';
     cycleEl.classList.add('swap');
     setTimeout(() => {
       districtIdx = nextRandomDistrictIdx();
       cycleEl.textContent = DISTRICTS[districtIdx];
+      tickerEl.style.width = 'auto';
+      const targetWidth = tickerEl.getBoundingClientRect().width;
+      tickerEl.style.width = startWidth + 'px';
+      tickerEl.offsetWidth; // fuerza reflow para que la transición anime desde startWidth
+      tickerEl.style.width = targetWidth + 'px';
       cycleEl.classList.remove('swap');
-    }, 450);
-  }, 2800);
+    }, 400);
+  }, 3400);
 
   // Parallax sutil del hero (todas las pantallas)
   const heroInner = document.getElementById('heroInner');
@@ -1254,12 +1627,10 @@
     if (currentView !== 'home') return;
     const y = window.scrollY;
     if (y < 900) {
-      heroInner.style.transform = `translateY(${y * .18}px)`;
-      heroInner.style.opacity = Math.max(1 - y / 620, 0);
+      heroInner.style.transform = `translateY(${y * .16}px)`;
     }
   }, { passive: true });
 
-  // Parallax cinematográfico extra — solo desktop, evita costo en mobile
   const desktopMQ = window.matchMedia('(min-width: 900px)');
   function setupDesktopParallax(){
     if (!desktopMQ.matches) return;
@@ -1270,7 +1641,7 @@
         if (!el) return;
         const rect = el.getBoundingClientRect();
         const centerDist = rect.top + rect.height / 2 - window.innerHeight / 2;
-        el.style.transform = `translateY(${centerDist * -rate}px) scale(1.06)`;
+        el.style.transform = `translateY(${centerDist * -rate}px) scale(1.05)`;
       });
     }, { passive: true });
   }
@@ -1302,6 +1673,294 @@
       requestAnimationFrame(tick);
     });
   }
+
+  // ---------- Zonas de cobertura: datos compartidos (mapa + clusters) ----------
+  // Coordenadas aproximadas (centroide visual del distrito) — para ubicar, no para medir.
+  const ZONES = {
+    centro:  { label:'Lima Centro',  items:[
+      {n:'Lima', lat:-12.0464, lng:-77.0428}, {n:'Breña', lat:-12.0586, lng:-77.0506},
+      {n:'La Victoria', lat:-12.0703, lng:-77.0175}, {n:'Rímac', lat:-12.0294, lng:-77.0281},
+      {n:'San Luis', lat:-12.0728, lng:-77.0064}
+    ]},
+    moderna: { label:'Lima Moderna', items:[
+      {n:'San Isidro', lat:-12.0969, lng:-77.0364}, {n:'Miraflores', lat:-12.1211, lng:-77.0296},
+      {n:'San Borja', lat:-12.1088, lng:-76.9986}, {n:'Santiago de Surco', lat:-12.1352, lng:-76.9931},
+      {n:'Barranco', lat:-12.1447, lng:-77.0219}, {n:'Jesús María', lat:-12.0735, lng:-77.0489},
+      {n:'Lince', lat:-12.0847, lng:-77.0339}, {n:'Magdalena del Mar', lat:-12.0928, lng:-77.0725},
+      {n:'Pueblo Libre', lat:-12.0736, lng:-77.0644}, {n:'San Miguel', lat:-12.0775, lng:-77.0917},
+      {n:'Surquillo', lat:-12.1108, lng:-77.0139}
+    ]},
+    norte:   { label:'Lima Norte',   items:[
+      {n:'Los Olivos', lat:-11.9698, lng:-77.0705}, {n:'Comas', lat:-11.9349, lng:-77.0517},
+      {n:'Independencia', lat:-11.9897, lng:-77.0503}, {n:'San Martín de Porres', lat:-12.0006, lng:-77.0858},
+      {n:'Puente Piedra', lat:-11.8636, lng:-77.0791}, {n:'Carabayllo', lat:-11.8492, lng:-77.0197},
+      {n:'Ancón', lat:-11.7739, lng:-77.1783}, {n:'Santa Rosa', lat:-11.7897, lng:-77.1719}
+    ]},
+    este:    { label:'Lima Este',    items:[
+      {n:'Ate', lat:-12.0267, lng:-76.9186}, {n:'La Molina', lat:-12.0797, lng:-76.9358},
+      {n:'Santa Anita', lat:-12.0431, lng:-76.9714}, {n:'San Juan de Lurigancho', lat:-11.9706, lng:-77.0004},
+      {n:'El Agustino', lat:-12.0389, lng:-77.0011}, {n:'Lurigancho-Chosica', lat:-11.9333, lng:-76.7042},
+      {n:'Chaclacayo', lat:-11.9789, lng:-76.7739}, {n:'Cieneguilla', lat:-12.0797, lng:-76.8339}
+    ]},
+    sur:     { label:'Lima Sur',     items:[
+      {n:'Chorrillos', lat:-12.1750, lng:-77.0086}, {n:'San Juan de Miraflores', lat:-12.1633, lng:-76.9722},
+      {n:'Villa El Salvador', lat:-12.2119, lng:-76.9364}, {n:'Villa María del Triunfo', lat:-12.1614, lng:-76.9433},
+      {n:'Lurín', lat:-12.2733, lng:-76.8703}, {n:'Pachacámac', lat:-12.2306, lng:-76.8342},
+      {n:'Pucusana', lat:-12.4822, lng:-76.7975}, {n:'Punta Hermosa', lat:-12.3319, lng:-76.8253},
+      {n:'Punta Negra', lat:-12.3600, lng:-76.8000}, {n:'San Bartolo', lat:-12.3897, lng:-76.7728},
+      {n:'Santa María del Mar', lat:-12.4211, lng:-76.7908}
+    ]},
+    callao:  { label:'Callao',       items:[
+      {n:'Callao', lat:-12.0567, lng:-77.1181}, {n:'Bellavista', lat:-12.0644, lng:-77.1200},
+      {n:'La Perla', lat:-12.0708, lng:-77.1197}, {n:'La Punta', lat:-12.0708, lng:-77.1614},
+      {n:'Carmen de la Legua Reynoso', lat:-12.0517, lng:-77.1042}, {n:'Ventanilla', lat:-11.8747, lng:-77.1281},
+      {n:'Mi Perú', lat:-11.8567, lng:-77.1108}
+    ]}
+  };
+
+  // ---------- Variante A: mapa real (Leaflet + CartoDB dark, sin API key) ----------
+  // Límites distritales (Lima provincia + Callao) — juaneladio/peru-geojson (INEI),
+  // recortado y redondeado a 4 decimales. 2 distritos del dataset original (La Punta,
+  // Santa Anita) no traían geometría válida y quedan solo en la lista de chips.
+  const PERU_DISTRICTS = {"type":"FeatureCollection","features":[{"type":"Feature","properties":{"s":"sur","n":"Pucusana"},"geometry":{"type":"Polygon","coordinates":[[[-76.7533,-12.4289],[-76.7517,-12.4627],[-76.7842,-12.5199],[-76.8025,-12.5043],[-76.7801,-12.4171],[-76.7533,-12.4289]]]}},{"type":"Feature","properties":{"s":"sur","n":"Santa María del Mar"},"geometry":{"type":"Polygon","coordinates":[[[-76.7569,-12.4015],[-76.7533,-12.4289],[-76.7801,-12.4171],[-76.7799,-12.3994],[-76.7569,-12.4015]]]}},{"type":"Feature","properties":{"s":"sur","n":"San Bartolo"},"geometry":{"type":"Polygon","coordinates":[[[-76.668,-12.3602],[-76.6834,-12.3821],[-76.7569,-12.4015],[-76.7799,-12.3994],[-76.7892,-12.3839],[-76.7254,-12.3413],[-76.6784,-12.3335],[-76.668,-12.3602]]]}},{"type":"Feature","properties":{"s":"sur","n":"Punta Negra"},"geometry":{"type":"Polygon","coordinates":[[[-76.6784,-12.3335],[-76.7254,-12.3413],[-76.7892,-12.3839],[-76.8162,-12.3454],[-76.7273,-12.2953],[-76.6656,-12.2438],[-76.6456,-12.2117],[-76.6211,-12.2269],[-76.6368,-12.2794],[-76.6784,-12.3335]]]}},{"type":"Feature","properties":{"s":"sur","n":"Villa El Salvador"},"geometry":{"type":"Polygon","coordinates":[[[-76.911,-12.2335],[-76.9399,-12.2477],[-76.9759,-12.2307],[-76.9729,-12.1949],[-76.9517,-12.1856],[-76.911,-12.2335]]]}},{"type":"Feature","properties":{"s":"sur","n":"Punta Hermosa"},"geometry":{"type":"Polygon","coordinates":[[[-76.6456,-12.2117],[-76.6656,-12.2438],[-76.7273,-12.2953],[-76.8162,-12.3454],[-76.8431,-12.3117],[-76.8192,-12.2828],[-76.7401,-12.2536],[-76.662,-12.178],[-76.6456,-12.2117]]]}},{"type":"Feature","properties":{"s":"sur","n":"Lurín"},"geometry":{"type":"Polygon","coordinates":[[[-76.662,-12.178],[-76.7401,-12.2536],[-76.8192,-12.2828],[-76.8431,-12.3117],[-76.9399,-12.2477],[-76.911,-12.2335],[-76.891,-12.2078],[-76.8458,-12.2212],[-76.7892,-12.2029],[-76.734,-12.1644],[-76.662,-12.178]]]}},{"type":"Feature","properties":{"s":"sur","n":"Chorrillos"},"geometry":{"type":"Polygon","coordinates":[[[-77.016,-12.1556],[-76.9862,-12.1677],[-76.9729,-12.1949],[-76.9759,-12.2307],[-77.0377,-12.2041],[-77.0263,-12.1573],[-77.016,-12.1556]]]}},{"type":"Feature","properties":{"s":"moderna","n":"Barranco"},"geometry":{"type":"Polygon","coordinates":[[[-77.018,-12.1312],[-77.016,-12.1556],[-77.0263,-12.1573],[-77.0294,-12.1401],[-77.018,-12.1312]]]}},{"type":"Feature","properties":{"s":"sur","n":"Villa María del Triunfo"},"geometry":{"type":"Polygon","coordinates":[[[-76.9108,-12.1223],[-76.8812,-12.1679],[-76.891,-12.2078],[-76.911,-12.2335],[-76.9517,-12.1856],[-76.9408,-12.1222],[-76.9108,-12.1223]]]}},{"type":"Feature","properties":{"s":"sur","n":"San Juan de Miraflores"},"geometry":{"type":"Polygon","coordinates":[[[-76.9477,-12.1175],[-76.9408,-12.1222],[-76.9517,-12.1856],[-76.9729,-12.1949],[-76.9862,-12.1677],[-76.9477,-12.1175]]]}},{"type":"Feature","properties":{"s":"moderna","n":"Miraflores"},"geometry":{"type":"Polygon","coordinates":[[[-77.0026,-12.1266],[-77.018,-12.1312],[-77.0294,-12.1401],[-77.056,-12.111],[-77.0273,-12.1028],[-77.0026,-12.1266]]]}},{"type":"Feature","properties":{"s":"moderna","n":"Surquillo"},"geometry":{"type":"Polygon","coordinates":[[[-77.0104,-12.1073],[-76.9936,-12.1113],[-77.0026,-12.1266],[-77.0273,-12.1028],[-77.0104,-12.1073]]]}},{"type":"Feature","properties":{"s":"moderna","n":"San Isidro"},"geometry":{"type":"Polygon","coordinates":[[[-77.0228,-12.0908],[-77.0098,-12.0892],[-77.0104,-12.1073],[-77.0273,-12.1028],[-77.056,-12.111],[-77.0607,-12.1077],[-77.055,-12.0919],[-77.0486,-12.085],[-77.0228,-12.0908]]]}},{"type":"Feature","properties":{"s":"moderna","n":"Magdalena del Mar"},"geometry":{"type":"Polygon","coordinates":[[[-77.0631,-12.0865],[-77.055,-12.0919],[-77.0607,-12.1077],[-77.0777,-12.0956],[-77.0721,-12.0836],[-77.0631,-12.0865]]]}},{"type":"Feature","properties":{"s":"moderna","n":"San Borja"},"geometry":{"type":"Polygon","coordinates":[[[-76.9817,-12.0846],[-76.9936,-12.1113],[-77.0104,-12.1073],[-77.0098,-12.0892],[-77.0041,-12.0841],[-76.9873,-12.0799],[-76.9817,-12.0846]]]}},{"type":"Feature","properties":{"s":"moderna","n":"Lince"},"geometry":{"type":"Polygon","coordinates":[[[-77.0228,-12.0908],[-77.0486,-12.085],[-77.0363,-12.0798],[-77.0281,-12.0787],[-77.0228,-12.0908]]]}},{"type":"Feature","properties":{"s":"moderna","n":"Santiago de Surco"},"geometry":{"type":"Polygon","coordinates":[[[-76.9477,-12.1175],[-76.9862,-12.1677],[-77.016,-12.1556],[-77.018,-12.1312],[-77.0026,-12.1266],[-76.9936,-12.1113],[-76.9817,-12.0846],[-76.9763,-12.0781],[-76.9477,-12.1175]]]}},{"type":"Feature","properties":{"s":"moderna","n":"Pueblo Libre"},"geometry":{"type":"Polygon","coordinates":[[[-77.0497,-12.0703],[-77.0631,-12.0865],[-77.0721,-12.0836],[-77.0777,-12.0685],[-77.0612,-12.0675],[-77.0497,-12.0703]]]}},{"type":"Feature","properties":{"s":"moderna","n":"Jesús María"},"geometry":{"type":"Polygon","coordinates":[[[-77.0363,-12.0798],[-77.0486,-12.085],[-77.055,-12.0919],[-77.0631,-12.0865],[-77.0497,-12.0703],[-77.0457,-12.0653],[-77.0363,-12.0798]]]}},{"type":"Feature","properties":{"s":"callao","n":"La Perla"},"geometry":{"type":"Polygon","coordinates":[[[-77.1046,-12.0634],[-77.1115,-12.0795],[-77.1326,-12.0705],[-77.1329,-12.0679],[-77.1046,-12.0634]]]}},{"type":"Feature","properties":{"s":"centro","n":"San Luis"},"geometry":{"type":"Polygon","coordinates":[[[-76.9978,-12.0608],[-76.9873,-12.0799],[-77.0041,-12.0841],[-77.0032,-12.0626],[-77.0018,-12.0617],[-76.9978,-12.0608]]]}},{"type":"Feature","properties":{"s":"moderna","n":"San Miguel"},"geometry":{"type":"Polygon","coordinates":[[[-77.0777,-12.0685],[-77.0721,-12.0836],[-77.0777,-12.0956],[-77.1115,-12.0795],[-77.1046,-12.0634],[-77.0873,-12.0615],[-77.0777,-12.0685]]]}},{"type":"Feature","properties":{"s":"sur","n":"Pachacámac"},"geometry":{"type":"Polygon","coordinates":[[[-76.7073,-12.114],[-76.6793,-12.131],[-76.662,-12.178],[-76.734,-12.1644],[-76.7892,-12.2029],[-76.8458,-12.2212],[-76.891,-12.2078],[-76.8812,-12.1679],[-76.9108,-12.1223],[-76.884,-12.0898],[-76.8891,-12.0594],[-76.833,-12.1451],[-76.7515,-12.1356],[-76.7073,-12.114]]]}},{"type":"Feature","properties":{"s":"centro","n":"La Victoria"},"geometry":{"type":"Polygon","coordinates":[[[-77.0032,-12.0626],[-77.0041,-12.0841],[-77.0098,-12.0892],[-77.0228,-12.0908],[-77.0281,-12.0787],[-77.0032,-12.0626]]]}},{"type":"Feature","properties":{"s":"este","n":"La Molina"},"geometry":{"type":"Polygon","coordinates":[[[-76.8891,-12.0594],[-76.884,-12.0898],[-76.9108,-12.1223],[-76.9408,-12.1222],[-76.9477,-12.1175],[-76.9763,-12.0781],[-76.8891,-12.0594]]]}},{"type":"Feature","properties":{"s":"callao","n":"Bellavista"},"geometry":{"type":"Polygon","coordinates":[[[-77.0873,-12.0615],[-77.1046,-12.0634],[-77.1329,-12.0679],[-77.0876,-12.0519],[-77.0873,-12.0615]]]}},{"type":"Feature","properties":{"s":"centro","n":"Breña"},"geometry":{"type":"Polygon","coordinates":[[[-77.0457,-12.0653],[-77.0497,-12.0703],[-77.0612,-12.0675],[-77.0457,-12.0653]]]}},{"type":"Feature","properties":{"s":"callao","n":"Carmen de la Legua Reynoso"},"geometry":{"type":"Polygon","coordinates":[[[-77.0815,-12.047],[-77.0935,-12.0381],[-77.0829,-12.0364],[-77.0815,-12.047]]]}},{"type":"Feature","properties":{"s":"centro","n":"Lima"},"geometry":{"type":"Polygon","coordinates":[[[-77.0018,-12.0617],[-77.0032,-12.0626],[-77.0281,-12.0787],[-77.0363,-12.0798],[-77.0457,-12.0653],[-77.0612,-12.0675],[-77.0777,-12.0685],[-77.0873,-12.0615],[-77.0876,-12.0519],[-77.0815,-12.047],[-77.0829,-12.0364],[-77.0435,-12.0389],[-77.0126,-12.0373],[-77.0095,-12.0309],[-77.0018,-12.0617]]]}},{"type":"Feature","properties":{"s":"este","n":"El Agustino"},"geometry":{"type":"Polygon","coordinates":[[[-76.9369,-12.022],[-76.9552,-12.0293],[-76.9734,-12.0585],[-76.9978,-12.0608],[-77.0018,-12.0617],[-77.0095,-12.0309],[-76.9531,-12.0223],[-76.9369,-12.022]]]}},{"type":"Feature","properties":{"s":"este","n":"Cieneguilla"},"geometry":{"type":"Polygon","coordinates":[[[-76.7223,-11.9996],[-76.6781,-12.053],[-76.7073,-12.114],[-76.7515,-12.1356],[-76.833,-12.1451],[-76.8891,-12.0594],[-76.8247,-12.0475],[-76.7829,-12.0232],[-76.7223,-11.9996]]]}},{"type":"Feature","properties":{"s":"centro","n":"Rímac"},"geometry":{"type":"Polygon","coordinates":[[[-77.0126,-12.0373],[-77.0435,-12.0389],[-77.053,-12.011],[-77.0307,-11.9964],[-77.0126,-12.0373]]]}},{"type":"Feature","properties":{"s":"este","n":"Ate"},"geometry":{"type":"Polygon","coordinates":[[[-76.7829,-12.0232],[-76.8247,-12.0475],[-76.8891,-12.0594],[-76.9763,-12.0781],[-76.9817,-12.0846],[-76.9873,-12.0799],[-76.9978,-12.0608],[-76.9734,-12.0585],[-76.9552,-12.0293],[-76.9369,-12.022],[-76.8372,-11.9926],[-76.7829,-12.0232]]]}},{"type":"Feature","properties":{"s":"este","n":"Chaclacayo"},"geometry":{"type":"Polygon","coordinates":[[[-76.7148,-11.9924],[-76.7223,-11.9996],[-76.7829,-12.0232],[-76.8372,-11.9926],[-76.7312,-11.9616],[-76.7148,-11.9924]]]}},{"type":"Feature","properties":{"s":"norte","n":"Independencia"},"geometry":{"type":"Polygon","coordinates":[[[-77.0307,-11.9964],[-77.053,-12.011],[-77.0614,-12.0084],[-77.0598,-11.9769],[-77.0283,-11.9607],[-77.0307,-11.9964]]]}},{"type":"Feature","properties":{"s":"callao","n":"Callao"},"geometry":{"type":"Polygon","coordinates":[[[-77.1287,-11.9372],[-77.0879,-12.0162],[-77.0935,-12.0381],[-77.0815,-12.047],[-77.0876,-12.0519],[-77.1329,-12.0679],[-77.1326,-12.0705],[-77.1564,-12.0679],[-77.1584,-12.0666],[-77.1375,-12.0109],[-77.1381,-11.9393],[-77.1287,-11.9372]]]}},{"type":"Feature","properties":{"s":"norte","n":"San Martín de Porres"},"geometry":{"type":"Polygon","coordinates":[[[-77.0614,-12.0084],[-77.053,-12.011],[-77.0435,-12.0389],[-77.0829,-12.0364],[-77.0935,-12.0381],[-77.0879,-12.0162],[-77.1287,-11.9372],[-77.0959,-11.9501],[-77.0842,-11.9343],[-77.0614,-12.0084]]]}},{"type":"Feature","properties":{"s":"norte","n":"Los Olivos"},"geometry":{"type":"Polygon","coordinates":[[[-77.0598,-11.9769],[-77.0614,-12.0084],[-77.0842,-11.9343],[-77.0735,-11.9184],[-77.0598,-11.9769]]]}},{"type":"Feature","properties":{"s":"norte","n":"Comas"},"geometry":{"type":"Polygon","coordinates":[[[-76.988,-11.8971],[-77.0283,-11.9607],[-77.0598,-11.9769],[-77.0735,-11.9184],[-77.0541,-11.8898],[-77.0255,-11.9093],[-76.988,-11.8971]]]}},{"type":"Feature","properties":{"s":"este","n":"Lurigancho-Chosica"},"geometry":{"type":"Polygon","coordinates":[[[-76.704,-11.8914],[-76.6688,-11.9235],[-76.6483,-11.9674],[-76.7148,-11.9924],[-76.7312,-11.9616],[-76.8372,-11.9926],[-76.9369,-12.022],[-76.9531,-12.0223],[-76.9694,-11.9949],[-76.9314,-11.9422],[-76.8937,-11.9562],[-76.7917,-11.9276],[-76.7279,-11.8757],[-76.704,-11.8914]]]}},{"type":"Feature","properties":{"s":"este","n":"San Juan de Lurigancho"},"geometry":{"type":"Polygon","coordinates":[[[-76.9314,-11.9422],[-76.9694,-11.9949],[-76.9531,-12.0223],[-77.0095,-12.0309],[-77.0126,-12.0373],[-77.0307,-11.9964],[-77.0283,-11.9607],[-76.988,-11.8971],[-76.9423,-11.8609],[-76.9121,-11.8893],[-76.9314,-11.9422]]]}},{"type":"Feature","properties":{"s":"callao","n":"Ventanilla"},"geometry":{"type":"Polygon","coordinates":[[[-77.126,-11.8208],[-77.0942,-11.8752],[-77.0959,-11.9501],[-77.1287,-11.9372],[-77.1381,-11.9393],[-77.1568,-11.8743],[-77.1871,-11.8284],[-77.1471,-11.8193],[-77.126,-11.8208]]]}},{"type":"Feature","properties":{"s":"norte","n":"Puente Piedra"},"geometry":{"type":"Polygon","coordinates":[[[-77.0541,-11.8898],[-77.0735,-11.9184],[-77.0842,-11.9343],[-77.0959,-11.9501],[-77.0942,-11.8752],[-77.126,-11.8208],[-77.0922,-11.8036],[-77.0541,-11.8898]]]}},{"type":"Feature","properties":{"s":"norte","n":"Santa Rosa"},"geometry":{"type":"Polygon","coordinates":[[[-77.1471,-11.8193],[-77.1871,-11.8284],[-77.1855,-11.7889],[-77.1471,-11.8193]]]}},{"type":"Feature","properties":{"s":"norte","n":"Carabayllo"},"geometry":{"type":"Polygon","coordinates":[[[-76.9761,-11.6854],[-76.9803,-11.7244],[-76.9327,-11.7553],[-76.8969,-11.7294],[-76.8049,-11.7559],[-76.8512,-11.7981],[-76.9066,-11.7961],[-76.9423,-11.8609],[-76.988,-11.8971],[-77.0255,-11.9093],[-77.0541,-11.8898],[-77.0922,-11.8036],[-77.057,-11.7858],[-77.0317,-11.7395],[-77.0248,-11.681],[-76.9761,-11.6854]]]}},{"type":"Feature","properties":{"s":"norte","n":"Ancón"},"geometry":{"type":"Polygon","coordinates":[[[-77.0049,-11.6135],[-77.035,-11.6524],[-77.0248,-11.681],[-77.0317,-11.7395],[-77.057,-11.7858],[-77.0922,-11.8036],[-77.126,-11.8208],[-77.1471,-11.8193],[-77.1855,-11.7889],[-77.1682,-11.7391],[-77.1935,-11.6783],[-77.1239,-11.6555],[-77.0518,-11.5761],[-77.0049,-11.6135]]]}}]};
+  const SECTOR_COLOR = { centro:'#E8C077', moderna:'#D9A75C', norte:'#C68A3D', este:'#A66B2E', sur:'#8B5427', callao:'#4A7A82' };
+
+  let leafletMap = null;
+  function initLeafletMap(){
+    if (leafletMap || typeof L === 'undefined' || !document.getElementById('leafletMap')) return;
+    leafletMap = L.map('leafletMap', { scrollWheelZoom:false }).setView([-12.02, -77.02], 10.4);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19,
+      className: 'zonemap-tiles-dark'
+    }).addTo(leafletMap);
+    L.geoJSON(PERU_DISTRICTS, {
+      style: feature => ({
+        color:'#0B0F1A', weight:1, fillColor: SECTOR_COLOR[feature.properties.s] || '#7E561F', fillOpacity:.68, className:'district-poly'
+      }),
+      onEachFeature: (feature, layer) => {
+        const z = ZONES[feature.properties.s];
+        layer.bindPopup(`<div class="bm-popup"><b>${feature.properties.n}</b>${z ? z.label : ''}</div>`);
+        layer.on('mouseover', () => layer.setStyle({ fillOpacity:.88, weight:2, color:'#E4BE78' }));
+        layer.on('mouseout', () => layer.setStyle({ fillOpacity:.68, weight:1, color:'#0B0F1A' }));
+      }
+    }).addTo(leafletMap);
+    buildChoroplethLegend();
+  }
+  function buildChoroplethLegend(){
+    const el = document.getElementById('choroplethLegend');
+    if (!el) return;
+    el.innerHTML = Object.entries(ZONES).map(([key, z]) =>
+      `<div class="cl-item"><span class="cl-swatch" style="background:${SECTOR_COLOR[key]}"></span>${z.label}</div>`).join('');
+  }
+  initLeafletMap();
+
+  // ---------- Buscador de propiedades: setup que depende de ZONES ----------
+  const sectorGroupEl = document.getElementById('sectorGroup');
+  if (sectorGroupEl) {
+    sectorGroupEl.innerHTML = '<button class="chip sel" data-v="">Todos los sectores</button>' +
+      Object.entries(ZONES).map(([key, z]) => `<button class="chip" data-v="${key}">${z.label}</button>`).join('');
+  }
+
+  // Tags de amenidades + mascotas, y botón de favorito, sobre cada ficha
+  const FAVORITES_KEY = 'quintanaFavorites';
+  function getFavorites(){ try { return JSON.parse(localStorage.getItem(FAVORITES_KEY)) || []; } catch(e) { return []; } }
+  function setFavorites(arr){ try { localStorage.setItem(FAVORITES_KEY, JSON.stringify(arr)); } catch(e) {} }
+  const favorites = getFavorites();
+
+  document.querySelectorAll('#propsGrid .prop').forEach((card, i) => {
+    card.style.animationDelay = Math.min(i * 0.05, 0.4) + 's';
+    const amenities = (card.dataset.amenities || '').split(',').map(s => s.trim()).filter(Boolean);
+    const pets = card.dataset.pets === 'true';
+    if (amenities.length || pets) {
+      const tags = document.createElement('div');
+      tags.className = 'ptags';
+      tags.innerHTML = amenities.map(a => `<span class="pchip">${a}</span>`).join('') +
+        (pets ? '<span class="pchip pet">🐾 Acepta mascotas</span>' : '');
+      card.querySelector('.pd').before(tags);
+    }
+    const favBtn = document.createElement('button');
+    favBtn.className = 'pfav';
+    favBtn.type = 'button';
+    favBtn.setAttribute('aria-label', 'Guardar propiedad');
+    favBtn.innerHTML = '<svg class="heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.6-10-9.1C.5 8.3 2.3 5 5.7 5c2 0 3.4 1 4.3 2.4C11 6 12.4 5 14.3 5c3.4 0 5.2 3.3 3.7 6.9C19.5 16.4 12 21 12 21z"/></svg>';
+    if (favorites.includes(card.dataset.id)) favBtn.classList.add('on');
+    favBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      const list = getFavorites();
+      const id = card.dataset.id;
+      const i = list.indexOf(id);
+      if (i === -1) { list.push(id); favBtn.classList.add('on'); }
+      else { list.splice(i, 1); favBtn.classList.remove('on'); }
+      setFavorites(list);
+    });
+    card.querySelector('.ph').appendChild(favBtn);
+  });
+
+  // Mapa de resultados (segunda instancia de Leaflet, independiente del de cobertura)
+  let browseMap = null;
+  const browseMarkers = {};
+  function initBrowseMap(){
+    if (browseMap || typeof L === 'undefined' || !document.getElementById('browseLeafletMap')) return;
+    browseMap = L.map('browseLeafletMap', { scrollWheelZoom:false }).setView([-12.04, -77.02], 10.5);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 19, className: 'zonemap-tiles-dark'
+    }).addTo(browseMap);
+    document.querySelectorAll('#propsGrid .prop').forEach(card => {
+      const lat = +card.dataset.lat, lng = +card.dataset.lng;
+      if (!lat || !lng) return;
+      const m = L.circleMarker([lat, lng], { radius:7, color:'#E4BE78', weight:1.5, fillColor:'#E4BE78', fillOpacity:.8 }).addTo(browseMap);
+      m.bindPopup(`<div class="bm-popup"><b>${card.querySelector('.price').textContent}</b>${card.querySelector('.pt').textContent}<br>${card.dataset.zone}</div>`);
+      browseMarkers[card.dataset.id] = m;
+    });
+  }
+  function updateBrowseMapMarkers(){
+    if (!browseMap) return;
+    document.querySelectorAll('#propsGrid .prop').forEach(card => {
+      const m = browseMarkers[card.dataset.id];
+      if (!m) return;
+      const visible = !card.classList.contains('hide');
+      m.setStyle({ opacity: visible ? 1 : .08, fillOpacity: visible ? .8 : .05 });
+    });
+  }
+  initBrowseMap();
+
+  // ---------- Panel "Más filtros" ----------
+  const mfPanel = document.getElementById('mfPanel');
+  const mfScrim = document.getElementById('mfScrim');
+  const moreFiltersBtn = document.getElementById('moreFiltersBtn');
+  const mfDesktopMQ = window.matchMedia('(min-width: 900px)');
+  function openMfPanel(){
+    mfPanel.classList.add('open');
+    mfScrim.classList.add('show');
+    if (mfDesktopMQ.matches && moreFiltersBtn) {
+      const r = moreFiltersBtn.getBoundingClientRect();
+      mfPanel.style.top = (r.bottom + 8) + 'px';
+      mfPanel.style.right = (window.innerWidth - r.right) + 'px';
+    } else {
+      mfPanel.style.top = ''; mfPanel.style.right = '';
+    }
+  }
+  function closeMfPanel(){
+    mfPanel.classList.remove('open');
+    mfScrim.classList.remove('show');
+  }
+  if (moreFiltersBtn) moreFiltersBtn.addEventListener('click', () => {
+    mfPanel.classList.contains('open') ? closeMfPanel() : openMfPanel();
+  });
+  const mfCloseBtn = document.getElementById('mfClose');
+  if (mfCloseBtn) mfCloseBtn.addEventListener('click', closeMfPanel);
+  const mfApplyBtn = document.getElementById('mfApply');
+  if (mfApplyBtn) mfApplyBtn.addEventListener('click', closeMfPanel);
+  if (mfScrim) mfScrim.addEventListener('click', () => { if (!mfDesktopMQ.matches) closeMfPanel(); });
+  document.addEventListener('click', e => {
+    if (!mfDesktopMQ.matches || !mfPanel.classList.contains('open')) return;
+    if (mfPanel.contains(e.target) || (moreFiltersBtn && moreFiltersBtn.contains(e.target))) return;
+    closeMfPanel();
+  });
+
+  applyFilters();
+
+  // ---------- Campo reactivo (puntos + llaves), cursor y toque ----------
+  function initReactiveField(canvas, container){
+    if (!canvas || !container) return;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const ctx = canvas.getContext('2d');
+    let w, h, dpr;
+    let particles = [];
+    let bursts = [];
+    const pointer = { x:-9999, y:-9999, active:false };
+
+    function resize(){
+      const rect = container.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = rect.width; h = rect.height;
+      canvas.width = w * dpr; canvas.height = h * dpr;
+      canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const count = Math.max(14, Math.min(34, Math.round((w * h) / 16000)));
+      particles = Array.from({ length: count }, () => makeParticle());
+    }
+    function makeParticle(){
+      return {
+        x: Math.random() * w, y: Math.random() * h,
+        vx: (Math.random() - .5) * .18, vy: (Math.random() - .5) * .18,
+        r: 1.6 + Math.random() * 1.8,
+        key: Math.random() < .16,
+        rot: Math.random() * Math.PI,
+        vrot: (Math.random() - .5) * .002,
+        phase: Math.random() * Math.PI * 2
+      };
+    }
+    function drawKey(p, alpha){
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.strokeStyle = `rgba(228,190,120,${alpha})`;
+      ctx.lineWidth = 1.1;
+      ctx.beginPath(); ctx.arc(0, 0, 3.4, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(3.2, 0); ctx.lineTo(10, 0); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(7.5, 0); ctx.lineTo(7.5, 2.6); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(9.5, 0); ctx.lineTo(9.5, 2.2); ctx.stroke();
+      ctx.restore();
+    }
+    function tick(t){
+      ctx.clearRect(0, 0, w, h);
+      particles.forEach(p => {
+        p.phase += .01;
+        p.x += p.vx + Math.sin(p.phase) * .05;
+        p.y += p.vy + Math.cos(p.phase * .8) * .05;
+        p.rot += p.vrot;
+        if (p.x < -20) p.x = w + 20; if (p.x > w + 20) p.x = -20;
+        if (p.y < -20) p.y = h + 20; if (p.y > h + 20) p.y = -20;
+        if (pointer.active) {
+          const dx = p.x - pointer.x, dy = p.y - pointer.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < 90 && dist > .01) {
+            const f = (90 - dist) / 90 * .6;
+            p.x += (dx / dist) * f; p.y += (dy / dist) * f;
+          }
+        }
+        const alpha = .35 + Math.sin(p.phase) * .12;
+        if (p.key) {
+          drawKey(p, Math.max(.15, alpha));
+        } else {
+          ctx.beginPath();
+          ctx.fillStyle = `rgba(228,190,120,${Math.max(.12, alpha * .6)})`;
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
+      bursts = bursts.filter(b => t - b.t0 < 700);
+      bursts.forEach(b => {
+        const p2 = (t - b.t0) / 700;
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(228,190,120,${1 - p2})`;
+        ctx.lineWidth = 1.5;
+        ctx.arc(b.x, b.y, 6 + p2 * 34, 0, Math.PI * 2);
+        ctx.stroke();
+      });
+      if (!reduceMotion) requestAnimationFrame(tick);
+    }
+
+    resize();
+    window.addEventListener('resize', resize, { passive:true });
+    container.addEventListener('pointermove', e => {
+      const rect = container.getBoundingClientRect();
+      pointer.x = e.clientX - rect.left; pointer.y = e.clientY - rect.top; pointer.active = true;
+    }, { passive:true });
+    container.addEventListener('pointerleave', () => { pointer.active = false; }, { passive:true });
+    container.addEventListener('pointerdown', e => {
+      const rect = container.getBoundingClientRect();
+      bursts.push({ x: e.clientX - rect.left, y: e.clientY - rect.top, t0: performance.now() });
+    }, { passive:true });
+
+    if (reduceMotion) { tick(0); } else { requestAnimationFrame(tick); }
+  }
+  initReactiveField(document.getElementById('fcCanvas'), document.getElementById('finalCtaBand'));
+  initReactiveField(document.getElementById('statsCanvas'), document.getElementById('statsBand'));
+  initReactiveField(document.getElementById('routesCanvas'), document.getElementById('routesOuter'));
 </script>
 </body>
 </html>
