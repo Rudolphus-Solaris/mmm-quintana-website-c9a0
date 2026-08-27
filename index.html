@@ -38,26 +38,24 @@
 
   /* ---------- Header ---------- */
   header{position:fixed;top:0;left:0;right:0;z-index:90;transition:all .4s var(--ease);padding:14px 0;}
-  header.solid, header.on-inner{background:rgba(241,236,226,.95);backdrop-filter:blur(12px);padding:10px 0;box-shadow:0 1px 0 var(--line);}
+  header.solid, header.on-inner{background:rgba(11,15,26,.92);backdrop-filter:blur(12px);padding:10px 0;box-shadow:0 1px 0 rgba(255,255,255,.08);}
   .hwrap{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
   .logo{display:flex;align-items:center;text-decoration:none;}
   .logo img{height:34px;width:auto;transition:opacity .3s;}
   .logo .l-dark{display:none;}
-  header.solid .logo .l-light, header.on-inner .logo .l-light, header.menu-open .logo .l-light{display:none;}
-  header.solid .logo .l-dark, header.on-inner .logo .l-dark, header.menu-open .logo .l-dark{display:block;}
   nav{display:none;}
   .btn-wa{display:none;}
 
   .burger{display:block;background:none;border:none;cursor:pointer;padding:8px;z-index:95;}
   .burger span{display:block;width:22px;height:2.5px;border-radius:2px;background:#fff;margin:5px 0;transition:all .3s var(--ease);}
-  header.solid .burger span, header.on-inner .burger span, header.menu-open .burger span{background:var(--brand);}
   header.menu-open .burger span:nth-child(1){transform:translateY(7.5px) rotate(45deg);}
   header.menu-open .burger span:nth-child(2){opacity:0;}
   header.menu-open .burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg);}
-  .mobile-menu{display:block;position:fixed;top:0;left:0;right:0;z-index:89;background:var(--bg);padding:78px 22px 26px;box-shadow:var(--sh-lift);transform:translateY(-105%);transition:transform .45s var(--ease);}
+  .mobile-menu{display:block;position:fixed;top:0;left:0;right:0;z-index:89;background:var(--brand);padding:78px 22px 26px;box-shadow:var(--sh-lift);transform:translateY(-105%);transition:transform .45s var(--ease);}
   .mobile-menu.open{transform:none;}
-  .mobile-menu a{display:block;padding:13px 4px;font-size:16px;font-weight:600;color:var(--brand);text-decoration:none;border-bottom:1px solid var(--line);}
+  .mobile-menu a{display:block;padding:13px 4px;font-size:16px;font-weight:600;color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.12);}
   .mobile-menu a:last-child{border-bottom:none;}
+  .mm-cta{background:var(--gold-bright);color:var(--brand) !important;text-align:center;border-radius:999px;padding:14px 4px !important;margin-bottom:14px;border-bottom:none !important;font-weight:700 !important;}
 
   .wrap{max-width:1200px;margin:0 auto;padding:0 20px;}
 
@@ -113,7 +111,8 @@
   .hero .tagline::before{content:"";position:absolute;left:50%;top:50%;width:340px;height:120px;transform:translate(-50%,-50%);background:radial-gradient(ellipse, rgba(228,190,120,.18), transparent 70%);pointer-events:none;z-index:-1;}
 
   /* ---------- Rutas ---------- */
-  .routes-band{position:relative;z-index:5;}
+  .routes-outer{position:relative;z-index:5;background:var(--brand);}
+  .routes-band{padding-bottom:1px;}
   .routes{display:none;}
 
   /* ---------- Bottom sheet "Quiero…" ---------- */
@@ -203,7 +202,7 @@
   .tc-dot.on{background:var(--gold);width:18px;border-radius:4px;}
   .photo-note{font-size:11px;color:var(--ink-soft);text-align:right;margin-top:10px;font-style:italic;}
 
-  .stats-band{background:var(--brand);margin-top:52px;padding:44px 0;position:relative;overflow:hidden;}
+  .stats-band{background:var(--brand);margin-top:0;padding:44px 0;position:relative;overflow:hidden;}
   .stats-band::after{content:"";position:absolute;right:-80px;top:-80px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle, rgba(126,86,31,.35), transparent 70%);}
   .stats{display:grid;grid-template-columns:1fr 1fr;gap:26px;position:relative;z-index:2;}
   .stat{text-align:center;color:#fff;}
@@ -265,34 +264,18 @@
   #nosotros .tc-arrow{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.25);color:#fff;}
   #nosotros .zc-full summary{color:var(--gold-bright);}
 
-  /* ---------- Zonas interactivas: mapa real + clusters (firma de la sección) ---------- */
-  .zonemap-wrap, .zoneclusters-wrap{background:var(--brand);border-radius:20px;padding:16px;position:relative;overflow:hidden;box-shadow:var(--sh-lift);}
-  .zoneclusters-wrap{display:none;}
-  body.zones-clusters .zonemap-wrap{display:none;}
-  body.zones-clusters .zoneclusters-wrap{display:block;}
-  .zonemap-legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
-  .zl-btn{display:inline-flex;align-items:center;gap:7px;background:var(--gold-bg);border:1px solid var(--gold);color:var(--gold);font-family:var(--sans);font-size:11px;font-weight:600;border-radius:999px;padding:6px 12px 6px 8px;cursor:pointer;transition:all .2s var(--ease);}
-  .zl-btn .zl-check{width:14px;height:14px;border-radius:4px;background:var(--gold);border:1.5px solid var(--gold);flex-shrink:0;position:relative;transition:all .2s var(--ease);}
-  .zl-btn .zl-check::after{content:"";position:absolute;left:3.5px;top:1px;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);opacity:1;transition:opacity .15s var(--ease);}
-  .zl-btn:not(.sel){background:transparent;border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.5);text-decoration:line-through;text-decoration-color:rgba(255,255,255,.35);}
-  .zl-btn:not(.sel) .zl-check{background:transparent;border-color:rgba(255,255,255,.35);}
-  .zl-btn:not(.sel) .zl-check::after{opacity:0;}
-  .zonemap-canvas{height:320px;border-radius:14px;overflow:hidden;background:#0a0e18;}
+  /* ---------- Zonas: mapa coroplético (firma de la sección) ---------- */
+  .choropleth-wrap{background:var(--brand);border-radius:20px;padding:16px;position:relative;overflow:hidden;box-shadow:var(--sh-lift);}
+  .zonemap-canvas{height:360px;border-radius:14px;overflow:hidden;background:#0a0e18;}
   .zonemap-canvas .zonemap-tiles-dark, .browse-map-canvas .zonemap-tiles-dark{filter:invert(1) hue-rotate(180deg) brightness(.92) contrast(.88) saturate(.7);}
   .zonemap-canvas .leaflet-popup-content-wrapper{background:var(--card);color:var(--ink);border-radius:10px;font-family:var(--sans);}
   .zonemap-canvas .leaflet-popup-tip{background:var(--card);}
   .zonemap-canvas .leaflet-control-attribution{background:rgba(11,15,26,.75);color:rgba(255,255,255,.55);}
   .zonemap-canvas .leaflet-control-attribution a{color:var(--gold-bright);}
-
-  .zc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-  .zc-card{background:rgba(255,255,255,.05);border:1.5px solid rgba(228,190,120,.25);border-radius:14px;padding:14px;text-align:left;cursor:pointer;transition:all .25s var(--ease);}
-  .zc-card.sel{background:var(--gold-bg);border-color:var(--gold);}
-  .zc-card-n{display:block;font-family:var(--display);font-style:italic;font-size:16px;color:#fff;}
-  .zc-card.sel .zc-card-n{color:var(--brand);}
-  .zc-card-c{display:block;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-top:4px;font-weight:600;}
-  .zc-card.sel .zc-card-c{color:var(--gold);}
-  .zc-districts{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12);}
-  .zc-districts .zchip{background:rgba(255,255,255,.08);border-color:rgba(228,190,120,.3);color:#fff;animation:rise .35s var(--ease) both;}
+  .zonemap-canvas .district-poly{transition:fill-opacity .2s var(--ease), fill .2s var(--ease);}
+  .choropleth-legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;padding:0 2px;}
+  .cl-item{display:flex;align-items:center;gap:7px;font-size:11px;color:rgba(255,255,255,.75);font-weight:600;}
+  .cl-swatch{width:12px;height:12px;border-radius:4px;flex-shrink:0;}
 
   .zc-full{margin-top:18px;}
   .zc-full summary{cursor:pointer;font-size:12.5px;font-weight:700;color:var(--gold);list-style:none;display:inline-flex;align-items:center;gap:5px;}
@@ -301,17 +284,17 @@
   .zc-full[open] summary::after{transform:rotate(180deg);}
   .zc-full .zones{margin-top:14px;}
 
-  .final-cta-band{background:var(--bg);margin-top:44px;padding:60px 0;position:relative;overflow:hidden;}
+  .final-cta-band{background:var(--brand);margin-top:0;padding:60px 0;position:relative;overflow:hidden;}
   .fc-canvas{position:absolute;inset:0;pointer-events:none;}
   .final-cta{text-align:center;position:relative;z-index:2;}
-  .fc-label{font-family:var(--display);font-style:italic;font-weight:300;font-size:18px;color:var(--brand);margin-bottom:18px;}
+  .fc-label{font-family:var(--display);font-style:italic;font-weight:300;font-size:18px;color:var(--gold-bright);margin-bottom:18px;}
   .fc-btns{display:flex;flex-direction:column;gap:10px;}
-  .fc-btn{background:transparent;border:1.5px solid var(--gold);border-radius:999px;padding:14px 20px;font-size:14px;font-weight:700;color:var(--gold);cursor:pointer;transition:all .25s var(--ease);font-family:var(--sans);text-decoration:none;display:inline-block;text-align:center;}
+  .fc-btn{background:transparent;border:1.5px solid var(--gold-bright);border-radius:999px;padding:14px 20px;font-size:14px;font-weight:700;color:var(--gold-bright);cursor:pointer;transition:all .25s var(--ease);font-family:var(--sans);text-decoration:none;display:inline-block;text-align:center;}
   .fc-btn-wa{background:var(--wa);border-color:var(--wa);color:#fff;}
-  .fc-btn:hover{background:var(--gold-bg);transform:translateY(-2px);}
+  .fc-btn:hover{background:rgba(228,190,120,.14);transform:translateY(-2px);}
   .fc-btn-wa:hover{background:var(--wa-dark);border-color:var(--wa-dark);color:#fff;transform:translateY(-2px);}
 
-  footer{background:var(--brand);color:rgba(255,255,255,.85);padding:48px 0 100px;margin-top:70px;}
+  footer{background:var(--brand);color:rgba(255,255,255,.85);padding:48px 0 100px;margin-top:0;}
   footer .fgrid{display:flex;flex-direction:column;gap:32px;max-width:1200px;margin:0 auto;padding:0 20px;}
   footer .flogo-img{height:58px;margin-bottom:12px;}
   footer p, footer a{font-size:13px;color:rgba(255,255,255,.82);text-decoration:none;line-height:1.8;}
@@ -483,8 +466,12 @@
     nav{display:flex;gap:26px;align-items:center;}
     nav a{color:rgba(255,255,255,.85);text-decoration:none;font-size:13.5px;font-weight:600;letter-spacing:.02em;transition:color .25s;}
     nav a:hover{color:#fff;}
-    header.solid nav a, header.on-inner nav a{color:var(--ink-soft);}
-    header.solid nav a:hover, header.on-inner nav a:hover{color:var(--brand);}
+    header.solid nav a, header.on-inner nav a{color:rgba(255,255,255,.8);}
+    header.solid nav a:hover, header.on-inner nav a:hover{color:var(--gold-bright);}
+    nav a.nav-cta{background:var(--gold-bright);color:var(--brand);padding:8px 18px;border-radius:999px;font-weight:700;}
+    nav a.nav-cta:hover{background:#fff;color:var(--brand);}
+    header.solid nav a.nav-cta, header.on-inner nav a.nav-cta{color:var(--brand);}
+    header.solid nav a.nav-cta:hover, header.on-inner nav a.nav-cta:hover{color:var(--brand);}
     .btn-wa{display:inline-flex;background:var(--wa);color:#fff;border-radius:999px;padding:9px 18px;font-size:12.5px;font-weight:700;text-decoration:none;align-items:center;gap:7px;transition:all .25s var(--ease);box-shadow:0 4px 14px rgba(29,168,81,.35);white-space:nowrap;}
     .btn-wa:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(29,168,81,.45);}
     .btn-wa svg{width:14px;height:14px;fill:currentColor;}
@@ -523,8 +510,8 @@
     .route p{font-size:12.5px;color:rgba(255,255,255,.78);margin:0;max-height:0;overflow:hidden;opacity:0;transition:all .45s var(--ease);}
     .route:hover p{max-height:80px;opacity:1;margin-bottom:7px;}
     .route .go{font-size:12px;font-weight:700;color:var(--gold-bright);letter-spacing:.04em;}
-    .routes-hint{display:block;text-align:center;font-size:13.5px;color:var(--ink-soft);padding:24px 0 8px;}
-    .routes-hint a{color:var(--gold);font-weight:700;text-decoration:none;border-bottom:1px solid var(--gold);}
+    .routes-hint{display:block;text-align:center;font-size:13.5px;color:rgba(255,255,255,.6);padding:24px 0 8px;}
+    .routes-hint a{color:var(--gold-bright);font-weight:700;text-decoration:none;border-bottom:1px solid var(--gold-bright);}
 
     .sheet-collapsed, .sheet, .sheet-scrim{display:none !important;}
 
@@ -548,7 +535,7 @@
     .tc-card h4{font-size:22px;}
     .tc-card .tc-desc{font-size:13.5px;}
 
-    .stats-band{margin-top:76px;padding:58px 0;}
+    .stats-band{padding:58px 0;}
     .stats{gap:26px;}
     .stat .n{font-size:48px;}
     .stat .l{font-size:12.5px;margin-top:9px;}
@@ -560,14 +547,13 @@
     .ti-view{flex-direction:row;align-items:center;justify-content:space-between;}
     .testi-invite{margin-top:22px;padding:24px 30px;}
     .zones-compact{margin-top:48px;padding-top:34px;}
-    .zonemap-wrap, .zoneclusters-wrap{padding:22px;}
-    .zonemap-canvas{height:420px;}
-    .zc-grid{grid-template-columns:repeat(3,1fr);gap:12px;}
-    .final-cta-band{margin-top:60px;padding:64px 0;}
+    .choropleth-wrap{padding:22px;}
+    .zonemap-canvas{height:460px;}
+    .final-cta-band{padding:64px 0;}
     .fc-btns{flex-direction:row;justify-content:center;flex-wrap:wrap;}
     .fc-btn{padding:14px 26px;}
 
-    footer{padding:58px 0 40px;margin-top:100px;}
+    footer{padding:58px 0 40px;}
     footer .fgrid{flex-direction:row;gap:40px;padding:0 28px;}
     footer .fgrid > div:first-child{flex:2;}
     footer .fgrid > div{flex:1;}
@@ -610,12 +596,6 @@
     .props{grid-template-columns:1fr 1fr;}
   }
 
-  /* ---------- Panel de revisión (temporal — se retira al elegir versión final) ---------- */
-  .review-panel{position:fixed;left:14px;bottom:14px;z-index:200;background:#fff;border:2px dashed var(--gold);border-radius:14px;padding:12px 16px;box-shadow:var(--sh-lift);font-family:var(--sans);max-width:240px;}
-  .rp-title{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
-  .rp-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12.5px;color:var(--ink);padding:5px 0;cursor:pointer;}
-  .rp-row input{flex-shrink:0;width:34px;height:20px;accent-color:var(--gold);cursor:pointer;}
-
   /* ---------- Movimiento reducido ---------- */
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;}
@@ -630,17 +610,17 @@
     <a class="logo" href="#" onclick="go('home');return false;"><img class="l-light" src="assets/quintana-logo-trim.png" alt="Quintana Propiedades"><img class="l-dark" src="assets/quintana-logo-dark.png" alt="Quintana Propiedades"></a>
     <nav>
       <a href="#" onclick="go('home');return false;">Inicio</a>
-      <a href="#" onclick="startBrowse('comprar');return false;">Propiedades</a>
       <a href="#nosotros" onclick="goAnchor('nosotros');return false;">Nosotros</a>
       <a href="#testimonios" onclick="goAnchor('testimonios');return false;">Testimonios</a>
+      <a class="nav-cta" href="#" onclick="startBrowse('comprar');return false;">Ver propiedades</a>
     </nav>
     <a class="btn-wa" href="https://wa.me/51947176425?text=Hola%2C%20quiero%20conversar%20sobre%20una%20propiedad" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.4 14.1c-.2.7-1.3 1.3-1.8 1.3-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5s.8 1.9.8 2c.1.1.1.3 0 .5l-.4.6c-.1.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1.1 2.2 1.4 2.5 1.5.3.1.5.1.7-.1l.9-1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.7-.2 1.1z"/></svg> Conversemos</a>
     <button class="burger" onclick="toggleMenu()" aria-label="Menú"><span></span><span></span><span></span></button>
   </div>
 </header>
 <div class="mobile-menu" id="mmenu">
+  <a class="mm-cta" href="#" onclick="closeMenu();startBrowse('comprar');return false;">Ver propiedades →</a>
   <a href="#" onclick="closeMenu();go('home');return false;">Inicio</a>
-  <a href="#" onclick="closeMenu();startBrowse('comprar');return false;">Propiedades</a>
   <a href="#" onclick="closeMenu();goAnchor('nosotros');return false;">Nosotros</a>
   <a href="#" onclick="closeMenu();goAnchor('testimonios');return false;">Testimonios</a>
   <a href="#" onclick="closeMenu();startFlow('vender');return false;">Vender mi propiedad</a>
@@ -674,6 +654,8 @@
     <div class="door door-r"></div>
   </div>
 
+  <section class="routes-outer" id="routesOuter">
+  <canvas class="fc-canvas" id="routesCanvas" aria-hidden="true"></canvas>
   <div class="wrap routes-band">
     <div class="routes">
       <button class="route" onclick="startFlow('vender')">
@@ -719,6 +701,7 @@
     </div>
     <div class="routes-hint">¿Solo mirando? Perfecto — <a href="#nosotros" onclick="goAnchor('nosotros');return false;">conócenos primero</a> o <a href="https://wa.me/51947176425?text=Hola%2C%20tengo%20una%20consulta" target="_blank">escríbenos directamente</a>.</div>
   </div>
+  </section>
 
   <section class="free" id="nosotros">
     <div class="wrap">
@@ -775,14 +758,9 @@
       <div class="zones-compact rv-rise">
         <div class="zc-label">Zonas de cobertura</div>
 
-        <div class="zonemap-wrap" id="zonesMapWrap">
-          <div class="zonemap-legend" id="zoneLegend"></div>
+        <div class="choropleth-wrap" id="choroplethWrap">
           <div id="leafletMap" class="zonemap-canvas"></div>
-        </div>
-
-        <div class="zoneclusters-wrap" id="zonesClustersWrap">
-          <div class="zc-grid" id="zoneClusterGrid"></div>
-          <div class="zc-districts" id="zoneClusterDistricts"></div>
+          <div class="choropleth-legend" id="choroplethLegend"></div>
         </div>
 
         <details class="zc-full">
@@ -796,7 +774,8 @@
     </div>
   </section>
 
-  <div class="stats-band rv-scale">
+  <div class="stats-band rv-scale" id="statsBand">
+    <canvas class="fc-canvas" id="statsCanvas" aria-hidden="true"></canvas>
     <div class="motes" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
     <div class="wrap">
       <div class="stats">
@@ -1250,11 +1229,6 @@
   <div class="sheet-handle"></div>
   <div class="sheet-head"><div class="st">Elige tu camino</div></div>
   <div class="sheet-body" id="sheetBody"></div>
-</div>
-
-<div class="review-panel" id="reviewPanel">
-  <div class="rp-title">Vista previa — solo para revisión</div>
-  <label class="rp-row"><span>Zonas: clusters (en vez de mapa)</span><input type="checkbox" id="toggleZonesVariant"></label>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
@@ -1745,59 +1719,40 @@
   };
 
   // ---------- Variante A: mapa real (Leaflet + CartoDB dark, sin API key) ----------
+  // Límites distritales (Lima provincia + Callao) — juaneladio/peru-geojson (INEI),
+  // recortado y redondeado a 4 decimales. 2 distritos del dataset original (La Punta,
+  // Santa Anita) no traían geometría válida y quedan solo en la lista de chips.
+  const PERU_DISTRICTS = {"type":"FeatureCollection","features":[{"type":"Feature","properties":{"s":"sur","n":"Pucusana"},"geometry":{"type":"Polygon","coordinates":[[[-76.7533,-12.4289],[-76.7517,-12.4627],[-76.7842,-12.5199],[-76.8025,-12.5043],[-76.7801,-12.4171],[-76.7533,-12.4289]]]}},{"type":"Feature","properties":{"s":"sur","n":"Santa María del Mar"},"geometry":{"type":"Polygon","coordinates":[[[-76.7569,-12.4015],[-76.7533,-12.4289],[-76.7801,-12.4171],[-76.7799,-12.3994],[-76.7569,-12.4015]]]}},{"type":"Feature","properties":{"s":"sur","n":"San Bartolo"},"geometry":{"type":"Polygon","coordinates":[[[-76.668,-12.3602],[-76.6834,-12.3821],[-76.7569,-12.4015],[-76.7799,-12.3994],[-76.7892,-12.3839],[-76.7254,-12.3413],[-76.6784,-12.3335],[-76.668,-12.3602]]]}},{"type":"Feature","properties":{"s":"sur","n":"Punta Negra"},"geometry":{"type":"Polygon","coordinates":[[[-76.6784,-12.3335],[-76.7254,-12.3413],[-76.7892,-12.3839],[-76.8162,-12.3454],[-76.7273,-12.2953],[-76.6656,-12.2438],[-76.6456,-12.2117],[-76.6211,-12.2269],[-76.6368,-12.2794],[-76.6784,-12.3335]]]}},{"type":"Feature","properties":{"s":"sur","n":"Villa El Salvador"},"geometry":{"type":"Polygon","coordinates":[[[-76.911,-12.2335],[-76.9399,-12.2477],[-76.9759,-12.2307],[-76.9729,-12.1949],[-76.9517,-12.1856],[-76.911,-12.2335]]]}},{"type":"Feature","properties":{"s":"sur","n":"Punta Hermosa"},"geometry":{"type":"Polygon","coordinates":[[[-76.6456,-12.2117],[-76.6656,-12.2438],[-76.7273,-12.2953],[-76.8162,-12.3454],[-76.8431,-12.3117],[-76.8192,-12.2828],[-76.7401,-12.2536],[-76.662,-12.178],[-76.6456,-12.2117]]]}},{"type":"Feature","properties":{"s":"sur","n":"Lurín"},"geometry":{"type":"Polygon","coordinates":[[[-76.662,-12.178],[-76.7401,-12.2536],[-76.8192,-12.2828],[-76.8431,-12.3117],[-76.9399,-12.2477],[-76.911,-12.2335],[-76.891,-12.2078],[-76.8458,-12.2212],[-76.7892,-12.2029],[-76.734,-12.1644],[-76.662,-12.178]]]}},{"type":"Feature","properties":{"s":"sur","n":"Chorrillos"},"geometry":{"type":"Polygon","coordinates":[[[-77.016,-12.1556],[-76.9862,-12.1677],[-76.9729,-12.1949],[-76.9759,-12.2307],[-77.0377,-12.2041],[-77.0263,-12.1573],[-77.016,-12.1556]]]}},{"type":"Feature","properties":{"s":"moderna","n":"Barranco"},"geometry":{"type":"Polygon","coordinates":[[[-77.018,-12.1312],[-77.016,-12.1556],[-77.0263,-12.1573],[-77.0294,-12.1401],[-77.018,-12.1312]]]}},{"type":"Feature","properties":{"s":"sur","n":"Villa María del Triunfo"},"geometry":{"type":"Polygon","coordinates":[[[-76.9108,-12.1223],[-76.8812,-12.1679],[-76.891,-12.2078],[-76.911,-12.2335],[-76.9517,-12.1856],[-76.9408,-12.1222],[-76.9108,-12.1223]]]}},{"type":"Feature","properties":{"s":"sur","n":"San Juan de Miraflores"},"geometry":{"type":"Polygon","coordinates":[[[-76.9477,-12.1175],[-76.9408,-12.1222],[-76.9517,-12.1856],[-76.9729,-12.1949],[-76.9862,-12.1677],[-76.9477,-12.1175]]]}},{"type":"Feature","properties":{"s":"moderna","n":"Miraflores"},"geometry":{"type":"Polygon","coordinates":[[[-77.0026,-12.1266],[-77.018,-12.1312],[-77.0294,-12.1401],[-77.056,-12.111],[-77.0273,-12.1028],[-77.0026,-12.1266]]]}},{"type":"Feature","properties":{"s":"moderna","n":"Surquillo"},"geometry":{"type":"Polygon","coordinates":[[[-77.0104,-12.1073],[-76.9936,-12.1113],[-77.0026,-12.1266],[-77.0273,-12.1028],[-77.0104,-12.1073]]]}},{"type":"Feature","properties":{"s":"moderna","n":"San Isidro"},"geometry":{"type":"Polygon","coordinates":[[[-77.0228,-12.0908],[-77.0098,-12.0892],[-77.0104,-12.1073],[-77.0273,-12.1028],[-77.056,-12.111],[-77.0607,-12.1077],[-77.055,-12.0919],[-77.0486,-12.085],[-77.0228,-12.0908]]]}},{"type":"Feature","properties":{"s":"moderna","n":"Magdalena del Mar"},"geometry":{"type":"Polygon","coordinates":[[[-77.0631,-12.0865],[-77.055,-12.0919],[-77.0607,-12.1077],[-77.0777,-12.0956],[-77.0721,-12.0836],[-77.0631,-12.0865]]]}},{"type":"Feature","properties":{"s":"moderna","n":"San Borja"},"geometry":{"type":"Polygon","coordinates":[[[-76.9817,-12.0846],[-76.9936,-12.1113],[-77.0104,-12.1073],[-77.0098,-12.0892],[-77.0041,-12.0841],[-76.9873,-12.0799],[-76.9817,-12.0846]]]}},{"type":"Feature","properties":{"s":"moderna","n":"Lince"},"geometry":{"type":"Polygon","coordinates":[[[-77.0228,-12.0908],[-77.0486,-12.085],[-77.0363,-12.0798],[-77.0281,-12.0787],[-77.0228,-12.0908]]]}},{"type":"Feature","properties":{"s":"moderna","n":"Santiago de Surco"},"geometry":{"type":"Polygon","coordinates":[[[-76.9477,-12.1175],[-76.9862,-12.1677],[-77.016,-12.1556],[-77.018,-12.1312],[-77.0026,-12.1266],[-76.9936,-12.1113],[-76.9817,-12.0846],[-76.9763,-12.0781],[-76.9477,-12.1175]]]}},{"type":"Feature","properties":{"s":"moderna","n":"Pueblo Libre"},"geometry":{"type":"Polygon","coordinates":[[[-77.0497,-12.0703],[-77.0631,-12.0865],[-77.0721,-12.0836],[-77.0777,-12.0685],[-77.0612,-12.0675],[-77.0497,-12.0703]]]}},{"type":"Feature","properties":{"s":"moderna","n":"Jesús María"},"geometry":{"type":"Polygon","coordinates":[[[-77.0363,-12.0798],[-77.0486,-12.085],[-77.055,-12.0919],[-77.0631,-12.0865],[-77.0497,-12.0703],[-77.0457,-12.0653],[-77.0363,-12.0798]]]}},{"type":"Feature","properties":{"s":"callao","n":"La Perla"},"geometry":{"type":"Polygon","coordinates":[[[-77.1046,-12.0634],[-77.1115,-12.0795],[-77.1326,-12.0705],[-77.1329,-12.0679],[-77.1046,-12.0634]]]}},{"type":"Feature","properties":{"s":"centro","n":"San Luis"},"geometry":{"type":"Polygon","coordinates":[[[-76.9978,-12.0608],[-76.9873,-12.0799],[-77.0041,-12.0841],[-77.0032,-12.0626],[-77.0018,-12.0617],[-76.9978,-12.0608]]]}},{"type":"Feature","properties":{"s":"moderna","n":"San Miguel"},"geometry":{"type":"Polygon","coordinates":[[[-77.0777,-12.0685],[-77.0721,-12.0836],[-77.0777,-12.0956],[-77.1115,-12.0795],[-77.1046,-12.0634],[-77.0873,-12.0615],[-77.0777,-12.0685]]]}},{"type":"Feature","properties":{"s":"sur","n":"Pachacámac"},"geometry":{"type":"Polygon","coordinates":[[[-76.7073,-12.114],[-76.6793,-12.131],[-76.662,-12.178],[-76.734,-12.1644],[-76.7892,-12.2029],[-76.8458,-12.2212],[-76.891,-12.2078],[-76.8812,-12.1679],[-76.9108,-12.1223],[-76.884,-12.0898],[-76.8891,-12.0594],[-76.833,-12.1451],[-76.7515,-12.1356],[-76.7073,-12.114]]]}},{"type":"Feature","properties":{"s":"centro","n":"La Victoria"},"geometry":{"type":"Polygon","coordinates":[[[-77.0032,-12.0626],[-77.0041,-12.0841],[-77.0098,-12.0892],[-77.0228,-12.0908],[-77.0281,-12.0787],[-77.0032,-12.0626]]]}},{"type":"Feature","properties":{"s":"este","n":"La Molina"},"geometry":{"type":"Polygon","coordinates":[[[-76.8891,-12.0594],[-76.884,-12.0898],[-76.9108,-12.1223],[-76.9408,-12.1222],[-76.9477,-12.1175],[-76.9763,-12.0781],[-76.8891,-12.0594]]]}},{"type":"Feature","properties":{"s":"callao","n":"Bellavista"},"geometry":{"type":"Polygon","coordinates":[[[-77.0873,-12.0615],[-77.1046,-12.0634],[-77.1329,-12.0679],[-77.0876,-12.0519],[-77.0873,-12.0615]]]}},{"type":"Feature","properties":{"s":"centro","n":"Breña"},"geometry":{"type":"Polygon","coordinates":[[[-77.0457,-12.0653],[-77.0497,-12.0703],[-77.0612,-12.0675],[-77.0457,-12.0653]]]}},{"type":"Feature","properties":{"s":"callao","n":"Carmen de la Legua Reynoso"},"geometry":{"type":"Polygon","coordinates":[[[-77.0815,-12.047],[-77.0935,-12.0381],[-77.0829,-12.0364],[-77.0815,-12.047]]]}},{"type":"Feature","properties":{"s":"centro","n":"Lima"},"geometry":{"type":"Polygon","coordinates":[[[-77.0018,-12.0617],[-77.0032,-12.0626],[-77.0281,-12.0787],[-77.0363,-12.0798],[-77.0457,-12.0653],[-77.0612,-12.0675],[-77.0777,-12.0685],[-77.0873,-12.0615],[-77.0876,-12.0519],[-77.0815,-12.047],[-77.0829,-12.0364],[-77.0435,-12.0389],[-77.0126,-12.0373],[-77.0095,-12.0309],[-77.0018,-12.0617]]]}},{"type":"Feature","properties":{"s":"este","n":"El Agustino"},"geometry":{"type":"Polygon","coordinates":[[[-76.9369,-12.022],[-76.9552,-12.0293],[-76.9734,-12.0585],[-76.9978,-12.0608],[-77.0018,-12.0617],[-77.0095,-12.0309],[-76.9531,-12.0223],[-76.9369,-12.022]]]}},{"type":"Feature","properties":{"s":"este","n":"Cieneguilla"},"geometry":{"type":"Polygon","coordinates":[[[-76.7223,-11.9996],[-76.6781,-12.053],[-76.7073,-12.114],[-76.7515,-12.1356],[-76.833,-12.1451],[-76.8891,-12.0594],[-76.8247,-12.0475],[-76.7829,-12.0232],[-76.7223,-11.9996]]]}},{"type":"Feature","properties":{"s":"centro","n":"Rímac"},"geometry":{"type":"Polygon","coordinates":[[[-77.0126,-12.0373],[-77.0435,-12.0389],[-77.053,-12.011],[-77.0307,-11.9964],[-77.0126,-12.0373]]]}},{"type":"Feature","properties":{"s":"este","n":"Ate"},"geometry":{"type":"Polygon","coordinates":[[[-76.7829,-12.0232],[-76.8247,-12.0475],[-76.8891,-12.0594],[-76.9763,-12.0781],[-76.9817,-12.0846],[-76.9873,-12.0799],[-76.9978,-12.0608],[-76.9734,-12.0585],[-76.9552,-12.0293],[-76.9369,-12.022],[-76.8372,-11.9926],[-76.7829,-12.0232]]]}},{"type":"Feature","properties":{"s":"este","n":"Chaclacayo"},"geometry":{"type":"Polygon","coordinates":[[[-76.7148,-11.9924],[-76.7223,-11.9996],[-76.7829,-12.0232],[-76.8372,-11.9926],[-76.7312,-11.9616],[-76.7148,-11.9924]]]}},{"type":"Feature","properties":{"s":"norte","n":"Independencia"},"geometry":{"type":"Polygon","coordinates":[[[-77.0307,-11.9964],[-77.053,-12.011],[-77.0614,-12.0084],[-77.0598,-11.9769],[-77.0283,-11.9607],[-77.0307,-11.9964]]]}},{"type":"Feature","properties":{"s":"callao","n":"Callao"},"geometry":{"type":"Polygon","coordinates":[[[-77.1287,-11.9372],[-77.0879,-12.0162],[-77.0935,-12.0381],[-77.0815,-12.047],[-77.0876,-12.0519],[-77.1329,-12.0679],[-77.1326,-12.0705],[-77.1564,-12.0679],[-77.1584,-12.0666],[-77.1375,-12.0109],[-77.1381,-11.9393],[-77.1287,-11.9372]]]}},{"type":"Feature","properties":{"s":"norte","n":"San Martín de Porres"},"geometry":{"type":"Polygon","coordinates":[[[-77.0614,-12.0084],[-77.053,-12.011],[-77.0435,-12.0389],[-77.0829,-12.0364],[-77.0935,-12.0381],[-77.0879,-12.0162],[-77.1287,-11.9372],[-77.0959,-11.9501],[-77.0842,-11.9343],[-77.0614,-12.0084]]]}},{"type":"Feature","properties":{"s":"norte","n":"Los Olivos"},"geometry":{"type":"Polygon","coordinates":[[[-77.0598,-11.9769],[-77.0614,-12.0084],[-77.0842,-11.9343],[-77.0735,-11.9184],[-77.0598,-11.9769]]]}},{"type":"Feature","properties":{"s":"norte","n":"Comas"},"geometry":{"type":"Polygon","coordinates":[[[-76.988,-11.8971],[-77.0283,-11.9607],[-77.0598,-11.9769],[-77.0735,-11.9184],[-77.0541,-11.8898],[-77.0255,-11.9093],[-76.988,-11.8971]]]}},{"type":"Feature","properties":{"s":"este","n":"Lurigancho-Chosica"},"geometry":{"type":"Polygon","coordinates":[[[-76.704,-11.8914],[-76.6688,-11.9235],[-76.6483,-11.9674],[-76.7148,-11.9924],[-76.7312,-11.9616],[-76.8372,-11.9926],[-76.9369,-12.022],[-76.9531,-12.0223],[-76.9694,-11.9949],[-76.9314,-11.9422],[-76.8937,-11.9562],[-76.7917,-11.9276],[-76.7279,-11.8757],[-76.704,-11.8914]]]}},{"type":"Feature","properties":{"s":"este","n":"San Juan de Lurigancho"},"geometry":{"type":"Polygon","coordinates":[[[-76.9314,-11.9422],[-76.9694,-11.9949],[-76.9531,-12.0223],[-77.0095,-12.0309],[-77.0126,-12.0373],[-77.0307,-11.9964],[-77.0283,-11.9607],[-76.988,-11.8971],[-76.9423,-11.8609],[-76.9121,-11.8893],[-76.9314,-11.9422]]]}},{"type":"Feature","properties":{"s":"callao","n":"Ventanilla"},"geometry":{"type":"Polygon","coordinates":[[[-77.126,-11.8208],[-77.0942,-11.8752],[-77.0959,-11.9501],[-77.1287,-11.9372],[-77.1381,-11.9393],[-77.1568,-11.8743],[-77.1871,-11.8284],[-77.1471,-11.8193],[-77.126,-11.8208]]]}},{"type":"Feature","properties":{"s":"norte","n":"Puente Piedra"},"geometry":{"type":"Polygon","coordinates":[[[-77.0541,-11.8898],[-77.0735,-11.9184],[-77.0842,-11.9343],[-77.0959,-11.9501],[-77.0942,-11.8752],[-77.126,-11.8208],[-77.0922,-11.8036],[-77.0541,-11.8898]]]}},{"type":"Feature","properties":{"s":"norte","n":"Santa Rosa"},"geometry":{"type":"Polygon","coordinates":[[[-77.1471,-11.8193],[-77.1871,-11.8284],[-77.1855,-11.7889],[-77.1471,-11.8193]]]}},{"type":"Feature","properties":{"s":"norte","n":"Carabayllo"},"geometry":{"type":"Polygon","coordinates":[[[-76.9761,-11.6854],[-76.9803,-11.7244],[-76.9327,-11.7553],[-76.8969,-11.7294],[-76.8049,-11.7559],[-76.8512,-11.7981],[-76.9066,-11.7961],[-76.9423,-11.8609],[-76.988,-11.8971],[-77.0255,-11.9093],[-77.0541,-11.8898],[-77.0922,-11.8036],[-77.057,-11.7858],[-77.0317,-11.7395],[-77.0248,-11.681],[-76.9761,-11.6854]]]}},{"type":"Feature","properties":{"s":"norte","n":"Ancón"},"geometry":{"type":"Polygon","coordinates":[[[-77.0049,-11.6135],[-77.035,-11.6524],[-77.0248,-11.681],[-77.0317,-11.7395],[-77.057,-11.7858],[-77.0922,-11.8036],[-77.126,-11.8208],[-77.1471,-11.8193],[-77.1855,-11.7889],[-77.1682,-11.7391],[-77.1935,-11.6783],[-77.1239,-11.6555],[-77.0518,-11.5761],[-77.0049,-11.6135]]]}}]};
+  const SECTOR_COLOR = { centro:'#E8C077', moderna:'#D9A75C', norte:'#C68A3D', este:'#A66B2E', sur:'#8B5427', callao:'#4A7A82' };
+
   let leafletMap = null;
-  const zoneMarkers = {};
   function initLeafletMap(){
     if (leafletMap || typeof L === 'undefined' || !document.getElementById('leafletMap')) return;
-    leafletMap = L.map('leafletMap', { scrollWheelZoom:false }).setView([-12.02, -77.02], 10.3);
+    leafletMap = L.map('leafletMap', { scrollWheelZoom:false }).setView([-12.02, -77.02], 10.4);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       maxZoom: 19,
       className: 'zonemap-tiles-dark'
     }).addTo(leafletMap);
-    Object.entries(ZONES).forEach(([key, z]) => {
-      zoneMarkers[key] = z.items.map(d => {
-        const m = L.circleMarker([d.lat, d.lng], { radius:6, color:'#E4BE78', weight:1.5, fillColor:'#E4BE78', fillOpacity:.75 }).addTo(leafletMap);
-        m.bindPopup(`<b>${d.n}</b><br>${z.label}`);
-        return m;
-      });
-    });
-    buildMapLegend();
+    L.geoJSON(PERU_DISTRICTS, {
+      style: feature => ({
+        color:'#0B0F1A', weight:1, fillColor: SECTOR_COLOR[feature.properties.s] || '#7E561F', fillOpacity:.68, className:'district-poly'
+      }),
+      onEachFeature: (feature, layer) => {
+        const z = ZONES[feature.properties.s];
+        layer.bindPopup(`<div class="bm-popup"><b>${feature.properties.n}</b>${z ? z.label : ''}</div>`);
+        layer.on('mouseover', () => layer.setStyle({ fillOpacity:.88, weight:2, color:'#E4BE78' }));
+        layer.on('mouseout', () => layer.setStyle({ fillOpacity:.68, weight:1, color:'#0B0F1A' }));
+      }
+    }).addTo(leafletMap);
+    buildChoroplethLegend();
   }
-  function buildMapLegend(){
-    const legend = document.getElementById('zoneLegend');
-    if (!legend) return;
-    legend.innerHTML = Object.entries(ZONES).map(([key, z]) =>
-      `<button class="zl-btn sel" data-zone="${key}"><span class="zl-check"></span>${z.label}</button>`).join('');
-    legend.querySelectorAll('.zl-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const on = btn.classList.toggle('sel');
-        zoneMarkers[btn.dataset.zone].forEach(m => m.setStyle({ opacity: on ? 1 : .1, fillOpacity: on ? .75 : .06 }));
-      });
-    });
-  }
-
-  // ---------- Variante B: clusters (sin dependencias externas) ----------
-  let zoneActive = 'moderna';
-  function renderZoneClusters(){
-    const grid = document.getElementById('zoneClusterGrid');
-    if (!grid) return;
-    grid.innerHTML = Object.entries(ZONES).map(([key, z]) => `
-      <button class="zc-card${key === zoneActive ? ' sel' : ''}" data-zone="${key}">
-        <span class="zc-card-n">${z.label}</span>
-        <span class="zc-card-c">${z.items.length} distritos</span>
-      </button>`).join('');
-    grid.querySelectorAll('.zc-card').forEach(btn => {
-      btn.addEventListener('click', () => { zoneActive = btn.dataset.zone; renderZoneClusters(); renderZoneClusterDistricts(); });
-    });
-  }
-  function renderZoneClusterDistricts(){
-    const el = document.getElementById('zoneClusterDistricts');
+  function buildChoroplethLegend(){
+    const el = document.getElementById('choroplethLegend');
     if (!el) return;
-    el.innerHTML = ZONES[zoneActive].items.map(d => `<span class="zchip">${d.n}</span>`).join('');
+    el.innerHTML = Object.entries(ZONES).map(([key, z]) =>
+      `<div class="cl-item"><span class="cl-swatch" style="background:${SECTOR_COLOR[key]}"></span>${z.label}</div>`).join('');
   }
-  renderZoneClusters();
-  renderZoneClusterDistricts();
   initLeafletMap();
 
   // ---------- Buscador de propiedades: setup que depende de ZONES ----------
@@ -1942,7 +1897,7 @@
       ctx.save();
       ctx.translate(p.x, p.y);
       ctx.rotate(p.rot);
-      ctx.strokeStyle = `rgba(126,86,31,${alpha})`;
+      ctx.strokeStyle = `rgba(228,190,120,${alpha})`;
       ctx.lineWidth = 1.1;
       ctx.beginPath(); ctx.arc(0, 0, 3.4, 0, Math.PI * 2); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(3.2, 0); ctx.lineTo(10, 0); ctx.stroke();
@@ -1972,7 +1927,7 @@
           drawKey(p, Math.max(.15, alpha));
         } else {
           ctx.beginPath();
-          ctx.fillStyle = `rgba(126,86,31,${Math.max(.12, alpha * .6)})`;
+          ctx.fillStyle = `rgba(228,190,120,${Math.max(.12, alpha * .6)})`;
           ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
           ctx.fill();
         }
@@ -2004,14 +1959,8 @@
     if (reduceMotion) { tick(0); } else { requestAnimationFrame(tick); }
   }
   initReactiveField(document.getElementById('fcCanvas'), document.getElementById('finalCtaBand'));
-
-  // ---------- Panel de revisión (temporal) ----------
-  const toggleZonesVariant = document.getElementById('toggleZonesVariant');
-  if (toggleZonesVariant) toggleZonesVariant.addEventListener('change', () => {
-    const showClusters = toggleZonesVariant.checked;
-    document.body.classList.toggle('zones-clusters', showClusters);
-    if (!showClusters && leafletMap) setTimeout(() => leafletMap.invalidateSize(), 60);
-  });
+  initReactiveField(document.getElementById('statsCanvas'), document.getElementById('statsBand'));
+  initReactiveField(document.getElementById('routesCanvas'), document.getElementById('routesOuter'));
 </script>
 </body>
 </html>
